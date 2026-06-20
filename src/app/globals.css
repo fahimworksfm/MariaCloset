@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background-color: theme(colors.cream);
+  color: theme(colors.ink);
+}
+
+body {
+  font-family: theme(fontFamily.sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle paper-grain backdrop for the boutique feel. */
+.bg-boutique {
+  background-color: theme(colors.cream);
+  background-image:
+    radial-gradient(60% 50% at 50% -10%, rgba(201, 162, 75, 0.12), transparent 60%),
+    radial-gradient(40% 40% at 90% 10%, rgba(44, 94, 79, 0.1), transparent 60%);
+}
+
+.font-serif {
+  font-family: theme(fontFamily.serif);
+}
+
+/* Don't select text while dragging the 3D rail. */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-forest px-6 py-3
+      text-sm font-medium tracking-wide text-cream transition
+      hover:bg-emerald active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cocoa/30
+      px-6 py-3 text-sm font-medium tracking-wide text-ink transition
+      hover:border-cocoa/60 hover:bg-sand/60 active:scale-[0.98];
+  }
+  .field {
+    @apply w-full rounded-xl border border-cocoa/25 bg-white/70 px-4 py-3 text-sm text-ink
+      outline-none transition placeholder:text-cocoa/50
+      focus:border-emerald focus:ring-2 focus:ring-emerald/30;
+  }
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.28em] text-cocoa;
+  }
+}
