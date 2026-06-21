@@ -38,25 +38,18 @@ All optional except the admin password. See [`.env.example`](.env.example).
 | --- | --- |
 | `ADMIN_PASSWORD` | The `/admin` login (change before sharing). |
 | `GROQ_API_KEY` (+ `GROQ_VISION_MODEL`) | **✨ Auto-fill from photo** — Groq vision reads an uploaded photo and fills name, category, colour, description, tags, and a matching accent colour. |
-| `REMOVEBG_API_KEY` | **Remove bg** in the admin (keeps the person + clothes). |
-| `REPLICATE_API_TOKEN` (+ `REPLICATE_CLOTHES_MODEL`) | **Extract garment** — segment out just the clothing from a worn photo. |
 
-If a key is missing, the related button simply reports it's unavailable —
-nothing breaks.
+If `GROQ_API_KEY` is missing, the auto-fill button just reports it's unavailable
+— nothing breaks.
 
-### Clothing extraction from photos
+### Background removal (free)
 
-Tiers, easiest → hardest:
-
-1. **Background removal** (keeps her + the garment) — robust, via `REMOVEBG_API_KEY`.
-2. **Garment-only extraction** (removes the person too) — clothing segmentation
-   via Replicate (`REPLICATE_API_TOKEN` + a `mattmdjaga/segformer_b2_clothes`-style
-   model in `REPLICATE_CLOTHES_MODEL`). Good for full garments; edges where cloth
-   meets skin can be imperfect.
-3. **Catalog-quality flat-lay** (ghost-mannequin) — a dedicated paid service.
-
-Note: a Groq key powers the **text/vision auto-fill** but cannot cut pixels out
-of an image — that needs a segmentation provider as above.
+The admin's **Remove background** button runs entirely in the browser via
+[`@imgly/background-removal`](https://github.com/imgly/background-removal-js) —
+**no API key, no per-image cost**, and it works on serverless hosts because the
+processing happens on the visitor's device. It removes the background while
+keeping the subject + garment; first use downloads a small model, then it's
+cached. For best results, photograph pieces on a plain background or laid flat.
 
 ## Adding pieces by hand (instead of the admin)
 

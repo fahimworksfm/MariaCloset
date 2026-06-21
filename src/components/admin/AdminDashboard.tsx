@@ -124,21 +124,34 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
     setMsg("AI filled the details ✦ review & save");
   }
 
-  async function cutout(mode: "background" | "garment") {
+  // Free, in-browser background removal (no API key). Runs on the visitor's
+  // device, then re-uploads the transparent PNG.
+  async function removeBg() {
     if (!editing?.image) return setMsg("Upload a photo first.");
-    setBusy(mode);
-    const r = await fetch("/api/admin/cutout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageUrl: editing.image, mode }),
-    });
-    const d = await r.json().catch(() => ({}));
-    setBusy("");
-    if (r.ok) {
-      setEditing({ ...editing, image: d.url });
-      setMsg("Image processed ✓");
-    } else {
-      setMsg(d.error || "Processing unavailable");
+    setBusy("background");
+    setMsg("Removing background… (first run downloads a small model)");
+    try {
+      // Loaded from a CDN at runtime via new Function so the heavy WASM model
+      // never enters the build (webpack can't parse onnxruntime's import.meta).
+      const cdnImport = new Function("u", "return import(u)") as (
+        u: string,
+      ) => Promise<{ removeBackground: (src: string) => Promise<Blob> }>;
+      const mod = await cdnImport("https://esm.sh/@imgly/background-removal@1.7.0");
+      const blob = await mod.removeBackground(editing.image);
+      const form = new FormData();
+      form.append("file", new File([blob], "cutout.png", { type: "image/png" }));
+      const r = await fetch("/api/admin/upload", { method: "POST", body: form });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok) {
+        setEditing((cur) => (cur ? { ...cur, image: d.url } : cur));
+        setMsg("Background removed ✓");
+      } else {
+        setMsg(d.error || "Upload failed");
+      }
+    } catch {
+      setMsg("Background removal failed — try a clearer photo.");
+    } finally {
+      setBusy("");
     }
   }
 
@@ -216,14 +229,9 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
                 <button onClick={aiSuggest} className="btn-ghost" disabled={busy === "ai"}>
                   {busy === "ai" ? "Thinking…" : "✨ Auto-fill from photo (AI)"}
                 </button>
-                <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => cutout("background")} className="btn-ghost text-xs" disabled={busy === "background"}>
-                    {busy === "background" ? "…" : "Remove bg"}
-                  </button>
-                  <button onClick={() => cutout("garment")} className="btn-ghost text-xs" disabled={busy === "garment"}>
-                    {busy === "garment" ? "…" : "Extract garment"}
-                  </button>
-                </div>
+                <button onClick={removeBg} className="btn-ghost" disabled={busy === "background"}>
+                  {busy === "background" ? "Removing…" : "Remove background (free)"}
+                </button>
               </div>
             </div>
 
