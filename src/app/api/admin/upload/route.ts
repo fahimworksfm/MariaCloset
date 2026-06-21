@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          "Couldn't save the image. On a hosted (read-only) server, create a Vercel Blob store to enable uploads.",
+          "Couldn't save the image. On Vercel, add a BLOB_READ_WRITE_TOKEN (from your Blob store) and redeploy.",
       },
       { status: 500 },
     );
