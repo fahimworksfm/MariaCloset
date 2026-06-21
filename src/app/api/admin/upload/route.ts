@@ -31,8 +31,9 @@ export async function POST(req: Request) {
 
   const buf = Buffer.from(await file.arrayBuffer());
   const filename = `${randomUUID()}.${ext}`;
+  const usingBlob = blobEnabled();
   try {
-    if (blobEnabled()) {
+    if (usingBlob) {
       const url = await putImage(filename, buf, file.type);
       return NextResponse.json({ url });
     }
@@ -42,11 +43,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: `/uploads/${filename}` });
   } catch (err) {
     console.error("[upload] save failed:", err);
+    const detail = err instanceof Error ? err.message : String(err);
+    const where = usingBlob
+      ? "blob"
+      : "no Blob token at runtime — redeploy after adding BLOB_READ_WRITE_TOKEN";
     return NextResponse.json(
-      {
-        error:
-          "Couldn't save the image. On Vercel, add a BLOB_READ_WRITE_TOKEN (from your Blob store) and redeploy.",
-      },
+      { error: `Couldn't save the image (${where}): ${detail}` },
       { status: 500 },
     );
   }
