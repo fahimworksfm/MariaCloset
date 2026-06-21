@@ -90,23 +90,23 @@ export default function RentRequestForm({ item }: { item: Item }) {
       )}`;
 
     return (
-      <div className="rounded-2xl border border-emerald/30 bg-emerald/5 p-6">
+      <div className="panel p-6">
         <div className="mb-2 flex items-center gap-2">
-          <span className="grid h-7 w-7 place-items-center rounded-full bg-emerald text-cream">
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-emerald to-peacock text-white shadow-glow">
             ✓
           </span>
-          <h3 className="font-serif text-xl text-ink">Request sent</h3>
+          <h3 className="font-display text-2xl text-gold">Request sent!</h3>
         </div>
-        <p className="text-sm text-cocoa">
+        <p className="text-sm text-cream/80">
           Thanks, {name.split(" ")[0] || "lovely"}! Your request for the{" "}
-          <span className="text-ink">{item.name}</span> from{" "}
-          <span className="text-ink">{formatPretty(confirmed.from)}</span> to{" "}
-          <span className="text-ink">{formatPretty(confirmed.to)}</span> ({confirmed.days} day
+          <span className="text-gold">{item.name}</span> from{" "}
+          <span className="text-gold">{formatPretty(confirmed.from)}</span> to{" "}
+          <span className="text-gold">{formatPretty(confirmed.to)}</span> ({confirmed.days} day
           {confirmed.days > 1 ? "s" : ""}, {money(confirmed.total)}) has been logged.{" "}
-          {siteConfig.ownerName} will confirm availability with you shortly.
+          {siteConfig.ownerName} will confirm shortly.
         </p>
         {!confirmed.stored && (
-          <p className="mt-3 rounded-lg bg-gold/10 px-3 py-2 text-xs text-cocoa">
+          <p className="mt-3 rounded-lg border border-gold/20 bg-gold/10 px-3 py-2 text-xs text-cream/80">
             Heads up: this request couldn&apos;t be saved on the server.
             {mailto ? " Use the button below so it reaches " : " Please reach out to "}
             {siteConfig.ownerName} directly.
@@ -141,12 +141,8 @@ export default function RentRequestForm({ item }: { item: Item }) {
     <form onSubmit={submit} className="space-y-5">
       <div>
         <p className="eyebrow mb-2">Choose your dates</p>
-        <AvailabilityCalendar
-          unavailable={item.unavailable}
-          value={range}
-          onChange={setRange}
-        />
-        <p className="mt-2 text-xs text-cocoa/70">
+        <AvailabilityCalendar unavailable={item.unavailable} value={range} onChange={setRange} />
+        <p className="mt-2 text-xs text-cream/60">
           {range?.from && !range?.to
             ? "Now pick a return date."
             : complete
@@ -188,17 +184,17 @@ export default function RentRequestForm({ item }: { item: Item }) {
         />
       </div>
 
-      <div className="flex flex-col gap-4 rounded-2xl border border-cocoa/15 bg-white/60 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-sm text-cocoa">
+      <div className="panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm text-cream/70">
           {complete ? (
             <>
-              <span className="text-ink">{money(item.pricePerDay)}</span> × {days} day
+              <span className="text-gold">{money(item.pricePerDay)}</span> × {days} day
               {days > 1 ? "s" : ""}
             </>
           ) : (
             <>Pick dates to see your total</>
           )}
-          <div className="font-serif text-2xl text-ink">
+          <div className="font-display text-3xl text-gold-shimmer">
             {complete ? money(total) : "—"}
           </div>
         </div>
@@ -208,7 +204,9 @@ export default function RentRequestForm({ item }: { item: Item }) {
       </div>
 
       {status === "error" && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="rounded-lg border border-vermilion/40 bg-vermilion/15 px-3 py-2 text-sm text-cream">
+          {error}
+        </p>
       )}
     </form>
   );

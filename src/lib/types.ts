@@ -3,6 +3,8 @@ export type DateRange = { from: string; to: string };
 export type Item = {
   id: string;
   name: string;
+  /** Optional Bengali-script name shown as an accent. */
+  nameBn?: string;
   category: string;
   brand?: string;
   size: string;

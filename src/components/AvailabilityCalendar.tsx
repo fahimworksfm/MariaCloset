@@ -4,7 +4,6 @@ import { useState } from "react";
 import type { DateRange } from "@/lib/types";
 import {
   WEEKDAYS,
-  addDays,
   isUnavailable,
   monthLabel,
   monthMatrix,
@@ -41,19 +40,16 @@ export default function AvailabilityCalendar({
 
   function pick(date: Date) {
     const iso = toISO(date);
-    // start fresh if nothing chosen yet, or a full range already exists
     if (!fromISO || (fromISO && toISOValue)) {
       onChange({ from: iso, to: "" } as unknown as Selection);
       return;
     }
-    // second click sets the end
     const start = startOfDay(new Date(fromISO));
     if (date.getTime() < start.getTime()) {
       onChange({ from: iso, to: "" } as unknown as Selection);
       return;
     }
     if (rangeOverlapsUnavailable(start, date, unavailable)) {
-      // the chosen span hits a booked day — restart from the new click
       onChange({ from: iso, to: "" } as unknown as Selection);
       return;
     }
@@ -69,35 +65,36 @@ export default function AvailabilityCalendar({
     const isTo = iso === toISOValue;
     let inRange = false;
     if (fromISO && toISOValue) {
-      inRange = date.getTime() >= startOfDay(new Date(fromISO)).getTime() &&
+      inRange =
+        date.getTime() >= startOfDay(new Date(fromISO)).getTime() &&
         date.getTime() <= startOfDay(new Date(toISOValue)).getTime();
     }
     return { iso, inMonth, disabled: past || booked || !inMonth, booked, isFrom, isTo, inRange };
   }
 
   return (
-    <div className="rounded-2xl border border-cocoa/15 bg-white/60 p-4">
+    <div className="panel p-4">
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
           onClick={() => shiftMonth(-1)}
-          className="grid h-8 w-8 place-items-center rounded-full text-cocoa transition hover:bg-sand"
+          className="grid h-8 w-8 place-items-center rounded-full text-gold transition hover:bg-gold/10"
           aria-label="Previous month"
         >
           ‹
         </button>
-        <p className="font-serif text-lg text-ink">{monthLabel(view.year, view.month)}</p>
+        <p className="font-display text-xl text-gold">{monthLabel(view.year, view.month)}</p>
         <button
           type="button"
           onClick={() => shiftMonth(1)}
-          className="grid h-8 w-8 place-items-center rounded-full text-cocoa transition hover:bg-sand"
+          className="grid h-8 w-8 place-items-center rounded-full text-gold transition hover:bg-gold/10"
           aria-label="Next month"
         >
           ›
         </button>
       </div>
 
-      <div className="mb-1 grid grid-cols-7 text-center text-[11px] font-medium uppercase tracking-wide text-cocoa/60">
+      <div className="mb-1 grid grid-cols-7 text-center text-[11px] font-semibold uppercase tracking-wide text-gold/50">
         {WEEKDAYS.map((d) => (
           <div key={d} className="py-1">
             {d}
@@ -108,16 +105,16 @@ export default function AvailabilityCalendar({
       <div className="grid grid-cols-7 gap-1">
         {weeks.flat().map((date) => {
           const s = cellState(date);
-          const base =
-            "relative h-9 rounded-lg text-sm transition flex items-center justify-center";
-          let cls = "text-ink hover:bg-sand";
-          if (!s.inMonth) cls = "text-cocoa/25";
+          const base = "h-9 rounded-lg text-sm transition flex items-center justify-center";
+          let cls = "text-cream/85 hover:bg-gold/10";
+          if (!s.inMonth) cls = "text-cream/20";
           if (s.disabled && s.inMonth)
             cls = s.booked
-              ? "text-cocoa/35 line-through cursor-not-allowed"
-              : "text-cocoa/30 cursor-not-allowed";
-          if (s.inRange) cls = "bg-emerald/15 text-ink";
-          if (s.isFrom || s.isTo) cls = "bg-emerald text-cream font-medium";
+              ? "text-vermilion/60 line-through cursor-not-allowed"
+              : "text-cream/25 cursor-not-allowed";
+          if (s.inRange) cls = "bg-rani/20 text-cream";
+          if (s.isFrom || s.isTo)
+            cls = "bg-gradient-to-br from-rani to-marigold text-white font-semibold shadow-glow-pink";
           return (
             <button
               key={s.iso}
@@ -132,12 +129,12 @@ export default function AvailabilityCalendar({
         })}
       </div>
 
-      <div className="mt-3 flex items-center gap-4 text-[11px] text-cocoa/70">
+      <div className="mt-3 flex items-center gap-4 text-[11px] text-cream/60">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald" /> selected
+          <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-rani to-marigold" /> selected
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-cocoa/30" /> booked
+          <span className="h-2.5 w-2.5 rounded-full bg-vermilion/50" /> booked
         </span>
       </div>
     </div>

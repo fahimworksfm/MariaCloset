@@ -1,0 +1,51 @@
+<svg width="600" height="800" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.82">
+      <stop offset="0" stop-color="#123E5E"/>
+      <stop offset="1" stop-color="#07223A"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0" stop-color="#FFE7BE" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#FFE7BE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cloth" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#F2B45A"/>
+      <stop offset="1" stop-color="#E08C26"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <g fill="none" stroke="#F2B53C" stroke-opacity="0.16">
+    <circle cx="300" cy="330" r="216"/>
+    <circle cx="300" cy="330" r="176"/>
+  </g>
+  <rect width="600" height="800" fill="url(#halo)"/>
+  <ellipse cx="300" cy="702" rx="150" ry="22" fill="#000000" opacity="0.28"/>
+
+  <path d="M250,206 L350,206 L352,252 L248,252 Z" fill="#C77E22"/>
+  <path d="M286,206 Q300,228 314,206 Z" fill="#B97018"/>
+  <path d="M250,212 Q300,202 350,212 L356,330 L418,694 Q300,720 182,694 L244,330 Z" fill="url(#cloth)"/>
+  <g stroke="#C67E20" stroke-width="3" opacity="0.5" fill="none" stroke-linecap="round">
+    <path d="M300,342 L264,690"/>
+    <path d="M300,342 L284,692"/>
+    <path d="M300,342 L308,692"/>
+    <path d="M300,342 L332,690"/>
+  </g>
+  <path d="M356,330 L340,330 L400,692 L418,692 Z" fill="#B11C2A" opacity="0.95"/>
+  <path d="M188,672 Q300,700 412,672 L418,694 Q300,720 182,694 Z" fill="#B11C2A"/>
+  <path d="M196,662 Q300,688 404,662" stroke="#FFF1D6" stroke-width="2" fill="none" opacity="0.85"/>
+  <g fill="#FFF6E6" opacity="0.9">
+    <circle cx="334" cy="402" r="3.2"/><circle cx="366" cy="468" r="3.2"/>
+    <circle cx="334" cy="536" r="3.2"/><circle cx="368" cy="600" r="3.2"/>
+    <circle cx="300" cy="566" r="3.2"/><circle cx="318" cy="648" r="3.2"/>
+    <circle cx="264" cy="600" r="3.2"/><circle cx="238" cy="556" r="3.2"/>
+  </g>
+  <path d="M250,212 L322,228 L314,452 Q274,468 234,452 L238,236 Z" fill="url(#cloth)"/>
+  <path d="M250,214 L322,230" stroke="#FFF1D6" stroke-width="2" opacity="0.5" fill="none"/>
+  <path d="M234,434 Q274,452 314,434 L314,452 Q274,468 234,452 Z" fill="#B11C2A"/>
+  <g fill="#FFF6E6" opacity="0.9">
+    <path d="M276,288c-9,0-15,7-15,16c0,7 5,11 11,11c-4,-3 -6,-8 -3,-12c2,-4 7,-4 9,-1c-1,-6 -1,-12 -2,-14z"/>
+    <circle cx="258" cy="252" r="3"/><circle cx="290" cy="252" r="3"/>
+    <circle cx="254" cy="340" r="3"/><circle cx="292" cy="340" r="3"/>
+    <circle cx="274" cy="386" r="3"/>
+  </g>
+</svg>

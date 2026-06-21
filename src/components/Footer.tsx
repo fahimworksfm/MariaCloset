@@ -1,14 +1,25 @@
 import { siteConfig } from "@/data/config";
+import { MarigoldToran, PaisleyDivider } from "./Ornament";
 
 export default function Footer() {
   return (
-    <footer className="mt-24 border-t border-cocoa/10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-10 text-sm text-cocoa sm:flex-row">
-        <p className="font-serif text-base text-ink">{siteConfig.name}</p>
-        <p>{siteConfig.tagline}</p>
-        <p className="text-cocoa/70">
-          Rent responsibly · Handle with love
-        </p>
+    <footer className="relative mt-24">
+      <MarigoldToran className="h-14 w-full rotate-180 opacity-90" />
+      <div className="mx-auto max-w-6xl px-5 pb-12 pt-8">
+        <PaisleyDivider className="mx-auto mb-7 h-8 w-48 text-gold" />
+        <div className="flex flex-col items-center justify-between gap-3 text-sm text-cream/70 sm:flex-row">
+          <p className="flex items-baseline gap-2">
+            <span className="font-display text-lg text-gold">{siteConfig.name}</span>
+            <span className="font-bengali text-marigold">{siteConfig.nameBn}</span>
+          </p>
+          <p className="font-bengali text-base text-rani">{siteConfig.taglineBn}</p>
+          <p className="text-cream/50">
+            Rent responsibly · Handle with love ·{" "}
+            <a href="/admin" className="transition hover:text-gold">
+              Manage
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

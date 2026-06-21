@@ -1,9 +1,10 @@
-# Maria's Closet 👗
+# Maria's Closet · মারিয়ার আলমারি 👗✨
 
-A boutique web app for renting out a personal closet. Browse the rail as a
-**3D carousel** you can drag/spin, open a piece to inspect it in 3D, check its
-availability calendar, and send a **request to rent** that Maria approves
-manually. No accounts, no payments, no database — all data lives in the repo.
+A vibrant, festive web app for renting out a personal closet of **Bengali &
+desi attire** — sarees, anarkalis, lehengas, accessories. Browse the rail as a
+**3D carousel** on a jewel-toned, marigold-garlanded stage, open a piece to
+inspect it in 3D, check its availability, and send a **request to rent**. A
+password-protected **admin** lets the owner upload pieces and arrange them.
 
 Built with **Next.js 14**, **React Three Fiber**, and **Tailwind CSS**.
 
@@ -11,60 +12,62 @@ Built with **Next.js 14**, **React Three Fiber**, and **Tailwind CSS**.
 
 ```bash
 npm install
+cp .env.example .env.local   # set ADMIN_PASSWORD (and optional AI keys)
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:3000 · admin at http://localhost:3000/admin
 
 ## How it works
 
-- **Home (`/`)** — a 3D ring of garment cards. Drag, use the arrows, or tap the
-  dots to swap between pieces. "View & rent" opens the detail page.
-- **Item page (`/items/[id]`)** — a 3D inspect viewer (drag to peek, or 360°
-  spin if the item has frames) plus details and the rent-request flow.
-- **Requests** — submitting the form `POST`s to `/api/requests`, which appends
-  the request to `data/requests.json` (created automatically on first request).
-  Open that file to see pending requests.
+- **Home (`/`)** — a 3D ring of gilded garment cards, each spotlit on its own
+  jewel stage. Drag, use the arrows, or tap the dots to swap pieces.
+- **Item page (`/items/[id]`)** — a 3D inspect viewer + details + availability
+  calendar + the rent-request flow.
+- **Admin (`/admin`)** — upload photos, edit details, set the stage/glow colour,
+  and reorder pieces (top-to-bottom = order on the rail). Changes save to
+  `data/items.json`; the catalog falls back to the seed in
+  [`src/data/items.ts`](src/data/items.ts) until the first save.
+- **Requests** — `POST /api/requests` appends to `data/requests.json`.
 
-## Adding / editing pieces
+## Environment variables
 
-1. Drop a photo into `public/items/` (e.g. `public/items/red-gown.jpg`).
-2. Add an entry to [`src/data/items.ts`](src/data/items.ts):
+All optional except the admin password. See [`.env.example`](.env.example).
 
-```ts
-{
-  id: "red-gown",
-  name: "Red Carpet Gown",
-  category: "Gowns",
-  size: "UK 8",
-  color: "Red",
-  pricePerDay: 50,
-  description: "…",
-  image: "/items/red-gown.jpg",
-  accent: "#a01b2b",        // glow / highlight colour
-  unavailable: [{ from: "2026-07-01", to: "2026-07-04" }], // booked ranges
-}
-```
+| Variable | Enables |
+| --- | --- |
+| `ADMIN_PASSWORD` | The `/admin` login (change before sharing). |
+| `GROQ_API_KEY` (+ `GROQ_VISION_MODEL`) | **✨ Auto-fill from photo** — Groq vision reads an uploaded photo and fills name, Bengali name, category, colour, description, tags, and a matching accent colour. |
+| `REMOVEBG_API_KEY` | **Remove bg** in the admin (keeps the person + clothes). |
+| `REPLICATE_API_TOKEN` (+ `REPLICATE_CLOTHES_MODEL`) | **Extract garment** — segment out just the clothing from a worn photo. |
 
-### 360° spin (optional)
+If a key is missing, the related button simply reports it's unavailable —
+nothing breaks.
 
-Take several evenly-rotated photos of a piece, drop them in `public/items/`,
-and list them in order as `frames: ["/items/x-01.jpg", "/items/x-02.jpg", …]`.
-The inspect view automatically becomes drag-to-spin.
+### Clothing extraction from photos
 
-The starter pieces use placeholder SVG art in `public/items/` — replace them
-with real photos whenever you're ready.
+Tiers, easiest → hardest:
 
-## Settings
+1. **Background removal** (keeps her + the garment) — robust, via `REMOVEBG_API_KEY`.
+2. **Garment-only extraction** (removes the person too) — clothing segmentation
+   via Replicate (`REPLICATE_API_TOKEN` + a `mattmdjaga/segformer_b2_clothes`-style
+   model in `REPLICATE_CLOTHES_MODEL`). Good for full garments; edges where cloth
+   meets skin can be imperfect.
+3. **Catalog-quality flat-lay** (ghost-mannequin) — a dedicated paid service.
 
-Edit [`src/data/config.ts`](src/data/config.ts) for the closet name, tagline,
-and currency. Set `ownerEmail` to enable an email fallback on the confirmation
-screen (handy if you deploy somewhere with a read-only filesystem).
+Note: a Groq key powers the **text/vision auto-fill** but cannot cut pixels out
+of an image — that needs a segmentation provider as above.
 
-## Notes on deployment
+## Adding pieces by hand (instead of the admin)
 
-`data/requests.json` is written to the local filesystem, which works great when
-you run the app on your own machine or a server with persistent disk. On
-read-only/serverless hosts the write is skipped gracefully and the confirmation
-screen offers an email fallback instead — swap in a database or email service
-when you're ready to go fully hosted.
+Drop a photo in `public/items/`, add an entry to
+[`src/data/items.ts`](src/data/items.ts). Add a `frames: [...]` array of
+evenly-rotated photos to turn the inspect view into a 360° drag-to-spin. The
+starter pieces use placeholder SVG art — replace with real photos any time.
+
+## Deployment note
+
+`data/items.json`, `data/requests.json`, and `public/uploads/` are written to
+local disk — perfect on your own machine or a server with persistent storage.
+On read-only/serverless hosts those writes are skipped; swap in a database +
+object storage (and an email service for requests) when you go fully hosted.

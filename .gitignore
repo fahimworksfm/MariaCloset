@@ -27,5 +27,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# runtime rental requests (saved locally by the app)
+# runtime data saved locally by the app / admin
 /data/requests.json
+/data/items.json
+
+# admin-uploaded images (personal content; keep the folder, ignore contents)
+/public/uploads/*
+!/public/uploads/.gitkeep

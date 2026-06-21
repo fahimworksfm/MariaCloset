@@ -3,34 +3,48 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html,
 body {
-  background-color: theme(colors.cream);
-  color: theme(colors.ink);
+  background-color: theme(colors.night);
+  color: theme(colors.cream);
 }
 
 body {
   font-family: theme(fontFamily.sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-/* Subtle paper-grain backdrop for the boutique feel. */
-.bg-boutique {
-  background-color: theme(colors.cream);
+/* Festive jewel-toned, animated, patterned backdrop. */
+.bg-festive {
+  background-color: theme(colors.night);
   background-image:
-    radial-gradient(60% 50% at 50% -10%, rgba(201, 162, 75, 0.12), transparent 60%),
-    radial-gradient(40% 40% at 90% 10%, rgba(44, 94, 79, 0.1), transparent 60%);
+    radial-gradient(60% 50% at 15% 0%, rgba(255, 46, 136, 0.22), transparent 60%),
+    radial-gradient(55% 45% at 85% 8%, rgba(255, 154, 31, 0.2), transparent 60%),
+    radial-gradient(60% 55% at 50% 100%, rgba(18, 194, 180, 0.18), transparent 60%),
+    radial-gradient(50% 40% at 90% 70%, rgba(106, 43, 217, 0.2), transparent 60%),
+    linear-gradient(160deg, #20092e 0%, #1a0826 45%, #2c0a2e 100%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: gradient-pan 18s ease infinite;
 }
 
-.font-serif {
-  font-family: theme(fontFamily.serif);
+/* Ornamental gold jali tile overlay. */
+.bg-jali {
+  background-image: url("/pattern/jali.svg");
+  background-size: 120px 120px;
 }
 
-/* Don't select text while dragging the 3D rail. */
+.font-display {
+  font-family: theme(fontFamily.display);
+}
+.font-bengali {
+  font-family: theme(fontFamily.bengali);
+}
+
 .no-select {
   -webkit-user-select: none;
   user-select: none;
@@ -38,22 +52,116 @@ body {
 }
 
 @layer components {
+  /* Shimmering gold gradient text. */
+  .text-gold-shimmer {
+    background-image: linear-gradient(
+      100deg,
+      #f2b53c 0%,
+      #ffe39a 25%,
+      #ffc83d 50%,
+      #ffe39a 75%,
+      #f2b53c 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 7s linear infinite;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-forest px-6 py-3
-      text-sm font-medium tracking-wide text-cream transition
-      hover:bg-emerald active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3
+      text-sm font-semibold uppercase tracking-wider text-white transition
+      hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+    background-image: linear-gradient(100deg, #ff2e88, #ff6a13 55%, #ff9a1f);
+    box-shadow:
+      0 0 0 1.5px rgba(255, 200, 61, 0.7),
+      0 12px 34px -10px rgba(255, 46, 136, 0.7);
   }
+  .btn-primary:hover {
+    box-shadow:
+      0 0 0 1.5px rgba(255, 220, 120, 0.9),
+      0 16px 40px -8px rgba(255, 106, 19, 0.8);
+  }
+
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-cocoa/30
-      px-6 py-3 text-sm font-medium tracking-wide text-ink transition
-      hover:border-cocoa/60 hover:bg-sand/60 active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3
+      text-sm font-semibold uppercase tracking-wider text-gold transition
+      hover:-translate-y-0.5 active:scale-[0.98];
+    border-color: rgba(255, 200, 61, 0.45);
+    background: rgba(255, 200, 61, 0.06);
   }
+  .btn-ghost:hover {
+    background: rgba(255, 200, 61, 0.14);
+  }
+
+  /* Translucent dark panel with gilded edge. */
+  .panel {
+    @apply rounded-2xl border;
+    border-color: rgba(255, 200, 61, 0.28);
+    background:
+      linear-gradient(180deg, rgba(61, 14, 51, 0.7), rgba(26, 8, 38, 0.78));
+    box-shadow: theme(boxShadow.panel);
+    backdrop-filter: blur(6px);
+  }
+
   .field {
-    @apply w-full rounded-xl border border-cocoa/25 bg-white/70 px-4 py-3 text-sm text-ink
-      outline-none transition placeholder:text-cocoa/50
-      focus:border-emerald focus:ring-2 focus:ring-emerald/30;
+    @apply w-full rounded-xl border px-4 py-3 text-sm text-cream outline-none transition
+      placeholder:text-cream/35;
+    border-color: rgba(255, 200, 61, 0.25);
+    background: rgba(26, 8, 38, 0.55);
   }
+  .field:focus {
+    border-color: theme(colors.rani);
+    box-shadow: 0 0 0 3px rgba(255, 46, 136, 0.25);
+  }
+
   .eyebrow {
-    @apply text-xs font-medium uppercase tracking-[0.28em] text-cocoa;
+    @apply text-xs font-bold uppercase tracking-[0.32em] text-marigold;
+  }
+
+  .chip {
+    @apply rounded-full border px-3 py-1 text-sm;
+    border-color: rgba(255, 200, 61, 0.3);
+    background: rgba(255, 200, 61, 0.08);
+    color: theme(colors.gold);
+  }
+}
+
+/* Falling petals (raw keyframes so they exist even when only referenced inline). */
+@keyframes petalfall {
+  0% {
+    transform: translateY(-12vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  92% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(112vh) translateX(70px) rotate(460deg);
+    opacity: 0;
+  }
+}
+
+.petal {
+  position: absolute;
+  top: 0;
+  animation-name: petalfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  .petal {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .petal {
+    display: none;
   }
 }

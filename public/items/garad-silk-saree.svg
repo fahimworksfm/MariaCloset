@@ -1,0 +1,50 @@
+<svg width="600" height="800" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.82">
+      <stop offset="0" stop-color="#0E6B60"/>
+      <stop offset="1" stop-color="#062E2A"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.4" r="0.5">
+      <stop offset="0" stop-color="#FFE7BE" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFE7BE" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cloth" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#ECE2CE"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <g fill="none" stroke="#F2B53C" stroke-opacity="0.16">
+    <circle cx="300" cy="330" r="216"/>
+    <circle cx="300" cy="330" r="176"/>
+  </g>
+  <rect width="600" height="800" fill="url(#halo)"/>
+  <ellipse cx="300" cy="702" rx="150" ry="22" fill="#000000" opacity="0.25"/>
+
+  <path d="M250,206 L350,206 L352,252 L248,252 Z" fill="#E2D6BE"/>
+  <path d="M286,206 Q300,228 314,206 Z" fill="#D8C9AB"/>
+  <path d="M250,212 Q300,202 350,212 L356,330 L418,694 Q300,720 182,694 L244,330 Z" fill="url(#cloth)"/>
+  <g stroke="#DCD1B8" stroke-width="3" opacity="0.6" fill="none" stroke-linecap="round">
+    <path d="M300,342 L264,690"/>
+    <path d="M300,342 L284,692"/>
+    <path d="M300,342 L308,692"/>
+    <path d="M300,342 L332,690"/>
+  </g>
+  <path d="M356,330 L340,330 L400,692 L418,692 Z" fill="#B11C2A" opacity="0.92"/>
+  <path d="M188,672 Q300,700 412,672 L418,694 Q300,720 182,694 Z" fill="#B11C2A"/>
+  <path d="M196,662 Q300,688 404,662" stroke="#C9A24B" stroke-width="3" fill="none"/>
+  <g fill="#C9A24B" opacity="0.85">
+    <circle cx="332" cy="408" r="3.2"/><circle cx="364" cy="474" r="3.2"/>
+    <circle cx="334" cy="540" r="3.2"/><circle cx="368" cy="604" r="3.2"/>
+    <circle cx="318" cy="648" r="3.2"/>
+  </g>
+  <path d="M250,212 L322,228 L314,452 Q274,468 234,452 L238,236 Z" fill="url(#cloth)"/>
+  <path d="M250,214 L322,230" stroke="#C9A24B" stroke-width="2" opacity="0.55" fill="none"/>
+  <path d="M234,434 Q274,452 314,434 L314,452 Q274,468 234,452 Z" fill="#B11C2A"/>
+  <g fill="#C9A24B" opacity="0.9">
+    <path d="M276,288c-9,0-15,7-15,16c0,7 5,11 11,11c-4,-3 -6,-8 -3,-12c2,-4 7,-4 9,-1c-1,-6 -1,-12 -2,-14z"/>
+    <circle cx="262" cy="252" r="3"/><circle cx="288" cy="252" r="3"/>
+    <circle cx="252" cy="338" r="3"/><circle cx="288" cy="338" r="3"/>
+    <circle cx="270" cy="384" r="3"/>
+  </g>
+</svg>

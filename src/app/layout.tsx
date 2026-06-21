@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Rozha_One, Inter, Baloo_Da_2 } from "next/font/google";
 import { siteConfig } from "@/data/config";
 import "./globals.css";
 
-const serif = Playfair_Display({
+const display = Rozha_One({
   subsets: ["latin"],
-  variable: "--font-serif",
+  weight: "400",
+  variable: "--font-display",
   display: "swap",
 });
 
 const sans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const bengali = Baloo_Da_2({
+  subsets: ["bengali"],
+  weight: ["500", "600", "700"],
+  variable: "--font-bengali",
   display: "swap",
 });
 
@@ -26,8 +34,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`}>
-      <body className="bg-boutique min-h-screen antialiased">{children}</body>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${bengali.variable}`}>
+      <body className="bg-festive min-h-screen antialiased">
+        <div className="bg-jali min-h-screen">{children}</div>
+      </body>
     </html>
   );
 }

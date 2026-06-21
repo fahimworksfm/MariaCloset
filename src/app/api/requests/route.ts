@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { getItem } from "@/data/items";
+import { getItemById } from "@/lib/store";
 import { saveRequest } from "@/lib/requests";
 import { inclusiveDays, parseISO, rangeOverlapsUnavailable } from "@/lib/dates";
 import type { RentRequest } from "@/lib/types";
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const item = getItem(itemId);
+  const item = await getItemById(itemId);
   if (!item) {
     return NextResponse.json({ error: "That piece no longer exists." }, { status: 404 });
   }

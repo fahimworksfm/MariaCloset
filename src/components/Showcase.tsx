@@ -3,52 +3,74 @@
 import { useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { items } from "@/data/items";
+import type { Item } from "@/lib/types";
 import { money } from "@/data/config";
 
 const CarouselCanvas = dynamic(() => import("./CarouselCanvas"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="h-10 w-10 animate-spin rounded-full border-2 border-cocoa/20 border-t-emerald" />
+      <div className="h-12 w-12 animate-spin rounded-full border-2 border-gold/20 border-t-rani" />
     </div>
   ),
 });
 
-export default function Showcase() {
+export default function Showcase({ items }: { items: Item[] }) {
   const [index, setIndex] = useState(0);
-  const active = items[index];
   const n = items.length;
 
+  if (n === 0) {
+    return (
+      <section id="rail" className="mx-auto max-w-2xl px-5 py-20 text-center">
+        <p className="font-display text-3xl text-gold">The rail is empty</p>
+        <p className="mt-2 text-cream/70">
+          Add your first piece from the{" "}
+          <Link href="/admin" className="text-marigold underline">
+            admin
+          </Link>
+          .
+        </p>
+      </section>
+    );
+  }
+
+  const active = items[Math.min(index, n - 1)];
   const go = (dir: number) => setIndex((i) => (i + dir + n) % n);
 
   return (
     <section id="rail" className="relative">
-      <div className="relative h-[58vh] min-h-[420px] w-full sm:h-[64vh]">
+      <div className="relative h-[62vh] min-h-[460px] w-full">
+        {/* accent glow behind the rail */}
+        <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
+          <div
+            className="h-[55%] w-[60%] rounded-full opacity-40 blur-[90px] transition-all duration-700"
+            style={{ backgroundColor: active.accent }}
+          />
+        </div>
+
         <CarouselCanvas items={items} index={index} onIndexChange={setIndex} />
 
-        {/* Arrows */}
         <button
           aria-label="Previous piece"
           onClick={() => go(-1)}
-          className="absolute left-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-cocoa/15 bg-cream/80 text-ink shadow-card backdrop-blur transition hover:bg-cream sm:left-8"
+          className="absolute left-3 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-gold/40 bg-night/60 text-xl text-gold backdrop-blur transition hover:bg-night/90 hover:text-marigold sm:left-8"
         >
           ‹
         </button>
         <button
           aria-label="Next piece"
           onClick={() => go(1)}
-          className="absolute right-3 top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-cocoa/15 bg-cream/80 text-ink shadow-card backdrop-blur transition hover:bg-cream sm:right-8"
+          className="absolute right-3 top-1/2 z-10 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full border border-gold/40 bg-night/60 text-xl text-gold backdrop-blur transition hover:bg-night/90 hover:text-marigold sm:right-8"
         >
           ›
         </button>
 
-        <p className="pointer-events-none absolute left-1/2 top-4 z-10 -translate-x-1/2 text-center text-xs text-cocoa/70">
-          drag to spin the rail
+        <p className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 text-center text-xs uppercase tracking-[0.25em] text-gold/70">
+          drag to spin · <span className="font-bengali tracking-normal text-marigold">টানুন</span>
         </p>
       </div>
 
-      {/* Active piece details */}
+      {/* active piece */}
       <div className="mx-auto -mt-2 max-w-2xl px-5 text-center">
         <p key={`${active.id}-cat`} className="eyebrow animate-fade-up">
           {active.category}
@@ -56,23 +78,30 @@ export default function Showcase() {
         </p>
         <h2
           key={`${active.id}-name`}
-          className="mt-2 font-serif text-3xl text-ink animate-fade-up sm:text-4xl"
+          className="mt-2 font-display text-4xl text-gold-shimmer animate-fade-up sm:text-5xl"
         >
           {active.name}
         </h2>
-        <p key={`${active.id}-price`} className="mt-3 text-cocoa animate-fade-up">
-          <span className="font-medium text-ink">{money(active.pricePerDay)}</span> / day
-          <span className="mx-2 text-cocoa/40">·</span>
+        {active.nameBn && (
+          <p
+            key={`${active.id}-bn`}
+            className="mt-1 font-bengali text-2xl text-rani animate-fade-up"
+          >
+            {active.nameBn}
+          </p>
+        )}
+        <p key={`${active.id}-price`} className="mt-3 text-cream/80 animate-fade-up">
+          <span className="text-lg font-semibold text-gold">{money(active.pricePerDay)}</span> / day
+          <span className="mx-2 text-gold/40">✦</span>
           Size {active.size}
         </p>
 
-        <div className="mt-6 flex items-center justify-center gap-3">
+        <div className="mt-6 flex items-center justify-center">
           <Link href={`/items/${active.id}`} className="btn-primary">
             View &amp; rent
           </Link>
         </div>
 
-        {/* Dots */}
         <div className="mt-7 flex items-center justify-center gap-2">
           {items.map((it, i) => (
             <button
@@ -80,7 +109,9 @@ export default function Showcase() {
               aria-label={`Show ${it.name}`}
               onClick={() => setIndex(i)}
               className={`h-2 rounded-full transition-all ${
-                i === index ? "w-6 bg-emerald" : "w-2 bg-cocoa/25 hover:bg-cocoa/50"
+                i === index
+                  ? "w-7 bg-gradient-to-r from-rani to-marigold"
+                  : "w-2 bg-gold/30 hover:bg-gold/60"
               }`}
             />
           ))}
