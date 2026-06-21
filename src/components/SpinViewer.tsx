@@ -2,7 +2,15 @@
 
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { RoundedBox, useTexture, ContactShadows, Sparkles } from "@react-three/drei";
+import {
+  RoundedBox,
+  useTexture,
+  ContactShadows,
+  Sparkles,
+  Environment,
+  Lightformer,
+} from "@react-three/drei";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 const CARD_W = 2.4;
@@ -91,11 +99,11 @@ function Card({
       <group ref={group}>
         <RoundedBox args={[CARD_W, CARD_H, 0.18]} radius={0.12} smoothness={5}>
           <meshStandardMaterial
-            color="#6e5113"
+            color="#7a5c16"
             emissive="#FFC83D"
-            emissiveIntensity={0.4}
-            metalness={0.9}
-            roughness={0.28}
+            emissiveIntensity={0.25}
+            metalness={1}
+            roughness={0.22}
           />
         </RoundedBox>
         <mesh position={[0, 0, 0.1]}>
@@ -158,15 +166,24 @@ export default function SpinViewer({ images, accent = "#FF9A1F" }: Props) {
       onPointerLeave={onUp}
     >
       <Canvas camera={{ position: [0, 0, 5.4], fov: 42 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[3, 5, 5]} intensity={1.4} color="#FFE3A6" />
-        <directionalLight position={[-4, 1, 2]} intensity={0.7} color="#FF2E88" />
-        <pointLight position={[0, -1, 3]} intensity={0.6} color="#12C2B4" />
+        <ambientLight intensity={0.45} />
+        <directionalLight position={[3, 5, 5]} intensity={1.1} color="#FFE3A6" />
+        <directionalLight position={[-4, 1, 2]} intensity={0.6} color="#FF2E88" />
+        <pointLight position={[0, -1, 3]} intensity={0.5} color="#12C2B4" />
         <Suspense fallback={null}>
           <Card images={images} accent={accent} rotX={rotX} rotY={rotY} frame={frame} hasFrames={hasFrames} />
+          <Environment resolution={256} frames={1}>
+            <Lightformer intensity={2.2} color="#FFE3A6" position={[0, 2, 5]} scale={[8, 8, 1]} />
+            <Lightformer intensity={1.6} color="#FF2E88" position={[-5, 1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.4} color="#12C2B4" position={[5, -1, 2]} scale={[5, 5, 1]} />
+          </Environment>
           <Sparkles count={40} scale={[6, 7, 4]} size={4} speed={0.4} color="#FFD56B" opacity={0.7} />
           <ContactShadows position={[0, -1.9, 0]} opacity={0.45} scale={9} blur={2.8} far={4} color="#000000" />
         </Suspense>
+        <EffectComposer>
+          <Bloom mipmapBlur luminanceThreshold={0.82} luminanceSmoothing={0.3} intensity={0.45} />
+          <Vignette offset={0.3} darkness={0.55} eskil={false} />
+        </EffectComposer>
       </Canvas>
     </div>
   );

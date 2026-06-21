@@ -2,7 +2,15 @@
 
 import { Suspense, useEffect, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { RoundedBox, useTexture, Sparkles, ContactShadows } from "@react-three/drei";
+import {
+  RoundedBox,
+  useTexture,
+  Sparkles,
+  ContactShadows,
+  Environment,
+  Lightformer,
+} from "@react-three/drei";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import type { Item } from "@/lib/types";
 
@@ -36,19 +44,44 @@ type Props = {
   onIndexChange: (index: number) => void;
 };
 
-function RailDriver({
-  groupRef,
-  targetRot,
-  dragging,
-}: {
+type Refs = {
   groupRef: React.MutableRefObject<THREE.Group | null>;
   targetRot: React.MutableRefObject<number>;
+  velocity: React.MutableRefObject<number>;
   dragging: React.MutableRefObject<boolean>;
+};
+
+/** Drives rotation: direct while dragging, momentum coast on release, then
+ *  spring-snap to the nearest card. */
+function RailDriver({
+  refs,
+  anglePer,
+  count,
+  onSettle,
+}: {
+  refs: Refs;
+  anglePer: number;
+  count: number;
+  onSettle: (i: number) => void;
 }) {
   useFrame((_, dt) => {
-    const g = groupRef.current;
-    if (!g || dragging.current) return;
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, targetRot.current, 6, dt);
+    const g = refs.groupRef.current;
+    if (!g || refs.dragging.current) return;
+    const v = refs.velocity.current;
+    if (Math.abs(v) > 0.2) {
+      g.rotation.y += v * dt;
+      refs.velocity.current = v * Math.exp(-3.5 * dt); // friction
+    } else if (v !== 0) {
+      refs.velocity.current = 0;
+      const idx = ((Math.round(-g.rotation.y / anglePer) % count) + count) % count;
+      let target = -idx * anglePer;
+      while (target - g.rotation.y > Math.PI) target -= Math.PI * 2;
+      while (target - g.rotation.y < -Math.PI) target += Math.PI * 2;
+      refs.targetRot.current = target;
+      onSettle(idx);
+    } else {
+      g.rotation.y = THREE.MathUtils.damp(g.rotation.y, refs.targetRot.current, 6, dt);
+    }
   });
   return null;
 }
@@ -88,7 +121,7 @@ function Ring({
       const veil = veilRefs.current[i];
       if (veil) veil.opacity = THREE.MathUtils.lerp(veil.opacity, (1 - front) * 0.55, 0.12);
       const gl = glowRefs.current[i];
-      if (gl) gl.opacity = (0.18 + 0.5 * front) * pulse;
+      if (gl) gl.opacity = (0.08 + 0.26 * front) * pulse;
     });
   });
 
@@ -105,7 +138,6 @@ function Ring({
               cardRefs.current[i] = el;
             }}
           >
-            {/* accent glow halo */}
             <mesh position={[0, 0, -0.28]}>
               <planeGeometry args={[CARD_W * 2.1, CARD_H * 1.7]} />
               <meshBasicMaterial
@@ -121,18 +153,16 @@ function Ring({
               />
             </mesh>
 
-            {/* gilded frame */}
             <RoundedBox args={[CARD_W, CARD_H, 0.16]} radius={0.1} smoothness={4}>
               <meshStandardMaterial
-                color="#6e5113"
+                color="#7a5c16"
                 emissive="#FFC83D"
-                emissiveIntensity={0.35}
-                metalness={0.9}
-                roughness={0.28}
+                emissiveIntensity={0.22}
+                metalness={1}
+                roughness={0.22}
               />
             </RoundedBox>
 
-            {/* front + back art */}
             <mesh position={[0, 0, 0.09]}>
               <planeGeometry args={[PHOTO_W, PHOTO_H]} />
               <meshBasicMaterial map={textures[i]} toneMapped={false} transparent />
@@ -142,7 +172,6 @@ function Ring({
               <meshBasicMaterial map={textures[i]} toneMapped={false} transparent />
             </mesh>
 
-            {/* depth veil */}
             <mesh position={[0, 0, 0.1]}>
               <planeGeometry args={[CARD_W, CARD_H]} />
               <meshBasicMaterial
@@ -166,44 +195,51 @@ export default function CarouselCanvas({ items, index, onIndexChange }: Props) {
   const n = items.length;
   const anglePer = (Math.PI * 2) / n;
 
-  const groupRef = useRef<THREE.Group | null>(null);
-  const targetRot = useRef(0);
-  const dragging = useRef(false);
+  const refs: Refs = {
+    groupRef: useRef<THREE.Group | null>(null),
+    targetRot: useRef(0),
+    velocity: useRef(0),
+    dragging: useRef(false),
+  };
   const startX = useRef(0);
   const startRot = useRef(0);
+  const lastX = useRef(0);
+  const lastT = useRef(0);
 
   useEffect(() => {
-    const current = groupRef.current?.rotation.y ?? 0;
+    const current = refs.groupRef.current?.rotation.y ?? 0;
     let target = -index * anglePer;
     while (target - current > Math.PI) target -= Math.PI * 2;
     while (target - current < -Math.PI) target += Math.PI * 2;
-    targetRot.current = target;
+    refs.targetRot.current = target;
+    refs.velocity.current = 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, anglePer]);
 
-  function indexFromRotation(rot: number): number {
-    return ((Math.round(-rot / anglePer) % n) + n) % n;
-  }
-
   function onDown(e: React.PointerEvent) {
-    dragging.current = true;
+    refs.dragging.current = true;
+    refs.velocity.current = 0;
     startX.current = e.clientX;
-    startRot.current = groupRef.current?.rotation.y ?? 0;
+    startRot.current = refs.groupRef.current?.rotation.y ?? 0;
+    lastX.current = e.clientX;
+    lastT.current = performance.now();
     (e.target as Element).setPointerCapture?.(e.pointerId);
   }
   function onMove(e: React.PointerEvent) {
-    if (!dragging.current || !groupRef.current) return;
-    groupRef.current.rotation.y = startRot.current + (e.clientX - startX.current) * ROT_SPEED;
+    const g = refs.groupRef.current;
+    if (!refs.dragging.current || !g) return;
+    g.rotation.y = startRot.current + (e.clientX - startX.current) * ROT_SPEED;
+    const now = performance.now();
+    const dt = (now - lastT.current) / 1000;
+    if (dt > 0) {
+      const step = (e.clientX - lastX.current) * ROT_SPEED;
+      refs.velocity.current = THREE.MathUtils.clamp(step / dt, -10, 10);
+    }
+    lastX.current = e.clientX;
+    lastT.current = now;
   }
   function onUp() {
-    if (!dragging.current || !groupRef.current) return;
-    dragging.current = false;
-    const next = indexFromRotation(groupRef.current.rotation.y);
-    let target = -next * anglePer;
-    const current = groupRef.current.rotation.y;
-    while (target - current > Math.PI) target -= Math.PI * 2;
-    while (target - current < -Math.PI) target += Math.PI * 2;
-    targetRot.current = target;
-    if (next !== index) onIndexChange(next);
+    refs.dragging.current = false; // momentum carries via RailDriver
   }
 
   return (
@@ -216,17 +252,30 @@ export default function CarouselCanvas({ items, index, onIndexChange }: Props) {
     >
       <Canvas camera={{ position: [0, 0.25, CAM_Z], fov: 40 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <fog attach="fog" args={["#1A0826", 9.5, 16]} />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[3, 5, 6]} intensity={1.4} color="#FFE3A6" />
-        <directionalLight position={[-5, 2, 3]} intensity={0.85} color="#FF2E88" />
-        <pointLight position={[0, -1, 4]} intensity={0.7} color="#12C2B4" />
+        <ambientLight intensity={0.45} />
+        <directionalLight position={[3, 5, 6]} intensity={1.1} color="#FFE3A6" />
+        <directionalLight position={[-5, 2, 3]} intensity={0.7} color="#FF2E88" />
+        <pointLight position={[0, -1, 4]} intensity={0.6} color="#12C2B4" />
+
         <Suspense fallback={null}>
-          <Ring items={items} anglePer={anglePer} groupRef={groupRef} />
+          <Ring items={items} anglePer={anglePer} groupRef={refs.groupRef} />
+          <Environment resolution={256} frames={1}>
+            <Lightformer intensity={2.2} color="#FFE3A6" position={[0, 2, 5]} scale={[8, 8, 1]} />
+            <Lightformer intensity={1.6} color="#FF2E88" position={[-5, 1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.4} color="#12C2B4" position={[5, -1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.2} color="#FFC83D" position={[0, -3, 3]} scale={[6, 3, 1]} />
+          </Environment>
           <Sparkles count={60} scale={[13, 7, 5]} size={4} speed={0.35} color="#FFD56B" opacity={0.7} />
           <Sparkles count={24} scale={[12, 6, 4]} size={3} speed={0.5} color="#FF8FC4" opacity={0.6} />
           <ContactShadows position={[0, -2.0, 0]} opacity={0.5} scale={14} blur={2.8} far={4} color="#000000" />
         </Suspense>
-        <RailDriver groupRef={groupRef} targetRot={targetRot} dragging={dragging} />
+
+        <EffectComposer>
+          <Bloom mipmapBlur luminanceThreshold={0.82} luminanceSmoothing={0.3} intensity={0.45} />
+          <Vignette offset={0.3} darkness={0.6} eskil={false} />
+        </EffectComposer>
+
+        <RailDriver refs={refs} anglePer={anglePer} count={n} onSettle={onIndexChange} />
       </Canvas>
     </div>
   );

@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
 import Petals from "@/components/Petals";
+import Reveal from "@/components/Reveal";
 import {
   MarigoldToran,
   Mandala,
@@ -95,8 +96,12 @@ export default async function Home() {
             </h2>
             <PaisleyDivider className="mx-auto mt-4 h-7 w-40 text-gold" />
             <div className="mt-12 grid gap-6 sm:grid-cols-3">
-              {steps.map((s) => (
-                <div key={s.n} className="panel relative overflow-hidden p-7">
+              {steps.map((s, i) => (
+                <Reveal
+                  key={s.n}
+                  delay={i * 0.12}
+                  className="panel relative overflow-hidden p-7 transition duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-glow"
+                >
                   <AlpanaCorner className="absolute right-2 top-2 h-10 w-10 text-gold/30" />
                   <span
                     className={`grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br ${s.grad} font-display text-2xl font-bold text-white shadow-glow`}
@@ -105,7 +110,7 @@ export default async function Home() {
                   </span>
                   <h3 className="mt-5 font-display text-2xl text-gold">{s.title}</h3>
                   <p className="mt-2 text-sm text-cream/70">{s.body}</p>
-                </div>
+                </Reveal>
               ))}
             </div>
           </section>

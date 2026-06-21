@@ -10,7 +10,7 @@ const CarouselCanvas = dynamic(() => import("./CarouselCanvas"), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full items-center justify-center">
-      <div className="h-12 w-12 animate-spin rounded-full border-2 border-gold/20 border-t-rani" />
+      <div className="skeleton-shimmer h-[64%] w-[36%] max-w-[260px] rounded-2xl border border-gold/20" />
     </div>
   ),
 });

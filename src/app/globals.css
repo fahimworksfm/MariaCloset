@@ -152,6 +152,26 @@ body {
   will-change: transform, opacity;
 }
 
+/* Shimmer placeholder for loading the 3D rail / viewer. */
+.skeleton-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 200, 61, 0.05) 25%,
+    rgba(255, 200, 61, 0.16) 50%,
+    rgba(255, 200, 61, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.5s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   .petal {
