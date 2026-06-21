@@ -58,9 +58,13 @@ Drop a photo in `public/items/`, add an entry to
 evenly-rotated photos to turn the inspect view into a 360° drag-to-spin. The
 starter pieces use placeholder SVG art — replace with real photos any time.
 
-## Deployment note
+## Deployment
 
-`data/items.json`, `data/requests.json`, and `public/uploads/` are written to
-local disk — perfect on your own machine or a server with persistent storage.
-On read-only/serverless hosts those writes are skipped; swap in a database +
-object storage (and an email service for requests) when you go fully hosted.
+Storage auto-switches. With a **Vercel Blob** store connected
+(`BLOB_READ_WRITE_TOKEN` — injected automatically on Vercel) the admin's
+uploads, saved items, and rent requests persist in Blob. Without it (local dev,
+or any host with a real disk) it uses the filesystem (`data/` + `public/uploads/`).
+
+To enable persistence on Vercel: **Project → Storage → Create → Blob**, then
+redeploy. Uploads and admin edits will then stick. (Email notifications for new
+requests are still a future add.)

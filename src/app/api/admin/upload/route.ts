@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import { isAdmin } from "@/lib/auth";
+import { blobEnabled, putImage } from "@/lib/blob";
 
 const ALLOWED: Record<string, string> = {
   "image/png": "png",
@@ -29,10 +30,24 @@ export async function POST(req: Request) {
   }
 
   const buf = Buffer.from(await file.arrayBuffer());
-  const dir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(dir, { recursive: true });
   const filename = `${randomUUID()}.${ext}`;
-  await fs.writeFile(path.join(dir, filename), buf);
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  try {
+    if (blobEnabled()) {
+      const url = await putImage(filename, buf, file.type);
+      return NextResponse.json({ url });
+    }
+    const dir = path.join(process.cwd(), "public", "uploads");
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(path.join(dir, filename), buf);
+    return NextResponse.json({ url: `/uploads/${filename}` });
+  } catch (err) {
+    console.error("[upload] save failed:", err);
+    return NextResponse.json(
+      {
+        error:
+          "Couldn't save the image. On a hosted (read-only) server, create a Vercel Blob store to enable uploads.",
+      },
+      { status: 500 },
+    );
+  }
 }
