@@ -38,7 +38,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
             href="/"
             className="text-sm font-medium text-gold/80 transition hover:text-marigold"
           >
-            ‹ Back to the almari
+            ‹ Back to the closet
           </Link>
 
           <div className="mt-6 grid gap-10 lg:grid-cols-2">
@@ -71,9 +71,6 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
               <h1 className="mt-2 font-display text-5xl leading-tight text-gold-shimmer">
                 {item.name}
               </h1>
-              {item.nameBn && (
-                <p className="mt-1 font-bengali text-2xl text-rani">{item.nameBn}</p>
-              )}
               <p className="mt-3 text-3xl font-semibold text-gold">
                 {money(item.pricePerDay)}{" "}
                 <span className="text-base font-normal text-cream/60">/ day</span>

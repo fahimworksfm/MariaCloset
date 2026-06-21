@@ -10,11 +10,8 @@ export default function Navbar() {
           <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-rani to-marigold shadow-glow-pink">
             <LotusMark className="h-5 w-5 text-white" />
           </span>
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-2xl tracking-tight text-gold-shimmer">
-              {siteConfig.name}
-            </span>
-            <span className="font-bengali text-xs text-marigold">{siteConfig.nameBn}</span>
+          <span className="font-display text-2xl tracking-tight text-gold-shimmer">
+            {siteConfig.name}
           </span>
         </Link>
         <div className="flex items-center gap-6 text-sm font-medium text-cream/80">

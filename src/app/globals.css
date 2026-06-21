@@ -41,9 +41,6 @@ body {
 .font-display {
   font-family: theme(fontFamily.display);
 }
-.font-bengali {
-  font-family: theme(fontFamily.bengali);
-}
 
 .no-select {
   -webkit-user-select: none;

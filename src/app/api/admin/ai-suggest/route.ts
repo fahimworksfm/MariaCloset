@@ -20,9 +20,9 @@ async function toDataUri(imageUrl: string): Promise<string> {
   return `data:${MIME[ext] ?? "image/jpeg"};base64,${buf.toString("base64")}`;
 }
 
-const PROMPT = `You are cataloguing a South Asian / Bengali clothing rental item from a photo.
-Respond ONLY with a JSON object of this exact shape:
-{"name": "short English name", "nameBn": "Bengali-script name", "category": "Saree | Suit | Lehenga | Accessories | ...", "color": "main colour", "description": "1-2 warm, sales-y sentences", "details": ["3-4 short tags like fabric, length, care"], "accent": "#RRGGBB vibrant hex matching the garment", "occasions": ["pujo", "biye", ...]}
+const PROMPT = `You are cataloguing a South Asian clothing rental item from a photo.
+Respond ONLY in English with a JSON object of this exact shape:
+{"name": "short product name", "category": "Saree | Suit | Lehenga | Accessories | ...", "color": "main colour", "description": "1-2 warm, sales-y sentences", "details": ["3-4 short tags like fabric, length, care"], "accent": "#RRGGBB vibrant hex matching the garment", "occasions": ["weddings", "parties", ...]}
 If unsure about anything, make a sensible, confident guess.`;
 
 export async function POST(req: Request) {

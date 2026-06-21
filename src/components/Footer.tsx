@@ -8,11 +8,8 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-5 pb-12 pt-8">
         <PaisleyDivider className="mx-auto mb-7 h-8 w-48 text-gold" />
         <div className="flex flex-col items-center justify-between gap-3 text-sm text-cream/70 sm:flex-row">
-          <p className="flex items-baseline gap-2">
-            <span className="font-display text-lg text-gold">{siteConfig.name}</span>
-            <span className="font-bengali text-marigold">{siteConfig.nameBn}</span>
-          </p>
-          <p className="font-bengali text-base text-rani">{siteConfig.taglineBn}</p>
+          <p className="font-display text-lg text-gold">{siteConfig.name}</p>
+          <p className="text-base text-rani">{siteConfig.tagline}</p>
           <p className="text-cream/50">
             Rent responsibly · Handle with love ·{" "}
             <a href="/admin" className="transition hover:text-gold">

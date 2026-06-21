@@ -1,7 +1,7 @@
-# Maria's Closet · মারিয়ার আলমারি 👗✨
+# Maria's Closet 👗✨
 
-A vibrant, festive web app for renting out a personal closet of **Bengali &
-desi attire** — sarees, anarkalis, lehengas, accessories. Browse the rail as a
+A vibrant, festive web app for renting out a personal closet of **South Asian
+attire** — sarees, anarkalis, lehengas, accessories. Browse the rail as a
 **3D carousel** on a jewel-toned, marigold-garlanded stage, open a piece to
 inspect it in 3D, check its availability, and send a **request to rent**. A
 password-protected **admin** lets the owner upload pieces and arrange them.
@@ -37,7 +37,7 @@ All optional except the admin password. See [`.env.example`](.env.example).
 | Variable | Enables |
 | --- | --- |
 | `ADMIN_PASSWORD` | The `/admin` login (change before sharing). |
-| `GROQ_API_KEY` (+ `GROQ_VISION_MODEL`) | **✨ Auto-fill from photo** — Groq vision reads an uploaded photo and fills name, Bengali name, category, colour, description, tags, and a matching accent colour. |
+| `GROQ_API_KEY` (+ `GROQ_VISION_MODEL`) | **✨ Auto-fill from photo** — Groq vision reads an uploaded photo and fills name, category, colour, description, tags, and a matching accent colour. |
 | `REMOVEBG_API_KEY` | **Remove bg** in the admin (keeps the person + clothes). |
 | `REPLICATE_API_TOKEN` (+ `REPLICATE_CLOTHES_MODEL`) | **Extract garment** — segment out just the clothing from a worn photo. |
 

@@ -16,29 +16,35 @@ export const dynamic = "force-dynamic";
 
 const steps = [
   {
-    n: "০১",
-    title: "Spin the almari",
-    bn: "ঘোরাও",
+    n: "01",
+    title: "Spin the rail",
     body: "Drag through the rail in 3D and find a piece you love.",
     grad: "from-rani to-royal",
   },
   {
-    n: "০২",
+    n: "02",
     title: "Pick your dates",
-    bn: "তারিখ বাছো",
     body: "Check the availability calendar and choose your rental window.",
     grad: "from-peacock to-emerald",
   },
   {
-    n: "০৩",
+    n: "03",
     title: "Request to rent",
-    bn: "অনুরোধ পাঠাও",
     body: `Send a request — ${siteConfig.ownerName} confirms, you wear it beautifully.`,
     grad: "from-marigold to-saffron",
   },
 ];
 
-const occasions = ["পুজো", "বিয়ে", "আদ্দা", "ঈদ", "সঙ্গীত", "জন্মদিন", "অনুষ্ঠান", "মেহেন্দি"];
+const occasions = [
+  "Weddings",
+  "Receptions",
+  "Parties",
+  "Festivals",
+  "Galas",
+  "Date Nights",
+  "Brunches",
+  "Celebrations",
+];
 
 export default async function Home() {
   const items = await getItems();
@@ -51,13 +57,10 @@ export default async function Home() {
         <main>
           <section className="relative mx-auto max-w-6xl overflow-hidden px-5 pb-4 pt-12 text-center sm:pt-16">
             <Mandala className="pointer-events-none absolute left-1/2 top-[-120px] -z-10 h-[560px] w-[560px] -translate-x-1/2 animate-spin-slow text-gold/[0.08]" />
-            <p className="eyebrow animate-fade-up">✦ A rentable almari ✦</p>
+            <p className="eyebrow animate-fade-up">✦ A rentable closet ✦</p>
             <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-gold-shimmer animate-fade-up sm:text-7xl">
               {siteConfig.tagline}
             </h1>
-            <p className="mt-4 font-bengali text-3xl text-rani animate-fade-up sm:text-4xl">
-              {siteConfig.taglineBn}
-            </p>
             <p className="mx-auto mt-5 max-w-xl text-cream/75 animate-fade-up">
               {siteConfig.description}
             </p>
@@ -71,7 +74,9 @@ export default async function Home() {
                 <div key={dup} className="flex items-center" aria-hidden={dup === 1}>
                   {occasions.map((w) => (
                     <span key={w} className="flex items-center">
-                      <span className="font-bengali text-xl text-cream/90">{w}</span>
+                      <span className="text-sm font-semibold uppercase tracking-[0.2em] text-cream/90">
+                        {w}
+                      </span>
                       <span className="mx-5 text-gold">✦</span>
                     </span>
                   ))}
@@ -93,14 +98,11 @@ export default async function Home() {
               {steps.map((s) => (
                 <div key={s.n} className="panel relative overflow-hidden p-7">
                   <AlpanaCorner className="absolute right-2 top-2 h-10 w-10 text-gold/30" />
-                  <div className="flex items-center justify-between">
-                    <span
-                      className={`grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br ${s.grad} font-bengali text-2xl font-bold text-white shadow-glow`}
-                    >
-                      {s.n}
-                    </span>
-                    <span className="font-bengali text-lg text-marigold">{s.bn}</span>
-                  </div>
+                  <span
+                    className={`grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br ${s.grad} font-display text-2xl font-bold text-white shadow-glow`}
+                  >
+                    {s.n}
+                  </span>
                   <h3 className="mt-5 font-display text-2xl text-gold">{s.title}</h3>
                   <p className="mt-2 text-sm text-cream/70">{s.body}</p>
                 </div>

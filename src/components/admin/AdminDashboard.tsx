@@ -10,7 +10,6 @@ function blankDraft(): Item {
   return {
     id: "",
     name: "",
-    nameBn: "",
     category: "Saree",
     brand: "",
     size: "Free size",
@@ -116,7 +115,6 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
     setEditing({
       ...editing,
       name: s.name || editing.name,
-      nameBn: s.nameBn || editing.nameBn,
       category: s.category || editing.category,
       color: s.color || editing.color,
       description: s.description || editing.description,
@@ -234,9 +232,6 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
               <Field label="Name">
                 <input className="field" value={d.name} onChange={(e) => set({ name: e.target.value })} placeholder="Garad Silk Saree" />
               </Field>
-              <Field label="Bengali name">
-                <input className="field font-bengali" value={d.nameBn ?? ""} onChange={(e) => set({ nameBn: e.target.value })} placeholder="গরদ সিল্ক শাড়ি" />
-              </Field>
               <Field label="Category">
                 <input className="field" value={d.category} onChange={(e) => set({ category: e.target.value })} />
               </Field>
@@ -249,10 +244,10 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
               <Field label="Colour">
                 <input className="field" value={d.color} onChange={(e) => set({ color: e.target.value })} />
               </Field>
-              <Field label="Price / day (₹)">
+              <Field label="Price / day ($)">
                 <input type="number" className="field" value={d.pricePerDay || ""} onChange={(e) => set({ pricePerDay: Number(e.target.value) })} />
               </Field>
-              <Field label="Retail value (₹)">
+              <Field label="Retail value ($)">
                 <input type="number" className="field" value={d.retailValue ?? ""} onChange={(e) => set({ retailValue: e.target.value ? Number(e.target.value) : undefined })} />
               </Field>
               <div className="sm:col-span-2">

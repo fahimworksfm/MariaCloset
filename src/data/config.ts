@@ -1,10 +1,8 @@
 export const siteConfig = {
   name: "Maria's Closet",
-  nameBn: "মারিয়ার আলমারি",
   tagline: "Borrow something beautiful.",
-  taglineBn: "নতুন সাজে, নতুন রূপে",
   description:
-    "A curated almari of Bengali sarees and festive wear — spin through the rail in 3D and reserve your next favourite look for pujo, biye, or any reason to dress up.",
+    "A curated closet of South Asian sarees and festive wear — spin through the rail in 3D and reserve your next favourite look for weddings, parties, or any reason to dress up.",
   ownerName: "Maria",
   /**
    * Optional. If set, the rent-request confirmation offers an email fallback
@@ -12,7 +10,7 @@ export const siteConfig = {
    * isn't writable (e.g. on a serverless host).
    */
   ownerEmail: "",
-  currencySymbol: "₹",
+  currencySymbol: "$",
 };
 
 export function money(amount: number): string {

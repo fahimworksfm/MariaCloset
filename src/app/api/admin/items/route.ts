@@ -15,7 +15,6 @@ function sanitize(x: Record<string, unknown>): Item | null {
   return {
     id,
     name,
-    nameBn: x.nameBn ? String(x.nameBn) : undefined,
     category: String(x.category ?? "Piece"),
     brand: x.brand ? String(x.brand) : undefined,
     size: String(x.size ?? "One size"),

@@ -26,7 +26,6 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        bengali: ["var(--font-bengali)", "var(--font-display)", "serif"],
       },
       boxShadow: {
         glow: "0 0 40px -6px rgba(255, 154, 31, 0.55)",

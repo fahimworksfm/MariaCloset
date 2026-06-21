@@ -66,7 +66,7 @@ export default function Showcase({ items }: { items: Item[] }) {
         </button>
 
         <p className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 text-center text-xs uppercase tracking-[0.25em] text-gold/70">
-          drag to spin · <span className="font-bengali tracking-normal text-marigold">টানুন</span>
+          drag to spin
         </p>
       </div>
 
@@ -82,14 +82,6 @@ export default function Showcase({ items }: { items: Item[] }) {
         >
           {active.name}
         </h2>
-        {active.nameBn && (
-          <p
-            key={`${active.id}-bn`}
-            className="mt-1 font-bengali text-2xl text-rani animate-fade-up"
-          >
-            {active.nameBn}
-          </p>
-        )}
         <p key={`${active.id}-price`} className="mt-3 text-cream/80 animate-fade-up">
           <span className="text-lg font-semibold text-gold">{money(active.pricePerDay)}</span> / day
           <span className="mx-2 text-gold/40">✦</span>
