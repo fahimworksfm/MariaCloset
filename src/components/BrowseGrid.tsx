@@ -6,11 +6,18 @@ import { parseISO, rangeOverlapsUnavailable, toISO, today } from "@/lib/dates";
 import { wishlist, useStoreList } from "@/lib/clientStore";
 import ItemCard from "./ItemCard";
 
-export default function BrowseGrid({ items }: { items: Item[] }) {
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(items.map((i) => i.category)))],
-    [items],
-  );
+export default function BrowseGrid({
+  items,
+  initialCategory,
+}: {
+  items: Item[];
+  initialCategory?: string;
+}) {
+  const categories = useMemo(() => {
+    const set = new Set(items.map((i) => i.category));
+    if (initialCategory) set.add(initialCategory);
+    return ["All", ...Array.from(set)];
+  }, [items, initialCategory]);
   const occasions = useMemo(
     () => Array.from(new Set(items.flatMap((i) => i.occasions ?? []))).sort(),
     [items],
@@ -21,7 +28,9 @@ export default function BrowseGrid({ items }: { items: Item[] }) {
   );
 
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState(
+    initialCategory && initialCategory !== "All" ? initialCategory : "All",
+  );
   const [occasion, setOccasion] = useState<string | null>(null);
   const [price, setPrice] = useState(maxPrice);
   const [from, setFrom] = useState("");

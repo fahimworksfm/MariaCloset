@@ -19,23 +19,19 @@ body {
   overflow-x: hidden;
 }
 
-/* Festive jewel-toned, animated, patterned backdrop. */
+/* Restrained deep backdrop — a whisper of rose + gold, no animation. */
 .bg-festive {
   background-color: theme(colors.night);
   background-image:
-    radial-gradient(60% 50% at 15% 0%, rgba(255, 46, 136, 0.22), transparent 60%),
-    radial-gradient(55% 45% at 85% 8%, rgba(255, 154, 31, 0.2), transparent 60%),
-    radial-gradient(60% 55% at 50% 100%, rgba(18, 194, 180, 0.18), transparent 60%),
-    radial-gradient(50% 40% at 90% 70%, rgba(106, 43, 217, 0.2), transparent 60%),
-    linear-gradient(160deg, #20092e 0%, #1a0826 45%, #2c0a2e 100%);
-  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
-  animation: gradient-pan 18s ease infinite;
+    radial-gradient(48% 38% at 18% 0%, rgba(168, 83, 107, 0.1), transparent 62%),
+    radial-gradient(42% 34% at 86% 6%, rgba(201, 162, 75, 0.07), transparent 62%),
+    linear-gradient(165deg, #1e0e1a 0%, #160a12 58%, #1c1019 100%);
 }
 
-/* Ornamental gold jali tile overlay. */
+/* Faint ornamental tile. */
 .bg-jali {
   background-image: url("/pattern/jali.svg");
-  background-size: 120px 120px;
+  background-size: 150px 150px;
 }
 
 .font-display {
@@ -49,55 +45,44 @@ body {
 }
 
 @layer components {
-  /* Shimmering gold gradient text. */
+  /* Static brushed-gold gradient text. */
   .text-gold-shimmer {
-    background-image: linear-gradient(
-      100deg,
-      #f2b53c 0%,
-      #ffe39a 25%,
-      #ffc83d 50%,
-      #ffe39a 75%,
-      #f2b53c 100%
-    );
-    background-size: 200% auto;
+    background-image: linear-gradient(100deg, #b8923f 0%, #e6d29a 50%, #c9a24b 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: shimmer 7s linear infinite;
   }
 
   .btn-primary {
     @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3
-      text-sm font-semibold uppercase tracking-wider text-white transition
+      text-sm font-medium uppercase tracking-wider text-cream transition
       hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
-    background-image: linear-gradient(100deg, #ff2e88, #ff6a13 55%, #ff9a1f);
+    background-image: linear-gradient(135deg, #8e3a57, #a8536b);
     box-shadow:
-      0 0 0 1.5px rgba(255, 200, 61, 0.7),
-      0 12px 34px -10px rgba(255, 46, 136, 0.7);
+      0 0 0 1px rgba(201, 162, 75, 0.4),
+      0 12px 30px -16px rgba(0, 0, 0, 0.7);
   }
   .btn-primary:hover {
     box-shadow:
-      0 0 0 1.5px rgba(255, 220, 120, 0.9),
-      0 16px 40px -8px rgba(255, 106, 19, 0.8);
+      0 0 0 1px rgba(217, 194, 138, 0.6),
+      0 16px 34px -14px rgba(0, 0, 0, 0.7);
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3
-      text-sm font-semibold uppercase tracking-wider text-gold transition
+      text-sm font-medium uppercase tracking-wider text-gold transition
       hover:-translate-y-0.5 active:scale-[0.98];
-    border-color: rgba(255, 200, 61, 0.45);
-    background: rgba(255, 200, 61, 0.06);
+    border-color: rgba(201, 162, 75, 0.4);
+    background: rgba(201, 162, 75, 0.05);
   }
   .btn-ghost:hover {
-    background: rgba(255, 200, 61, 0.14);
+    background: rgba(201, 162, 75, 0.12);
   }
 
-  /* Translucent dark panel with gilded edge. */
   .panel {
     @apply rounded-2xl border;
-    border-color: rgba(255, 200, 61, 0.28);
-    background:
-      linear-gradient(180deg, rgba(61, 14, 51, 0.7), rgba(26, 8, 38, 0.78));
+    border-color: rgba(201, 162, 75, 0.22);
+    background: linear-gradient(180deg, rgba(42, 20, 34, 0.6), rgba(22, 10, 18, 0.72));
     box-shadow: theme(boxShadow.panel);
     backdrop-filter: blur(6px);
   }
@@ -105,63 +90,36 @@ body {
   .field {
     @apply w-full rounded-xl border px-4 py-3 text-sm text-cream outline-none transition
       placeholder:text-cream/35;
-    border-color: rgba(255, 200, 61, 0.25);
-    background: rgba(26, 8, 38, 0.55);
+    border-color: rgba(201, 162, 75, 0.22);
+    background: rgba(22, 10, 18, 0.55);
   }
   .field:focus {
-    border-color: theme(colors.rani);
-    box-shadow: 0 0 0 3px rgba(255, 46, 136, 0.25);
+    border-color: theme(colors.gold);
+    box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.2);
   }
 
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-[0.32em] text-marigold;
+    @apply text-xs font-semibold uppercase tracking-[0.34em] text-marigold;
   }
 
   .chip {
     @apply rounded-full border px-3 py-1 text-sm;
-    border-color: rgba(255, 200, 61, 0.3);
-    background: rgba(255, 200, 61, 0.08);
+    border-color: rgba(201, 162, 75, 0.28);
+    background: rgba(201, 162, 75, 0.06);
     color: theme(colors.gold);
   }
-}
-
-/* Falling petals (raw keyframes so they exist even when only referenced inline). */
-@keyframes petalfall {
-  0% {
-    transform: translateY(-12vh) translateX(0) rotate(0deg);
-    opacity: 0;
-  }
-  8% {
-    opacity: 0.95;
-  }
-  92% {
-    opacity: 0.95;
-  }
-  100% {
-    transform: translateY(112vh) translateX(70px) rotate(460deg);
-    opacity: 0;
-  }
-}
-
-.petal {
-  position: absolute;
-  top: 0;
-  animation-name: petalfall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  will-change: transform, opacity;
 }
 
 /* Shimmer placeholder for loading the 3D rail / viewer. */
 .skeleton-shimmer {
   background-image: linear-gradient(
     100deg,
-    rgba(255, 200, 61, 0.05) 25%,
-    rgba(255, 200, 61, 0.16) 50%,
-    rgba(255, 200, 61, 0.05) 75%
+    rgba(201, 162, 75, 0.05) 25%,
+    rgba(201, 162, 75, 0.14) 50%,
+    rgba(201, 162, 75, 0.05) 75%
   );
   background-size: 200% 100%;
-  animation: skeleton-sweep 1.5s ease-in-out infinite;
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
 }
 @keyframes skeleton-sweep {
   0% {
@@ -170,6 +128,32 @@ body {
   100% {
     background-position: -200% 0;
   }
+}
+
+/* A few slow, subtle drifting petals. */
+@keyframes petalfall {
+  0% {
+    transform: translateY(-12vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(112vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+.petal {
+  position: absolute;
+  top: 0;
+  animation-name: petalfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {

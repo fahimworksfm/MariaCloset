@@ -5,13 +5,7 @@ import Showcase from "@/components/Showcase";
 import Petals from "@/components/Petals";
 import Reveal from "@/components/Reveal";
 import FestivalCountdown from "@/components/FestivalCountdown";
-import {
-  MarigoldToran,
-  Mandala,
-  ScallopValance,
-  PaisleyDivider,
-  AlpanaCorner,
-} from "@/components/Ornament";
+import { Mandala, ScallopValance, PaisleyDivider, AlpanaCorner } from "@/components/Ornament";
 import { siteConfig } from "@/data/config";
 import { getItems } from "@/lib/store";
 
@@ -54,13 +48,12 @@ export default async function Home() {
   return (
     <>
       <Petals />
-      <MarigoldToran className="relative z-20 h-16 w-full" />
       <div className="relative z-10">
         <Navbar />
         <main>
           <section className="relative mx-auto max-w-6xl overflow-hidden px-5 pb-4 pt-12 text-center sm:pt-16">
             <Mandala className="pointer-events-none absolute left-1/2 top-[-120px] -z-10 h-[560px] w-[560px] -translate-x-1/2 animate-spin-slow text-gold/[0.08]" />
-            <p className="eyebrow animate-fade-up">✦ A rentable closet ✦</p>
+            <p className="eyebrow animate-fade-up">A rentable closet</p>
             <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-gold-shimmer animate-fade-up sm:text-7xl">
               {siteConfig.tagline}
             </h1>
@@ -71,17 +64,17 @@ export default async function Home() {
             <FestivalCountdown className="mx-auto mt-5 block w-fit rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-sm text-gold animate-fade-up" />
           </section>
 
-          {/* occasion ribbon */}
-          <div className="relative my-6 overflow-hidden border-y border-gold/25 bg-gradient-to-r from-rani/30 via-marigold/25 to-peacock/30 py-3">
+          {/* occasion ribbon — understated */}
+          <div className="relative my-8 overflow-hidden border-y border-gold/12 py-2.5">
             <div className="flex w-max animate-marquee gap-0 whitespace-nowrap">
               {[0, 1].map((dup) => (
                 <div key={dup} className="flex items-center" aria-hidden={dup === 1}>
                   {occasions.map((w) => (
                     <span key={w} className="flex items-center">
-                      <span className="text-sm font-semibold uppercase tracking-[0.2em] text-cream/90">
+                      <span className="text-xs font-medium uppercase tracking-[0.28em] text-cream/55">
                         {w}
                       </span>
-                      <span className="mx-5 text-gold">✦</span>
+                      <span className="mx-7 text-gold/30">·</span>
                     </span>
                   ))}
                 </div>
@@ -89,7 +82,10 @@ export default async function Home() {
             </div>
           </div>
 
-          <ScallopValance className="h-7 w-full text-gold/80" />
+          <div className="text-center">
+            <p className="eyebrow">Newest additions</p>
+          </div>
+          <ScallopValance className="mt-3 h-6 w-full text-gold/40" />
           <Showcase items={items} />
 
           <div className="mt-10 text-center">

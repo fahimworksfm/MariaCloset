@@ -65,9 +65,6 @@ export default function Showcase({ items }: { items: Item[] }) {
           ›
         </button>
 
-        <p className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 text-center text-xs uppercase tracking-[0.25em] text-gold/70">
-          drag to spin
-        </p>
       </div>
 
       {/* active piece */}

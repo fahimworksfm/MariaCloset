@@ -11,7 +11,11 @@ import { getItems } from "@/lib/store";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Browse — Maria's Closet" };
 
-export default async function BrowsePage() {
+export default async function BrowsePage({
+  searchParams,
+}: {
+  searchParams: { category?: string };
+}) {
   const items = await getItems();
   return (
     <>
@@ -25,7 +29,7 @@ export default async function BrowsePage() {
             Browse the closet
           </h1>
           <PaisleyDivider className="mx-auto my-6 h-7 w-40 text-gold" />
-          <BrowseGrid items={items} />
+          <BrowseGrid items={items} initialCategory={searchParams.category} />
           <RecentlyViewed items={items} />
         </main>
         <Footer />

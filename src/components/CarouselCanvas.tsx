@@ -121,7 +121,7 @@ function Ring({
       const veil = veilRefs.current[i];
       if (veil) veil.opacity = THREE.MathUtils.lerp(veil.opacity, (1 - front) * 0.55, 0.12);
       const gl = glowRefs.current[i];
-      if (gl) gl.opacity = (0.08 + 0.26 * front) * pulse;
+      if (gl) gl.opacity = (0.05 + 0.16 * front) * pulse;
     });
   });
 
@@ -252,27 +252,26 @@ export default function CarouselCanvas({ items, index, onIndexChange }: Props) {
     >
       <Canvas camera={{ position: [0, 0.25, CAM_Z], fov: 40 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <fog attach="fog" args={["#1A0826", 9.5, 16]} />
-        <ambientLight intensity={0.45} />
-        <directionalLight position={[3, 5, 6]} intensity={1.1} color="#FFE3A6" />
-        <directionalLight position={[-5, 2, 3]} intensity={0.7} color="#FF2E88" />
-        <pointLight position={[0, -1, 4]} intensity={0.6} color="#12C2B4" />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[3, 5, 6]} intensity={1.0} color="#F2DDB0" />
+        <directionalLight position={[-5, 2, 3]} intensity={0.5} color="#9A5468" />
+        <pointLight position={[0, -1, 4]} intensity={0.4} color="#3E8C82" />
 
         <Suspense fallback={null}>
           <Ring items={items} anglePer={anglePer} groupRef={refs.groupRef} />
           <Environment resolution={256} frames={1}>
-            <Lightformer intensity={2.2} color="#FFE3A6" position={[0, 2, 5]} scale={[8, 8, 1]} />
-            <Lightformer intensity={1.6} color="#FF2E88" position={[-5, 1, 2]} scale={[5, 5, 1]} />
-            <Lightformer intensity={1.4} color="#12C2B4" position={[5, -1, 2]} scale={[5, 5, 1]} />
-            <Lightformer intensity={1.2} color="#FFC83D" position={[0, -3, 3]} scale={[6, 3, 1]} />
+            <Lightformer intensity={1.8} color="#F2DDB0" position={[0, 2, 5]} scale={[8, 8, 1]} />
+            <Lightformer intensity={1.1} color="#9A5468" position={[-5, 1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.0} color="#3E8C82" position={[5, -1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.0} color="#C9A24B" position={[0, -3, 3]} scale={[6, 3, 1]} />
           </Environment>
-          <Sparkles count={60} scale={[13, 7, 5]} size={4} speed={0.35} color="#FFD56B" opacity={0.7} />
-          <Sparkles count={24} scale={[12, 6, 4]} size={3} speed={0.5} color="#FF8FC4" opacity={0.6} />
+          <Sparkles count={22} scale={[13, 7, 5]} size={3} speed={0.25} color="#D9C28A" opacity={0.4} />
           <ContactShadows position={[0, -2.0, 0]} opacity={0.5} scale={14} blur={2.8} far={4} color="#000000" />
         </Suspense>
 
         <EffectComposer>
-          <Bloom mipmapBlur luminanceThreshold={0.82} luminanceSmoothing={0.3} intensity={0.45} />
-          <Vignette offset={0.3} darkness={0.6} eskil={false} />
+          <Bloom mipmapBlur luminanceThreshold={0.85} luminanceSmoothing={0.3} intensity={0.28} />
+          <Vignette offset={0.32} darkness={0.62} eskil={false} />
         </EffectComposer>
 
         <RailDriver refs={refs} anglePer={anglePer} count={n} onSettle={onIndexChange} />
