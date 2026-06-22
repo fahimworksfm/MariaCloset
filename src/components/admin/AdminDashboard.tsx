@@ -15,6 +15,7 @@ function blankDraft(): Item {
     size: "Free size",
     color: "",
     occasions: [],
+    closet: "Maria",
     pricePerDay: 0,
     retailValue: undefined,
     description: "",
@@ -253,6 +254,23 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
               <Field label="Retail value ($)">
                 <input type="number" className="field" value={d.retailValue ?? ""} onChange={(e) => set({ retailValue: e.target.value ? Number(e.target.value) : undefined })} />
               </Field>
+              <Field label="Closet (whose)">
+                <input className="field" value={d.closet ?? ""} onChange={(e) => set({ closet: e.target.value })} placeholder="Maria" />
+              </Field>
+              <Field label="Bust (in)">
+                <input type="number" className="field" value={d.fit?.bust ?? ""} onChange={(e) => set({ fit: { ...d.fit, bust: e.target.value ? Number(e.target.value) : undefined } })} />
+              </Field>
+              <Field label="Waist (in)">
+                <input type="number" className="field" value={d.fit?.waist ?? ""} onChange={(e) => set({ fit: { ...d.fit, waist: e.target.value ? Number(e.target.value) : undefined } })} />
+              </Field>
+              <Field label="Length (in)">
+                <input type="number" className="field" value={d.fit?.length ?? ""} onChange={(e) => set({ fit: { ...d.fit, length: e.target.value ? Number(e.target.value) : undefined } })} />
+              </Field>
+              <div className="sm:col-span-2">
+                <Field label="Fit note">
+                  <input className="field" value={d.fit?.note ?? ""} onChange={(e) => set({ fit: { ...d.fit, note: e.target.value } })} placeholder="True to size; the churidar is stretchy" />
+                </Field>
+              </div>
               <div className="sm:col-span-2">
                 <Field label="Description">
                   <textarea className="field min-h-[70px]" value={d.description} onChange={(e) => set({ description: e.target.value })} />

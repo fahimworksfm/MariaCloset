@@ -9,6 +9,7 @@ import RentRequestForm from "@/components/RentRequestForm";
 import RecordView from "@/components/RecordView";
 import WaitlistButton from "@/components/WaitlistButton";
 import ShareButton from "@/components/ShareButton";
+import SizeFit from "@/components/SizeFit";
 import CompleteTheLook from "@/components/CompleteTheLook";
 import ReviewsSection from "@/components/ReviewsSection";
 import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
@@ -105,6 +106,8 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
                   ))}
                 </ul>
               )}
+
+              <SizeFit item={item} />
 
               <div className="mt-4">
                 <WaitlistButton itemId={item.id} />

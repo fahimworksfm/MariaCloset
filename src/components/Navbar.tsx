@@ -23,6 +23,9 @@ export default function Navbar() {
           <Link href="/browse" className="transition hover:text-gold">
             Browse
           </Link>
+          <Link href="/closets" className="hidden transition hover:text-gold sm:inline">
+            Closets
+          </Link>
           <Link href="/#rail" className="hidden transition hover:text-gold sm:inline">
             The rail
           </Link>

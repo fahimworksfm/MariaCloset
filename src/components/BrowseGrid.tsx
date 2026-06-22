@@ -36,6 +36,8 @@ export default function BrowseGrid({
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [savedOnly, setSavedOnly] = useState(false);
+  const [ask, setAsk] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
 
   const saved = useStoreList(wishlist);
   const minDate = toISO(today());
@@ -70,8 +72,44 @@ export default function BrowseGrid({
     setSavedOnly(false);
   }
 
+  async function aiSearch(e: React.FormEvent) {
+    e.preventDefault();
+    if (!ask.trim()) return;
+    setAiBusy(true);
+    const r = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: ask, categories: categories.filter((c) => c !== "All"), occasions }),
+    });
+    const d = await r.json().catch(() => ({}));
+    setAiBusy(false);
+    const f = (d.filters ?? {}) as {
+      category?: string;
+      occasion?: string;
+      priceMax?: number;
+      q?: string;
+    };
+    setCategory(f.category || "All");
+    setOccasion(f.occasion || null);
+    if (typeof f.priceMax === "number") setPrice(Math.min(maxPrice, Math.max(10, f.priceMax)));
+    setQuery(f.q ? String(f.q) : "");
+  }
+
   return (
     <div>
+      {/* AI search */}
+      <form onSubmit={aiSearch} className="mx-auto mb-7 flex max-w-2xl gap-2">
+        <input
+          className="field"
+          value={ask}
+          onChange={(e) => setAsk(e.target.value)}
+          placeholder="Describe it — e.g. “something red for a wedding under $50”"
+        />
+        <button type="submit" className="btn-primary whitespace-nowrap" disabled={aiBusy}>
+          {aiBusy ? "…" : "✦ Ask"}
+        </button>
+      </form>
+
       {/* occasion chips */}
       <div className="mb-5 flex flex-wrap justify-center gap-2">
         <button

@@ -68,6 +68,7 @@ export const items: Item[] = [
     occasions: ["Party", "Reception", "Gala"],
     pricePerDay: 35,
     retailValue: 90,
+    fit: { bust: 38, waist: 32, length: 56, note: "True to size; the churidar is stretchy." },
     description:
       "A floor-sweeping peacock-teal Anarkali with gold detailing, paired with churidar and a sheer dupatta. Twirl-ready for celebration nights.",
     details: ["Georgette flare", "Gold-trim yoke", "Churidar + dupatta", "Spot clean"],

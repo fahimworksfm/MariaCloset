@@ -33,6 +33,21 @@ function sanitize(x: Record<string, unknown>): Item | null {
       : undefined,
     image,
     frames: Array.isArray(x.frames) ? x.frames.map(String).filter(Boolean) : undefined,
+    closet: x.closet ? String(x.closet).slice(0, 60) : undefined,
+    fit:
+      x.fit && typeof x.fit === "object"
+        ? (() => {
+            const f = x.fit as Record<string, unknown>;
+            const num = (v: unknown) => (Number(v) > 0 ? Number(v) : undefined);
+            const o = {
+              bust: num(f.bust),
+              waist: num(f.waist),
+              length: num(f.length),
+              note: f.note ? String(f.note).slice(0, 200) : undefined,
+            };
+            return o.bust || o.waist || o.length || o.note ? o : undefined;
+          })()
+        : undefined,
     accent,
     unavailable: Array.isArray(x.unavailable)
       ? (x.unavailable as Array<{ from?: unknown; to?: unknown }>)

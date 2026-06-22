@@ -17,6 +17,10 @@ export type Item = {
   image: string;
   /** Optional 360° frame sequence — if present, the inspect view becomes drag-to-spin. */
   frames?: string[];
+  /** Measurements (inches) + a fit note — powers the size & fit quiz. */
+  fit?: { bust?: number; waist?: number; length?: number; note?: string };
+  /** Whose closet this piece belongs to (defaults to the owner). */
+  closet?: string;
   /** Accent colour (hex) used to theme the card glow + UI highlights. */
   accent: string;
   /** Date ranges this piece is already booked / unavailable (ISO yyyy-mm-dd). */
@@ -30,6 +34,16 @@ export type Review = {
   rating: number; // 1–5
   text: string;
   approved: boolean;
+  createdAt: string;
+};
+
+export type GiftCard = {
+  id: string;
+  code: string;
+  amount: number;
+  from: string;
+  to: string;
+  message?: string;
   createdAt: string;
 };
 
