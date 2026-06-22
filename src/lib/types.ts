@@ -7,6 +7,8 @@ export type Item = {
   brand?: string;
   size: string;
   color: string;
+  /** Occasions this piece suits — powers filters & collections. */
+  occasions?: string[];
   pricePerDay: number;
   retailValue?: number;
   description: string;

@@ -1,8 +1,10 @@
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
 import Petals from "@/components/Petals";
 import Reveal from "@/components/Reveal";
+import FestivalCountdown from "@/components/FestivalCountdown";
 import {
   MarigoldToran,
   Mandala,
@@ -66,6 +68,7 @@ export default async function Home() {
               {siteConfig.description}
             </p>
             <PaisleyDivider className="mx-auto mt-8 h-7 w-44 text-gold animate-fade-up" />
+            <FestivalCountdown className="mx-auto mt-5 block w-fit rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-sm text-gold animate-fade-up" />
           </section>
 
           {/* occasion ribbon */}
@@ -88,6 +91,12 @@ export default async function Home() {
 
           <ScallopValance className="h-7 w-full text-gold/80" />
           <Showcase items={items} />
+
+          <div className="mt-10 text-center">
+            <Link href="/browse" className="btn-ghost">
+              Browse all pieces →
+            </Link>
+          </div>
 
           <section id="how" className="mx-auto max-w-6xl px-5 pt-20">
             <p className="eyebrow text-center">How it works</p>

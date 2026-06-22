@@ -14,6 +14,7 @@ function blankDraft(): Item {
     brand: "",
     size: "Free size",
     color: "",
+    occasions: [],
     pricePerDay: 0,
     retailValue: undefined,
     description: "",
@@ -74,6 +75,7 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
     const draft: Item = {
       ...editing,
       details: (editing.details ?? []).map((d) => d.trim()).filter(Boolean),
+      occasions: (editing.occasions ?? []).map((o) => o.trim()).filter(Boolean),
     };
     let next: Item[];
     if (!draft.id) {
@@ -119,6 +121,7 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
       color: s.color || editing.color,
       description: s.description || editing.description,
       details: Array.isArray(s.details) ? s.details : editing.details,
+      occasions: Array.isArray(s.occasions) ? s.occasions : editing.occasions,
       accent: /^#[0-9a-fA-F]{3,8}$/.test(s.accent) ? s.accent : editing.accent,
     });
     setMsg("AI filled the details ✦ review & save");
@@ -270,6 +273,16 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
                     value={(d.details ?? []).join("\n")}
                     onChange={(e) => set({ details: e.target.value.split("\n") })}
                     placeholder={"Pure silk\nBlouse piece included\nDry clean only"}
+                  />
+                </Field>
+              </div>
+              <div className="sm:col-span-2">
+                <Field label="Occasions (one per line)">
+                  <textarea
+                    className="field min-h-[60px]"
+                    value={(d.occasions ?? []).join("\n")}
+                    onChange={(e) => set({ occasions: e.target.value.split("\n") })}
+                    placeholder={"Wedding\nReception\nFestival"}
                   />
                 </Field>
               </div>

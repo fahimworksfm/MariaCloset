@@ -19,6 +19,9 @@ function sanitize(x: Record<string, unknown>): Item | null {
     brand: x.brand ? String(x.brand) : undefined,
     size: String(x.size ?? "One size"),
     color: String(x.color ?? ""),
+    occasions: Array.isArray(x.occasions)
+      ? x.occasions.map(String).map((s) => s.trim()).filter(Boolean).slice(0, 8)
+      : [],
     pricePerDay: Math.max(0, Number(x.pricePerDay) || 0),
     retailValue:
       x.retailValue != null && x.retailValue !== ""

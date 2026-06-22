@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Petals from "@/components/Petals";
 import SpinViewerClient from "@/components/SpinViewerClient";
 import RentRequestForm from "@/components/RentRequestForm";
+import RecordView from "@/components/RecordView";
 import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
 import { getItemById } from "@/lib/store";
 import { money } from "@/data/config";
@@ -30,6 +31,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
 
   return (
     <>
+      <RecordView itemId={item.id} />
       <Petals />
       <div className="relative z-10">
         <Navbar />

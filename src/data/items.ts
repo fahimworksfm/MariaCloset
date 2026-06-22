@@ -14,6 +14,7 @@ export const items: Item[] = [
     brand: "Heritage Looms",
     size: "Free size · 5.5m + blouse piece",
     color: "Ivory & Red",
+    occasions: ["Festival", "Wedding", "Reception"],
     pricePerDay: 40,
     retailValue: 120,
     description:
@@ -30,6 +31,7 @@ export const items: Item[] = [
     brand: "Heirloom",
     size: "Free size · 5.5m + blouse piece",
     color: "Mist Grey",
+    occasions: ["Reception", "Party", "Brunch"],
     pricePerDay: 55,
     retailValue: 240,
     description:
@@ -46,6 +48,7 @@ export const items: Item[] = [
     brand: "Bishnupur Weaves",
     size: "Free size · 5.5m + blouse piece",
     color: "Deep Maroon",
+    occasions: ["Wedding", "Reception", "Gala"],
     pricePerDay: 50,
     retailValue: 200,
     description:
@@ -62,6 +65,7 @@ export const items: Item[] = [
     brand: "Rivelle",
     size: "M · with churidar & dupatta",
     color: "Peacock Teal",
+    occasions: ["Party", "Reception", "Gala"],
     pricePerDay: 35,
     retailValue: 90,
     description:
@@ -78,6 +82,7 @@ export const items: Item[] = [
     brand: "Heritage Looms",
     size: "Free size · 5.5m + blouse piece",
     color: "Marigold",
+    occasions: ["Festival", "Brunch", "Date Night"],
     pricePerDay: 22,
     retailValue: 45,
     description:
@@ -94,6 +99,7 @@ export const items: Item[] = [
     brand: "Heirloom",
     size: "One size",
     color: "Antique Gold",
+    occasions: ["Wedding", "Party", "Gala"],
     pricePerDay: 12,
     retailValue: 30,
     description:

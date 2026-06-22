@@ -15,7 +15,10 @@ export default function Navbar() {
           </span>
         </Link>
         <div className="flex items-center gap-6 text-sm font-medium text-cream/80">
-          <Link href="/#rail" className="transition hover:text-gold">
+          <Link href="/browse" className="transition hover:text-gold">
+            Browse
+          </Link>
+          <Link href="/#rail" className="hidden transition hover:text-gold sm:inline">
             The rail
           </Link>
           <Link href="/#how" className="hidden transition hover:text-gold sm:inline">
