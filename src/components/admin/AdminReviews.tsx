@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Review } from "@/lib/types";
 import AdminNav from "./AdminNav";
 
@@ -13,7 +13,15 @@ function Stars({ n }: { n: number }) {
   );
 }
 
-export default function AdminReviews({ initial }: { initial: Review[] }) {
+export default function AdminReviews({
+  initial,
+  endpoint = "/api/admin/reviews",
+  nav,
+}: {
+  initial: Review[];
+  endpoint?: string;
+  nav?: ReactNode;
+}) {
   const [reviews, setReviews] = useState(initial);
   const [msg, setMsg] = useState("");
 
@@ -24,7 +32,7 @@ export default function AdminReviews({ initial }: { initial: Review[] }) {
   }, [msg]);
 
   async function approve(id: string, approved: boolean) {
-    const r = await fetch("/api/admin/reviews", {
+    const r = await fetch(endpoint, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, approved }),
@@ -37,7 +45,7 @@ export default function AdminReviews({ initial }: { initial: Review[] }) {
 
   async function del(id: string) {
     if (!confirm("Delete this review?")) return;
-    const r = await fetch(`/api/admin/reviews?id=${id}`, { method: "DELETE" });
+    const r = await fetch(`${endpoint}?id=${id}`, { method: "DELETE" });
     if (r.ok) setReviews((prev) => prev.filter((x) => x.id !== id));
   }
 
@@ -52,7 +60,7 @@ export default function AdminReviews({ initial }: { initial: Review[] }) {
             Approve a review to show it on the piece&apos;s page. {pending} awaiting you.
           </p>
         </div>
-        <AdminNav active="reviews" />
+        {nav ?? <AdminNav active="reviews" />}
       </header>
 
       {msg && (

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Item } from "@/lib/types";
 import { money } from "@/data/config";
+import OwnerNav from "./OwnerNav";
 
 function blankDraft(): Item {
   return {
@@ -150,12 +150,6 @@ export default function OwnerDashboard({
     }
   }
 
-  async function logout() {
-    await fetch("/api/owners/logout", { method: "POST" });
-    router.push("/");
-    router.refresh();
-  }
-
   const d = editing;
   const set = (patch: Partial<Item>) => editing && setEditing({ ...editing, ...patch });
 
@@ -166,20 +160,7 @@ export default function OwnerDashboard({
           <h1 className="font-display text-4xl text-gold-shimmer">{closet}&apos;s closet</h1>
           <p className="text-sm text-cream/60">Welcome, {ownerName} — manage your pieces here.</p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/"
-            className="inline-flex items-center rounded-full border border-gold/50 bg-gold/15 px-5 py-3 text-sm font-medium uppercase tracking-wider text-gold transition hover:bg-gold/25"
-          >
-            ‹ Main site
-          </Link>
-          <Link href={`/closet/${encodeURIComponent(closet)}`} className="btn-ghost">
-            View my closet
-          </Link>
-          <button onClick={logout} className="btn-ghost">
-            Log out
-          </button>
-        </div>
+        <OwnerNav active="pieces" closet={closet} />
       </header>
 
       {msg && (

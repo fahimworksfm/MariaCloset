@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { RentRequest } from "@/lib/types";
 import { money } from "@/data/config";
 import { formatPretty } from "@/lib/dates";
@@ -14,7 +14,15 @@ const BADGE: Record<RentRequest["status"], string> = {
   declined: "bg-vermilion/20 text-vermilion",
 };
 
-export default function AdminRequests({ initial }: { initial: RentRequest[] }) {
+export default function AdminRequests({
+  initial,
+  endpoint = "/api/admin/requests",
+  nav,
+}: {
+  initial: RentRequest[];
+  endpoint?: string;
+  nav?: ReactNode;
+}) {
   const [requests, setRequests] = useState(initial);
   const [busy, setBusy] = useState("");
   const [msg, setMsg] = useState("");
@@ -40,7 +48,7 @@ export default function AdminRequests({ initial }: { initial: RentRequest[] }) {
 
   async function setStatus(id: string, status: "approved" | "declined") {
     setBusy(id);
-    const r = await fetch("/api/admin/requests", {
+    const r = await fetch(endpoint, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),
@@ -64,7 +72,7 @@ export default function AdminRequests({ initial }: { initial: RentRequest[] }) {
             Approve to confirm a rental — it auto-blocks those dates on the rail.
           </p>
         </div>
-        <AdminNav active="requests" />
+        {nav ?? <AdminNav active="requests" />}
       </header>
 
       {msg && (
