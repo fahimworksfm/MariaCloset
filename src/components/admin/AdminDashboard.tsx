@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Item } from "@/lib/types";
 import { money } from "@/data/config";
+import AdminNav from "./AdminNav";
 
 function blankDraft(): Item {
   return {
@@ -158,11 +158,6 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
     }
   }
 
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.refresh();
-  }
-
   const d = editing;
   const set = (patch: Partial<Item>) => editing && setEditing({ ...editing, ...patch });
 
@@ -175,10 +170,7 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
             Upload pieces and drag the order — top to bottom = the order on the rail &amp; stage.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Link href="/" className="btn-ghost">View site</Link>
-          <button onClick={logout} className="btn-ghost">Log out</button>
-        </div>
+        <AdminNav active="pieces" />
       </header>
 
       {msg && (

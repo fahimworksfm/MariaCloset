@@ -23,6 +23,14 @@ export type Item = {
   unavailable: DateRange[];
 };
 
+export type WaitlistEntry = {
+  id: string;
+  itemId: string;
+  itemName: string;
+  contact: string;
+  createdAt: string;
+};
+
 export type RentRequest = {
   id: string;
   itemId: string;

@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { getItemById } from "@/lib/store";
 import { saveRequest } from "@/lib/requests";
-import { inclusiveDays, parseISO, rangeOverlapsUnavailable } from "@/lib/dates";
+import { inclusiveDays, parseISO, rangeOverlapsUnavailable, formatPretty } from "@/lib/dates";
+import { sendEmail, ownerEmail } from "@/lib/email";
+import { money } from "@/data/config";
 import type { RentRequest } from "@/lib/types";
 
 export async function POST(request: Request) {
@@ -65,6 +67,21 @@ export async function POST(request: Request) {
   };
 
   const { stored } = await saveRequest(record);
+
+  const owner = ownerEmail();
+  if (owner) {
+    await sendEmail({
+      to: owner,
+      subject: `New rental request — ${record.itemName}`,
+      html: `<h2>New rental request</h2>
+        <p><b>${record.itemName}</b> — ${formatPretty(record.from)} → ${formatPretty(
+          record.to,
+        )} (${record.days} day${record.days > 1 ? "s" : ""}, ${money(record.total)})</p>
+        <p>From: ${record.renterName} (${record.contact})</p>
+        ${record.message ? `<p>Note: ${record.message}</p>` : ""}
+        <p>Review and approve it in your admin dashboard.</p>`,
+    });
+  }
 
   return NextResponse.json({
     ok: true,

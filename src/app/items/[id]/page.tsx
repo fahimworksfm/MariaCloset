@@ -7,6 +7,7 @@ import Petals from "@/components/Petals";
 import SpinViewerClient from "@/components/SpinViewerClient";
 import RentRequestForm from "@/components/RentRequestForm";
 import RecordView from "@/components/RecordView";
+import WaitlistButton from "@/components/WaitlistButton";
 import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
 import { getItemById } from "@/lib/store";
 import { money } from "@/data/config";
@@ -96,6 +97,10 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
                   ))}
                 </ul>
               )}
+
+              <div className="mt-4">
+                <WaitlistButton itemId={item.id} />
+              </div>
 
               <div className="my-7 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
