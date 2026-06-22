@@ -37,6 +37,17 @@ export type Review = {
   createdAt: string;
 };
 
+export type Owner = {
+  id: string;
+  closet: string; // display name of their closet (and the items' `closet` value)
+  name: string;
+  email: string;
+  passwordHash: string;
+  bio?: string;
+  status: "pending" | "approved" | "declined";
+  createdAt: string;
+};
+
 export type GiftCard = {
   id: string;
   code: string;

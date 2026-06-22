@@ -10,6 +10,7 @@ export default function Footer() {
           <a href="/browse" className="transition hover:text-gold">Browse</a>
           <a href="/closets" className="transition hover:text-gold">Closets</a>
           <a href="/membership" className="transition hover:text-gold">Membership &amp; gifts</a>
+          <a href="/join" className="transition hover:text-gold">Open a closet</a>
         </div>
         <div className="flex flex-col items-center justify-between gap-3 text-sm text-cream/70 sm:flex-row">
           <p className="font-display text-lg text-gold">{siteConfig.name}</p>

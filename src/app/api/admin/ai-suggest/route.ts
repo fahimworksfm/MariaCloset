@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
-import { isAdmin } from "@/lib/auth";
+import { isOwnerOrAdmin } from "@/lib/ownerAuth";
 
 const MIME: Record<string, string> = {
   png: "image/png",
@@ -26,7 +26,7 @@ Respond ONLY in English with a JSON object of this exact shape:
 If unsure about anything, make a sensible, confident guess.`;
 
 export async function POST(req: Request) {
-  if (!isAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isOwnerOrAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const key = process.env.GROQ_API_KEY;
   if (!key) {

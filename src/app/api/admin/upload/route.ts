@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
-import { isAdmin } from "@/lib/auth";
+import { isOwnerOrAdmin } from "@/lib/ownerAuth";
 import { blobEnabled, putImage } from "@/lib/blob";
 
 const ALLOWED: Record<string, string> = {
@@ -14,7 +14,7 @@ const ALLOWED: Record<string, string> = {
 };
 
 export async function POST(req: Request) {
-  if (!isAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isOwnerOrAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const form = await req.formData().catch(() => null);
   const file = form?.get("file");
