@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function AdminNav({ active }: { active: "pieces" | "requests" | "waitlist" }) {
+export default function AdminNav({
+  active,
+}: {
+  active: "pieces" | "requests" | "waitlist" | "reviews";
+}) {
   const router = useRouter();
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -22,6 +26,7 @@ export default function AdminNav({ active }: { active: "pieces" | "requests" | "
       {tab("/admin", "Pieces", "pieces")}
       {tab("/admin/requests", "Requests", "requests")}
       {tab("/admin/waitlist", "Waitlist", "waitlist")}
+      {tab("/admin/reviews", "Reviews", "reviews")}
       <Link href="/" className="btn-ghost">
         View site
       </Link>

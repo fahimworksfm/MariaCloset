@@ -8,8 +8,12 @@ import SpinViewerClient from "@/components/SpinViewerClient";
 import RentRequestForm from "@/components/RentRequestForm";
 import RecordView from "@/components/RecordView";
 import WaitlistButton from "@/components/WaitlistButton";
+import ShareButton from "@/components/ShareButton";
+import CompleteTheLook from "@/components/CompleteTheLook";
+import ReviewsSection from "@/components/ReviewsSection";
 import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
-import { getItemById } from "@/lib/store";
+import { getItemById, getItems } from "@/lib/store";
+import { approvedForItem } from "@/lib/reviews";
 import { money } from "@/data/config";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +33,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
   if (!item) notFound();
 
   const images = item.frames?.length ? item.frames : [item.image];
+  const [allItems, reviews] = await Promise.all([getItems(), approvedForItem(item.id)]);
 
   return (
     <>
@@ -37,12 +42,15 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
       <div className="relative z-10">
         <Navbar />
         <main className="mx-auto max-w-6xl px-5 py-8">
-          <Link
-            href="/"
-            className="text-sm font-medium text-gold/80 transition hover:text-marigold"
-          >
-            ‹ Back to the closet
-          </Link>
+          <div className="flex items-center justify-between gap-3">
+            <Link
+              href="/"
+              className="text-sm font-medium text-gold/80 transition hover:text-marigold"
+            >
+              ‹ Back to the closet
+            </Link>
+            <ShareButton title={item.name} />
+          </div>
 
           <div className="mt-6 grid gap-10 lg:grid-cols-2">
             {/* 3D inspect viewer */}
@@ -107,6 +115,9 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
               <RentRequestForm item={item} />
             </div>
           </div>
+
+          <CompleteTheLook item={item} all={allItems} />
+          <ReviewsSection itemId={item.id} reviews={reviews} />
         </main>
         <Footer />
       </div>

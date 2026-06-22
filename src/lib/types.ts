@@ -23,6 +23,16 @@ export type Item = {
   unavailable: DateRange[];
 };
 
+export type Review = {
+  id: string;
+  itemId: string;
+  name: string;
+  rating: number; // 1–5
+  text: string;
+  approved: boolean;
+  createdAt: string;
+};
+
 export type WaitlistEntry = {
   id: string;
   itemId: string;
