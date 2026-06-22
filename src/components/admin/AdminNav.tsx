@@ -22,14 +22,18 @@ export default function AdminNav({
     </Link>
   );
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap items-center gap-2">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-1.5 rounded-full border border-gold/50 bg-gold/15 px-5 py-3 text-sm font-medium uppercase tracking-wider text-gold transition hover:-translate-y-0.5 hover:bg-gold/25"
+      >
+        ‹ Main site
+      </Link>
+      <span className="mx-1 hidden h-5 w-px bg-gold/20 sm:block" />
       {tab("/admin", "Pieces", "pieces")}
       {tab("/admin/requests", "Requests", "requests")}
       {tab("/admin/waitlist", "Waitlist", "waitlist")}
       {tab("/admin/reviews", "Reviews", "reviews")}
-      <Link href="/" className="btn-ghost">
-        View site
-      </Link>
       <button onClick={logout} className="btn-ghost">
         Log out
       </button>

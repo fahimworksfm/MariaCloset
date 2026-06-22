@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LotusMark } from "@/components/Ornament";
 
@@ -49,6 +50,9 @@ export default function AdminLogin() {
           {loading ? "Checking…" : "Enter"}
         </button>
       </form>
+      <Link href="/" className="mt-5 text-sm text-gold/70 transition hover:text-gold">
+        ‹ Back to Maria&apos;s Closet
+      </Link>
     </main>
   );
 }
