@@ -12,9 +12,11 @@ import {
 } from "@react-three/drei";
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
+import { coverFit } from "@/lib/textureFit";
 
 const CARD_W = 2.4;
 const CARD_H = 3.3;
+const PHOTO_ASPECT = (CARD_W - 0.2) / (CARD_H - 0.2);
 
 let _glow: THREE.CanvasTexture | null = null;
 function glowTexture(): THREE.CanvasTexture {
@@ -54,10 +56,8 @@ function Card({
   hasFrames: boolean;
 }) {
   const textures = useTexture(images) as THREE.Texture[];
-  for (const t of textures) {
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 8;
-  }
+  // Cover-fit so real photos (and frame sequences) fill the card undistorted.
+  for (const t of textures) coverFit(t, PHOTO_ASPECT);
   const group = useRef<THREE.Group>(null);
   const photo = useRef<THREE.MeshBasicMaterial>(null);
   const glowMat = useRef<THREE.MeshBasicMaterial>(null);

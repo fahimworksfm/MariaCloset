@@ -13,6 +13,7 @@ import {
 import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import type { Item } from "@/lib/types";
+import { coverFit } from "@/lib/textureFit";
 
 const CARD_W = 2.0;
 const CARD_H = 2.7;
@@ -21,6 +22,7 @@ const CAM_Z = 8.2;
 const ROT_SPEED = 0.009;
 const PHOTO_W = CARD_W - 0.18;
 const PHOTO_H = CARD_H - 0.18;
+const PHOTO_ASPECT = PHOTO_W / PHOTO_H;
 
 let _glow: THREE.CanvasTexture | null = null;
 function glowTexture(): THREE.CanvasTexture {
@@ -101,10 +103,9 @@ function Ring({
   const glowRefs = useRef<(THREE.MeshBasicMaterial | null)[]>([]);
   const glow = glowTexture();
 
-  for (const t of textures) {
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 8;
-  }
+  // Cover-fit each texture to the card face so real photos of any shape fill
+  // the frame without distortion (seed SVGs are already ~this ratio).
+  for (const t of textures) coverFit(t, PHOTO_ASPECT);
 
   useFrame((state) => {
     const base = groupRef.current?.rotation.y ?? 0;
