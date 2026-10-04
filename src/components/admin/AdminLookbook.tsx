@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { LookEntry } from "@/data/lookbook";
 import AdminNav from "./AdminNav";
@@ -17,9 +17,13 @@ const slugify = (s: string) =>
 export default function AdminLookbook({
   initial,
   pieces,
+  endpoint = "/api/admin/lookbook",
+  nav,
 }: {
   initial: LookEntry[];
   pieces: PieceRef[];
+  endpoint?: string;
+  nav?: ReactNode;
 }) {
   const router = useRouter();
   const [entries, setEntries] = useState<LookEntry[]>(initial);
@@ -37,7 +41,7 @@ export default function AdminLookbook({
 
   async function persist(next: LookEntry[]) {
     setEntries(next);
-    const r = await fetch("/api/admin/lookbook", {
+    const r = await fetch(endpoint, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ entries: next }),
@@ -101,7 +105,7 @@ export default function AdminLookbook({
             order with ↑ ↓. Five tiles read best.
           </p>
         </div>
-        <AdminNav active="lookbook" />
+        {nav ?? <AdminNav active="lookbook" />}
       </header>
 
       {msg && (

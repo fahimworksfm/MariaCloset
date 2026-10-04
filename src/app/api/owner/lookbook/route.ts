@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/auth";
+import { getCurrentOwner } from "@/lib/ownerAuth";
 import { getLookbookFor, saveLookbookFor } from "@/lib/lookbookStore";
 import { sanitizeLook } from "@/lib/sanitizeLook";
-import { siteConfig } from "@/data/config";
 import type { LookEntry } from "@/data/lookbook";
 
-// The admin manages Maria's own lookbook (the homepage "The Edit"); owner tiles
-// are preserved untouched by the scoped save.
 export async function GET() {
-  if (!isAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  return NextResponse.json({ entries: await getLookbookFor(siteConfig.ownerName) });
+  const owner = await getCurrentOwner();
+  if (!owner) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  return NextResponse.json({ entries: await getLookbookFor(owner.closet), closet: owner.closet });
 }
 
 export async function PUT(req: Request) {
-  if (!isAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const owner = await getCurrentOwner();
+  if (!owner) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const body = await req.json().catch(() => null);
   if (!body || !Array.isArray(body.entries)) {
     return NextResponse.json({ error: "Expected { entries: [...] }" }, { status: 400 });
   }
+  // The owner can only touch their own closet — saveLookbookFor forces it.
   const entries = body.entries.map(sanitizeLook).filter(Boolean) as LookEntry[];
-  const { stored } = await saveLookbookFor(siteConfig.ownerName, entries);
+  const { stored } = await saveLookbookFor(owner.closet, entries);
   return NextResponse.json({ ok: true, stored, count: entries.length });
 }

@@ -19,6 +19,8 @@ export type LookEntry = {
   video?: string;
   /** Optional piece this look links to. */
   itemId?: string;
+  /** Whose lookbook this tile belongs to; empty = Maria's (the homepage edit). */
+  closet?: string;
 };
 
 export const lookbook: LookEntry[] = [

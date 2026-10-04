@@ -5,8 +5,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Petals from "@/components/Petals";
 import ItemCard from "@/components/ItemCard";
+import Lookbook from "@/components/Lookbook";
 import { PaisleyDivider } from "@/components/Ornament";
 import { getItems } from "@/lib/store";
+import { getLookbookFor } from "@/lib/lookbookStore";
 import { siteConfig } from "@/data/config";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +19,8 @@ export function generateMetadata({ params }: { params: { name: string } }): Meta
 
 export default async function ClosetPage({ params }: { params: { name: string } }) {
   const name = decodeURIComponent(params.name);
-  const items = (await getItems()).filter((i) => (i.closet || siteConfig.ownerName) === name);
+  const [allItems, looks] = await Promise.all([getItems(), getLookbookFor(name)]);
+  const items = allItems.filter((i) => (i.closet || siteConfig.ownerName) === name);
   if (items.length === 0) notFound();
 
   return (
@@ -38,6 +41,8 @@ export default async function ClosetPage({ params }: { params: { name: string } 
               <ItemCard key={item.id} item={item} />
             ))}
           </div>
+
+          {looks.length > 0 && <Lookbook entries={looks} />}
         </main>
         <Footer />
       </div>

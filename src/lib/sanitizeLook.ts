@@ -19,5 +19,6 @@ export function sanitizeLook(x: Record<string, unknown>): LookEntry | null {
     image: x.image ? String(x.image).trim() : undefined,
     video: x.video ? String(x.video).trim() : undefined,
     itemId: x.itemId ? String(x.itemId).trim() : undefined,
+    closet: x.closet ? String(x.closet).slice(0, 60) : undefined,
   };
 }

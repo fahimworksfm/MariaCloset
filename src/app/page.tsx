@@ -10,7 +10,7 @@ import FestivalCountdown from "@/components/FestivalCountdown";
 import { Mandala, ScallopValance, PaisleyDivider, AlpanaCorner } from "@/components/Ornament";
 import { siteConfig } from "@/data/config";
 import { getItems } from "@/lib/store";
-import { getLookbook } from "@/lib/lookbookStore";
+import { getLookbookFor } from "@/lib/lookbookStore";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,10 @@ const occasions = [
 ];
 
 export default async function Home() {
-  const [items, looks] = await Promise.all([getItems(), getLookbook()]);
+  const [items, looks] = await Promise.all([
+    getItems(),
+    getLookbookFor(siteConfig.ownerName),
+  ]);
   return (
     <>
       <Petals />

@@ -3,6 +3,10 @@ import { promises as fs } from "fs";
 import path from "path";
 import { lookbook as seedLookbook, type LookEntry } from "@/data/lookbook";
 import { blobEnabled, getJson, putJson } from "@/lib/blob";
+import { siteConfig } from "@/data/config";
+
+/** A tile's effective owner — empty closet means Maria's (the homepage edit). */
+export const closetOf = (e: LookEntry) => e.closet || siteConfig.ownerName;
 
 const FILE = path.join(process.cwd(), "data", "lookbook.json");
 const BLOB_KEY = "data/lookbook.json";
@@ -24,6 +28,28 @@ export async function getLookbook(): Promise<LookEntry[]> {
     /* not persisted yet */
   }
   return seedLookbook;
+}
+
+/** Tiles belonging to one closet (Maria's name for the homepage edit). */
+export async function getLookbookFor(closet: string): Promise<LookEntry[]> {
+  return (await getLookbook()).filter((e) => closetOf(e) === closet);
+}
+
+/**
+ * Replace one closet's tiles while preserving everyone else's. Maria's tiles
+ * are stored with no `closet` (the canonical homepage edit); owners' tiles
+ * carry their closet name.
+ */
+export async function saveLookbookFor(
+  closet: string,
+  mine: LookEntry[],
+): Promise<{ stored: boolean }> {
+  const others = (await getLookbook()).filter((e) => closetOf(e) !== closet);
+  const scoped = mine.map((e) => ({
+    ...e,
+    closet: closet === siteConfig.ownerName ? undefined : closet,
+  }));
+  return saveLookbook([...others, ...scoped]);
 }
 
 export async function saveLookbook(entries: LookEntry[]): Promise<{ stored: boolean }> {

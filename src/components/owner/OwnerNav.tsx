@@ -7,7 +7,7 @@ export default function OwnerNav({
   active,
   closet,
 }: {
-  active: "pieces" | "requests" | "reviews";
+  active: "pieces" | "lookbook" | "requests" | "reviews";
   closet: string;
 }) {
   const router = useRouter();
@@ -34,6 +34,7 @@ export default function OwnerNav({
       </Link>
       <span className="mx-1 hidden h-5 w-px bg-gold/20 sm:block" />
       {tab("/owner", "Pieces", "pieces")}
+      {tab("/owner/lookbook", "Lookbook", "lookbook")}
       {tab("/owner/requests", "Requests", "requests")}
       {tab("/owner/reviews", "Reviews", "reviews")}
       <Link href={`/closet/${encodeURIComponent(closet)}`} className="btn-ghost">
