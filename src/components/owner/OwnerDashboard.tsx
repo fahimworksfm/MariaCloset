@@ -40,6 +40,7 @@ export default function OwnerDashboard({
   const [busy, setBusy] = useState("");
   const [msg, setMsg] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!msg) return;
@@ -94,6 +95,17 @@ export default function OwnerDashboard({
     const d = await r.json().catch(() => ({}));
     setBusy("");
     if (r.ok) setEditing((c) => (c ? { ...c, image: d.url } : c));
+    else setMsg(d.error || "Upload failed");
+  }
+
+  async function onUploadVideo(file: File) {
+    setBusy("video");
+    const form = new FormData();
+    form.append("file", file);
+    const r = await fetch("/api/admin/upload", { method: "POST", body: form });
+    const d = await r.json().catch(() => ({}));
+    setBusy("");
+    if (r.ok) setEditing((c) => (c ? { ...c, video: d.url } : c));
     else setMsg(d.error || "Upload failed");
   }
 
@@ -209,6 +221,35 @@ export default function OwnerDashboard({
               <button onClick={removeBg} className="btn-ghost mt-2 w-full" disabled={busy === "bg"}>
                 {busy === "bg" ? "Removing…" : "Remove background (free)"}
               </button>
+
+              <input
+                ref={videoRef}
+                type="file"
+                accept="video/mp4,video/webm"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) onUploadVideo(file);
+                }}
+              />
+              <button
+                onClick={() => videoRef.current?.click()}
+                className="btn-ghost mt-2 w-full"
+                disabled={busy === "video"}
+              >
+                {busy === "video" ? "Uploading…" : d.video ? "Replace hover video" : "＋ Hover video (optional)"}
+              </button>
+              {d.video && (
+                <button
+                  onClick={() => set({ video: undefined })}
+                  className="mt-1 w-full rounded-full px-3 py-2 text-xs text-rani hover:bg-rani/10"
+                >
+                  Remove clip
+                </button>
+              )}
+              <p className="mt-1 text-[11px] leading-snug text-cream/40">
+                Plays when someone hovers this piece&apos;s card. MP4/WebM, up to 4.5MB.
+              </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Name">

@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
 import Lookbook from "@/components/Lookbook";
+import HeroVideo from "@/components/HeroVideo";
 import Petals from "@/components/Petals";
 import Reveal from "@/components/Reveal";
 import FestivalCountdown from "@/components/FestivalCountdown";
@@ -53,6 +54,7 @@ export default async function Home() {
         <Navbar />
         <main>
           <section className="relative mx-auto max-w-6xl overflow-hidden px-5 pb-4 pt-12 text-center sm:pt-16">
+            {siteConfig.heroVideo && <HeroVideo src={siteConfig.heroVideo} />}
             <Mandala className="pointer-events-none absolute left-1/2 top-[-120px] -z-10 h-[560px] w-[560px] -translate-x-1/2 animate-spin-slow text-gold/[0.08]" />
             <p className="eyebrow animate-fade-up">A rentable closet</p>
             <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-gold-shimmer animate-fade-up sm:text-7xl">

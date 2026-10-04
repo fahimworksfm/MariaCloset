@@ -37,6 +37,7 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
   const [busy, setBusy] = useState<string>("");
   const [msg, setMsg] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!msg) return;
@@ -100,6 +101,17 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
     const d = await r.json().catch(() => ({}));
     setBusy("");
     if (r.ok) setEditing({ ...editing, image: d.url });
+    else setMsg(d.error || "Upload failed");
+  }
+
+  async function onUploadVideo(file: File) {
+    setBusy("video");
+    const form = new FormData();
+    form.append("file", file);
+    const r = await fetch("/api/admin/upload", { method: "POST", body: form });
+    const d = await r.json().catch(() => ({}));
+    setBusy("");
+    if (r.ok) setEditing((cur) => (cur ? { ...cur, video: d.url } : cur));
     else setMsg(d.error || "Upload failed");
   }
 
@@ -229,6 +241,38 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
                   {busy === "background" ? "Removing…" : "Remove background (free)"}
                 </button>
               </div>
+
+              {/* Optional hover clip */}
+              <input
+                ref={videoRef}
+                type="file"
+                accept="video/mp4,video/webm"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) onUploadVideo(f);
+                }}
+              />
+              <div className="mt-3 grid grid-cols-1 gap-2">
+                <button
+                  onClick={() => videoRef.current?.click()}
+                  className="btn-ghost"
+                  disabled={busy === "video"}
+                >
+                  {busy === "video" ? "Uploading…" : d.video ? "Replace hover video" : "＋ Hover video (optional)"}
+                </button>
+                {d.video && (
+                  <button
+                    onClick={() => set({ video: undefined })}
+                    className="rounded-full px-3 py-2 text-xs text-rani hover:bg-rani/10"
+                  >
+                    Remove clip
+                  </button>
+                )}
+              </div>
+              <p className="mt-1 text-[11px] leading-snug text-cream/40">
+                A short muted clip that plays when someone hovers this piece&apos;s card. MP4/WebM, up to 4.5MB.
+              </p>
             </div>
 
             {/* fields side */}

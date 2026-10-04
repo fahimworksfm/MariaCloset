@@ -11,7 +11,13 @@ const ALLOWED: Record<string, string> = {
   "image/webp": "webp",
   "image/svg+xml": "svg",
   "image/gif": "gif",
+  "video/mp4": "mp4",
+  "video/webm": "webm",
 };
+
+// Vercel serverless request bodies are capped at 4.5MB, so videos must stay
+// under that to upload through this route; images get a more generous limit.
+const MAX_BYTES = { image: 8 * 1024 * 1024, video: 4.5 * 1024 * 1024 };
 
 export async function POST(req: Request) {
   if (!isOwnerOrAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -23,10 +29,15 @@ export async function POST(req: Request) {
   }
   const ext = ALLOWED[file.type];
   if (!ext) {
-    return NextResponse.json({ error: "Unsupported image type." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Unsupported file type (images, or MP4/WebM video)." },
+      { status: 400 },
+    );
   }
-  if (file.size > 8 * 1024 * 1024) {
-    return NextResponse.json({ error: "Image too large (max 8MB)." }, { status: 400 });
+  const kind = file.type.startsWith("video/") ? "video" : "image";
+  if (file.size > MAX_BYTES[kind]) {
+    const mb = kind === "video" ? "4.5MB" : "8MB";
+    return NextResponse.json({ error: `${kind === "video" ? "Video" : "Image"} too large (max ${mb}).` }, { status: 400 });
   }
 
   const buf = Buffer.from(await file.arrayBuffer());
@@ -48,7 +59,7 @@ export async function POST(req: Request) {
       ? "blob"
       : "no Blob token at runtime — redeploy after adding BLOB_READ_WRITE_TOKEN";
     return NextResponse.json(
-      { error: `Couldn't save the image (${where}): ${detail}` },
+      { error: `Couldn't save the file (${where}): ${detail}` },
       { status: 500 },
     );
   }

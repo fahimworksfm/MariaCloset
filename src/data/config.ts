@@ -11,6 +11,8 @@ export const siteConfig = {
    */
   ownerEmail: "",
   currencySymbol: "$",
+  /** Optional muted looping clip shown behind the homepage headline. "" hides it. */
+  heroVideo: "/videos/saree-drift.mp4",
 };
 
 export function money(amount: number): string {
