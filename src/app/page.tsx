@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
+import Lookbook from "@/components/Lookbook";
 import Petals from "@/components/Petals";
 import Reveal from "@/components/Reveal";
 import FestivalCountdown from "@/components/FestivalCountdown";
@@ -93,6 +94,8 @@ export default async function Home() {
               Browse all pieces →
             </Link>
           </div>
+
+          <Lookbook />
 
           <section id="how" className="mx-auto max-w-6xl px-5 pt-20">
             <p className="eyebrow text-center">How it works</p>
