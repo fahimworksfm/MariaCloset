@@ -31,16 +31,16 @@ export default async function Home() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-10 pt-24 text-center sm:pt-32">
+        <section className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-16 pt-28 text-center sm:pt-40">
           {siteConfig.heroVideo && <HeroVideo src={siteConfig.heroVideo} />}
           <p className="eyebrow animate-fade-up">A rentable closet</p>
-          <h1 className="mx-auto mt-6 max-w-3xl font-display text-5xl font-light leading-[1.04] tracking-tight text-zari animate-fade-up sm:text-7xl">
+          <h1 className="mx-auto mt-7 max-w-3xl font-display text-6xl font-light leading-[1.02] tracking-tight text-zari animate-fade-up sm:text-7xl lg:text-[5.75rem]">
             {siteConfig.tagline}
           </h1>
-          <p className="mx-auto mt-6 max-w-lg text-cream/60 animate-fade-up">
+          <p className="mx-auto mt-7 max-w-md text-[15px] leading-relaxed text-cream/55 animate-fade-up">
             {siteConfig.description}
           </p>
-          <div className="mt-9 flex items-center justify-center gap-3 animate-fade-up">
+          <div className="mt-11 flex items-center justify-center gap-3 animate-fade-up">
             <Link href="/browse" className="btn-primary">
               Browse the closet
             </Link>
@@ -51,7 +51,7 @@ export default async function Home() {
         </section>
 
         {/* The rail */}
-        <section className="pt-14">
+        <section className="pt-20">
           <p className="eyebrow text-center">Newest additions</p>
           <Showcase items={items} />
           <div className="mt-10 text-center">
@@ -64,7 +64,7 @@ export default async function Home() {
         <Lookbook entries={looks} />
 
         {/* How it works */}
-        <section id="how" className="mx-auto max-w-5xl px-5 pt-28">
+        <section id="how" className="mx-auto max-w-5xl px-5 pt-32">
           <p className="eyebrow text-center">How it works</p>
           <h2 className="mt-3 text-center font-display text-4xl font-light text-cream sm:text-5xl">
             Three easy steps

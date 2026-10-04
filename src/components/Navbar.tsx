@@ -19,17 +19,17 @@ export default function Navbar() {
           <span className="hidden h-5 w-px bg-gold/20 sm:block" />
           <CategoryMenu />
         </div>
-        <div className="flex items-center gap-5 text-sm font-medium text-cream/80 sm:gap-6">
-          <Link href="/browse" className="transition hover:text-gold">
+        <div className="flex items-center gap-6 text-[11px] font-medium uppercase tracking-[0.18em] text-cream/55 sm:gap-8">
+          <Link href="/browse" className="transition hover:text-cream">
             Browse
           </Link>
-          <Link href="/closets" className="hidden transition hover:text-gold sm:inline">
+          <Link href="/closets" className="hidden transition hover:text-cream sm:inline">
             Closets
           </Link>
-          <Link href="/#rail" className="hidden transition hover:text-gold sm:inline">
+          <Link href="/#rail" className="hidden transition hover:text-cream sm:inline">
             The rail
           </Link>
-          <Link href="/#how" className="hidden transition hover:text-gold sm:inline">
+          <Link href="/#how" className="hidden transition hover:text-cream sm:inline">
             How it works
           </Link>
         </div>

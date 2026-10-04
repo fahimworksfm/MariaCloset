@@ -53,7 +53,7 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
       </button>
 
       <div
-        className="relative grid w-full place-items-center overflow-hidden rounded-lg border border-cream/10 bg-white/[0.02]"
+        className="relative grid w-full place-items-center overflow-hidden bg-white/[0.02]"
         style={{ aspectRatio: compact ? "1 / 1" : "4 / 5" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -86,15 +86,15 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
         )}
       </div>
 
-      <div className="pt-3">
+      <div className="pt-4">
         <p className="eyebrow truncate">
           {item.category}
           {item.brand ? ` · ${item.brand}` : ""}
         </p>
-        <h3 className="mt-1.5 truncate font-display text-xl font-medium leading-tight text-cream">
-          {item.name}
-        </h3>
-        <p className="mt-1 text-sm text-cream/55">{money(item.pricePerDay)} / day</p>
+        <h3 className="mt-2 truncate font-display text-lg leading-tight text-cream">{item.name}</h3>
+        <p className="mt-1.5 text-[13px] tracking-wide text-cream/50">
+          {money(item.pricePerDay)} <span className="text-cream/30">/ day</span>
+        </p>
       </div>
     </Link>
   );
