@@ -15,6 +15,8 @@ export type Item = {
   details?: string[];
   /** Main image (used in the carousel and as the inspect-view front). */
   image: string;
+  /** Optional short looping clip — plays on hover over the piece's card. */
+  video?: string;
   /** Optional 360° frame sequence — if present, the inspect view becomes drag-to-spin. */
   frames?: string[];
   /** Measurements (inches) + a fit note — powers the size & fit quiz. */

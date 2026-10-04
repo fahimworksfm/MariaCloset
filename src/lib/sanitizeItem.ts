@@ -29,6 +29,7 @@ export function sanitizeItem(x: Record<string, unknown>): Item | null {
       ? x.details.map(String).filter(Boolean).slice(0, 8)
       : undefined,
     image,
+    video: x.video ? String(x.video).trim() : undefined,
     frames: Array.isArray(x.frames) ? x.frames.map(String).filter(Boolean) : undefined,
     fit: sanitizeFit(x.fit),
     accent,

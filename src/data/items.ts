@@ -20,7 +20,8 @@ export const items: Item[] = [
     description:
       "A festival classic — pure ivory silk with a deep red border and fine gold threadwork. Made for the grandest celebrations.",
     details: ["Pure silk", "Red & gold border", "Blouse piece included", "Dry clean only"],
-    image: "/items/garad-silk-saree.svg",
+    image: "/items/garad-silk-saree.jpg",
+    video: "/videos/saree-drift.mp4",
     accent: "#B11C2A",
     unavailable: [{ from: "2026-09-26", to: "2026-10-02" }],
   },
@@ -37,7 +38,7 @@ export const items: Item[] = [
     description:
       "Handwoven jamdani in misty grey, scattered with delicate woven motifs floating in fine muslin. A heirloom-grade weave that feels like air.",
     details: ["Handloom muslin", "Woven floral motifs", "Featherlight drape", "Gentle dry clean"],
-    image: "/items/dhakai-jamdani-saree.svg",
+    image: "/items/dhakai-jamdani-saree.jpg",
     accent: "#8C7A4B",
     unavailable: [],
   },
@@ -54,7 +55,7 @@ export const items: Item[] = [
     description:
       "Rich maroon Baluchari silk with a pallu woven in golden narrative motifs. Regal enough for a wedding or reception.",
     details: ["Mulberry silk", "Woven motif pallu", "Gold threadwork", "Dry clean only"],
-    image: "/items/baluchari-saree.svg",
+    image: "/items/baluchari-saree.jpg",
     accent: "#7A1F2B",
     unavailable: [{ from: "2026-07-04", to: "2026-07-08" }],
   },
@@ -72,7 +73,8 @@ export const items: Item[] = [
     description:
       "A floor-sweeping peacock-teal Anarkali with gold detailing, paired with churidar and a sheer dupatta. Twirl-ready for celebration nights.",
     details: ["Georgette flare", "Gold-trim yoke", "Churidar + dupatta", "Spot clean"],
-    image: "/items/royal-anarkali-suit.svg",
+    image: "/items/royal-anarkali-suit.jpg",
+    video: "/videos/lehenga-turn.mp4",
     accent: "#13706A",
     unavailable: [],
   },
@@ -89,7 +91,7 @@ export const items: Item[] = [
     description:
       "A breezy marigold cotton with a contrasting red border — light, crisp and perfect for a daytime gathering or festival.",
     details: ["Handloom cotton", "Contrast red border", "Everyday-light", "Machine wash gentle"],
-    image: "/items/marigold-tant-saree.svg",
+    image: "/items/marigold-tant-saree.jpg",
     accent: "#E2952E",
     unavailable: [{ from: "2026-06-22", to: "2026-06-24" }],
   },
@@ -106,7 +108,7 @@ export const items: Item[] = [
     description:
       "A hand-embroidered drawstring potli in antique gold with a beaded tassel — the finishing touch that ties a festive look together.",
     details: ["Gold embroidery", "Beaded tassel", "Drawstring cord", "Spot clean"],
-    image: "/items/gold-potli-bag.svg",
+    image: "/items/gold-potli-bag.jpg",
     accent: "#BF953F",
     unavailable: [],
   },
