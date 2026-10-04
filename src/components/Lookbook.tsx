@@ -32,6 +32,7 @@ function Tile({
   priority?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const reduce = useReducedMotion();
   const [broken, setBroken] = useState(false);
 
@@ -41,9 +42,27 @@ function Tile({
 
   const showImg = Boolean(entry.image) && !broken;
 
+  function playHover() {
+    const v = videoRef.current;
+    if (!v || reduce) return;
+    v.play().catch(() => {});
+  }
+  function stopHover() {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    try {
+      v.currentTime = 0;
+    } catch {
+      /* ignore */
+    }
+  }
+
   return (
     <motion.div
       ref={ref}
+      onMouseEnter={playHover}
+      onMouseLeave={stopHover}
       initial={{ opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-70px" }}
@@ -63,6 +82,25 @@ function Tile({
         </motion.div>
       ) : (
         <Plate entry={entry} />
+      )}
+
+      {entry.video && (
+        <>
+          <video
+            ref={videoRef}
+            src={entry.video}
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-hidden
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          />
+          {/* subtle "has motion" cue, fades once the clip plays */}
+          <span className="pointer-events-none absolute right-3 top-3 z-10 grid h-7 w-7 place-items-center rounded-full border border-gold/30 bg-night/50 text-[9px] text-gold/90 backdrop-blur transition-opacity duration-300 group-hover:opacity-0">
+            ▶
+          </span>
+        </>
       )}
 
       {/* scrim for caption legibility */}

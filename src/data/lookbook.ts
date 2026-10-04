@@ -15,6 +15,8 @@ export type LookEntry = {
   accent: string;
   /** Path under /public (e.g. "/lookbook/wedding.jpg") or a full Blob URL. */
   image?: string;
+  /** Optional short muted clip that plays on hover over this tile. */
+  video?: string;
   /** Optional piece this look links to. */
   itemId?: string;
 };
@@ -27,6 +29,7 @@ export const lookbook: LookEntry[] = [
     caption: "Heirloom silks and hand-worked zari for the day everyone remembers.",
     accent: "#A8536B",
     image: "/lookbook/wedding-feature.jpg",
+    video: "/videos/lehenga-turn.mp4",
     itemId: "garad-silk-saree",
   },
   {
@@ -36,6 +39,7 @@ export const lookbook: LookEntry[] = [
     caption: "Deep jewel tones that catch the light.",
     accent: "#5A4A86",
     image: "/lookbook/reception.jpg",
+    video: "/videos/saree-drift.mp4",
     itemId: "royal-anarkali-suit",
   },
   {
