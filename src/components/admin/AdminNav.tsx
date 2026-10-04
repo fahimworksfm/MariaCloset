@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export default function AdminNav({
   active,
 }: {
-  active: "pieces" | "requests" | "waitlist" | "reviews" | "owners";
+  active: "pieces" | "lookbook" | "requests" | "waitlist" | "reviews" | "owners";
 }) {
   const router = useRouter();
   async function logout() {
@@ -31,6 +31,7 @@ export default function AdminNav({
       </Link>
       <span className="mx-1 hidden h-5 w-px bg-gold/20 sm:block" />
       {tab("/admin", "Pieces", "pieces")}
+      {tab("/admin/lookbook", "Lookbook", "lookbook")}
       {tab("/admin/requests", "Requests", "requests")}
       {tab("/admin/waitlist", "Waitlist", "waitlist")}
       {tab("/admin/reviews", "Reviews", "reviews")}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { lookbook, type LookEntry } from "@/data/lookbook";
+import { type LookEntry } from "@/data/lookbook";
 
 /** Elegant fallback shown until a real photo exists for this entry. */
 function Plate({ entry }: { entry: LookEntry }) {
@@ -123,10 +123,11 @@ function Tile({
   );
 }
 
-/** Editorial "The Edit" lookbook — magazine-spread layout with scroll reveals. */
-export default function Lookbook() {
-  const e = lookbook;
-  if (e.length < 5) return null; // the composition below expects five entries
+/** Editorial "The Edit" lookbook — magazine-spread layout with scroll reveals.
+ *  The first tile is the large feature; the rest flow beside and below it, so
+ *  any number of tiles (managed in the admin Lookbook editor) composes cleanly. */
+export default function Lookbook({ entries }: { entries: LookEntry[] }) {
+  if (!entries || entries.length === 0) return null;
 
   return (
     <section id="lookbook" className="mx-auto max-w-6xl px-5 pt-24">
@@ -141,19 +142,16 @@ export default function Lookbook() {
         <div className="mx-auto mt-6 h-px w-24 bg-gold/40" />
       </div>
 
-      {/* Row 1 — tall feature beside two stacked looks */}
-      <div className="mt-10 grid gap-4 md:h-[34rem] md:grid-cols-5">
-        <Tile entry={e[0]} aspect="aspect-[4/5]" className="md:col-span-3" priority />
-        <div className="grid gap-4 md:col-span-2 md:h-full md:grid-rows-2">
-          <Tile entry={e[1]} aspect="aspect-[16/10]" />
-          <Tile entry={e[2]} aspect="aspect-[16/10]" />
-        </div>
-      </div>
-
-      {/* Row 2 — wide panorama beside a portrait */}
-      <div className="mt-4 grid gap-4 md:h-[22rem] md:grid-cols-3">
-        <Tile entry={e[3]} aspect="aspect-[16/10]" className="md:col-span-2" />
-        <Tile entry={e[4]} aspect="aspect-[4/5]" className="md:col-span-1" />
+      <div className="mt-10 grid gap-4 md:auto-rows-[15rem] md:grid-cols-4">
+        {entries.map((entry, i) => (
+          <Tile
+            key={entry.id}
+            entry={entry}
+            priority={i === 0}
+            aspect={i === 0 ? "aspect-[4/5]" : "aspect-[16/10]"}
+            className={i === 0 ? "md:col-span-2 md:row-span-2" : "md:col-span-2"}
+          />
+        ))}
       </div>
     </section>
   );

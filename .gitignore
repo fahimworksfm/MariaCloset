@@ -27,9 +27,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# runtime data saved locally by the app / admin
-/data/requests.json
-/data/items.json
+# runtime data saved locally by the app / admin (seeded from src/data/*)
+/data/*.json
 
 # admin-uploaded images (personal content; keep the folder, ignore contents)
 /public/uploads/*
