@@ -5,14 +5,14 @@ import CategoryMenu from "./CategoryMenu";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-gold/15 bg-night/70 backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-cream/10 bg-night/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
         <div className="flex items-center gap-4 sm:gap-5">
           <Link href="/" className="group flex items-center gap-2.5">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-rani to-marigold">
-              <LotusMark className="h-5 w-5 text-white" />
+            <span className="grid h-8 w-8 place-items-center rounded-full border border-cream/25">
+              <LotusMark className="h-4 w-4 text-cream" />
             </span>
-            <span className="font-display text-xl tracking-tight text-gold-shimmer sm:text-2xl">
+            <span className="font-display text-2xl tracking-tight text-zari sm:text-[1.7rem]">
               {siteConfig.name}
             </span>
           </Link>

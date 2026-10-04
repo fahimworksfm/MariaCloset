@@ -38,7 +38,7 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
       href={`/items/${item.id}`}
       onMouseEnter={playHover}
       onMouseLeave={stopHover}
-      className="group panel relative block overflow-hidden p-3 transition duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-glow"
+      className="group relative block"
     >
       <button
         aria-label={isSaved ? "Remove from saved" : "Save"}
@@ -47,17 +47,14 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
           e.stopPropagation();
           wishlist.toggle(item.id);
         }}
-        className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border border-gold/30 bg-night/60 text-lg backdrop-blur transition hover:scale-110"
+        className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border border-cream/20 bg-night/50 text-lg backdrop-blur transition hover:border-cream/40"
       >
-        <span className={isSaved ? "text-rani" : "text-gold/70"}>{isSaved ? "♥" : "♡"}</span>
+        <span className={isSaved ? "text-cream" : "text-cream/60"}>{isSaved ? "♥" : "♡"}</span>
       </button>
 
       <div
-        className="relative grid w-full place-items-center overflow-hidden rounded-xl"
-        style={{
-          aspectRatio: compact ? "1 / 1" : "4 / 5",
-          background: `radial-gradient(70% 60% at 50% 40%, ${item.accent}33, #1a0826 75%)`,
-        }}
+        className="relative grid w-full place-items-center overflow-hidden rounded-lg border border-cream/10 bg-white/[0.02]"
+        style={{ aspectRatio: compact ? "1 / 1" : "4 / 5" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -89,24 +86,15 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
         )}
       </div>
 
-      <div className="px-1 pb-1 pt-3">
+      <div className="pt-3">
         <p className="eyebrow truncate">
           {item.category}
           {item.brand ? ` · ${item.brand}` : ""}
         </p>
-        <h3 className="mt-1 truncate font-display text-xl text-cream">{item.name}</h3>
-        <p className="mt-1 text-sm text-cream/70">
-          <span className="font-semibold text-gold">{money(item.pricePerDay)}</span> / day
-        </p>
-        {!compact && item.occasions && item.occasions.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1">
-            {item.occasions.slice(0, 3).map((o) => (
-              <span key={o} className="rounded-full bg-gold/10 px-2 py-0.5 text-[11px] text-gold/80">
-                {o}
-              </span>
-            ))}
-          </div>
-        )}
+        <h3 className="mt-1.5 truncate font-display text-xl font-medium leading-tight text-cream">
+          {item.name}
+        </h3>
+        <p className="mt-1 text-sm text-cream/55">{money(item.pricePerDay)} / day</p>
       </div>
     </Link>
   );

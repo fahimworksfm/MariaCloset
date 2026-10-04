@@ -5,33 +5,34 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // deep, restrained base
-        night: "#160A12",
-        plum: "#1E0E1A",
-        aubergine: "#2A1422",
-        // muted, classy accents (was neon — toned down)
-        rani: "#A8536B", // muted rose-wine
-        magenta: "#8E3A57",
-        marigold: "#C99A52", // muted amber
-        saffron: "#B5763A",
-        vermilion: "#B0463E", // muted, for errors
-        peacock: "#3E8C82", // muted teal
-        emerald: "#3E8C6A",
-        royal: "#5A4A86",
-        gold: "#C9A24B",
-        zari: "#D9C28A", // champagne
-        cream: "#F2E9DC",
-        ink: "#160A12",
+        // Monochrome luxe — warm near-black canvas, bone type, no colour in the
+        // chrome. Token names are kept so existing classes retheme automatically;
+        // former "accent" tokens now resolve to soft warm greys.
+        night: "#100F0D", // page background (warm near-black)
+        plum: "#15130F",
+        aubergine: "#1A1713", // raised surfaces / panels
+        ink: "#100F0D",
+        cream: "#ECE7DD", // bone — primary text
+        zari: "#F3EFE7", // bright bone — headings
+        gold: "#B8B1A3", // soft warm grey — borders, secondary text, "accent"
+        marigold: "#CFC8BA", // slightly brighter grey — eyebrows
+        saffron: "#B8B1A3",
+        rani: "#9C9589", // neutral grey (was wine)
+        magenta: "#8C8579",
+        peacock: "#8C8579",
+        royal: "#8C8579",
+        emerald: "#8E978A", // faint neutral for back-office "approved"
+        vermilion: "#BE6A5E", // muted terracotta — errors only
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       boxShadow: {
-        glow: "0 14px 40px -18px rgba(201, 162, 75, 0.4)",
-        "glow-pink": "0 14px 40px -18px rgba(168, 83, 107, 0.4)",
-        gold: "0 0 0 1px rgba(201,162,75,0.35), 0 18px 50px -22px rgba(0,0,0,0.75)",
-        panel: "0 24px 70px -28px rgba(0, 0, 0, 0.8)",
+        glow: "0 18px 50px -24px rgba(0, 0, 0, 0.85)",
+        "glow-pink": "0 18px 50px -24px rgba(0, 0, 0, 0.85)",
+        gold: "0 0 0 1px rgba(236,231,221,0.14), 0 22px 60px -30px rgba(0,0,0,0.9)",
+        panel: "0 24px 70px -30px rgba(0, 0, 0, 0.85)",
       },
       keyframes: {
         "fade-up": {

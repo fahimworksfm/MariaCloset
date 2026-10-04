@@ -42,10 +42,7 @@ export default function Showcase({ items }: { items: Item[] }) {
       <div className="relative h-[62vh] min-h-[460px] w-full">
         {/* accent glow behind the rail */}
         <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-          <div
-            className="h-[55%] w-[60%] rounded-full opacity-40 blur-[90px] transition-all duration-700"
-            style={{ backgroundColor: active.accent }}
-          />
+          <div className="h-[50%] w-[55%] rounded-full bg-cream/[0.06] opacity-60 blur-[100px]" />
         </div>
 
         <CarouselCanvas items={items} index={index} onIndexChange={setIndex} />

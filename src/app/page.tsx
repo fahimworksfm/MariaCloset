@@ -4,10 +4,7 @@ import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
 import Lookbook from "@/components/Lookbook";
 import HeroVideo from "@/components/HeroVideo";
-import Petals from "@/components/Petals";
 import Reveal from "@/components/Reveal";
-import FestivalCountdown from "@/components/FestivalCountdown";
-import { Mandala, ScallopValance, PaisleyDivider, AlpanaCorner } from "@/components/Ornament";
 import { siteConfig } from "@/data/config";
 import { getItems } from "@/lib/store";
 import { getLookbookFor } from "@/lib/lookbookStore";
@@ -15,35 +12,13 @@ import { getLookbookFor } from "@/lib/lookbookStore";
 export const dynamic = "force-dynamic";
 
 const steps = [
-  {
-    n: "01",
-    title: "Spin the rail",
-    body: "Drag through the rail in 3D and find a piece you love.",
-    grad: "from-rani to-royal",
-  },
-  {
-    n: "02",
-    title: "Pick your dates",
-    body: "Check the availability calendar and choose your rental window.",
-    grad: "from-peacock to-emerald",
-  },
+  { n: "01", title: "Spin the rail", body: "Drag through the rail in 3D and find a piece you love." },
+  { n: "02", title: "Pick your dates", body: "Check the availability calendar and choose your rental window." },
   {
     n: "03",
     title: "Request to rent",
     body: `Send a request — ${siteConfig.ownerName} confirms, you wear it beautifully.`,
-    grad: "from-marigold to-saffron",
   },
-];
-
-const occasions = [
-  "Weddings",
-  "Receptions",
-  "Parties",
-  "Festivals",
-  "Galas",
-  "Date Nights",
-  "Brunches",
-  "Celebrations",
 ];
 
 export default async function Home() {
@@ -52,85 +27,60 @@ export default async function Home() {
     getLookbookFor(siteConfig.ownerName),
   ]);
   return (
-    <>
-      <Petals />
-      <div className="relative z-10">
-        <Navbar />
-        <main>
-          <section className="relative mx-auto max-w-6xl overflow-hidden px-5 pb-4 pt-12 text-center sm:pt-16">
-            {siteConfig.heroVideo && <HeroVideo src={siteConfig.heroVideo} />}
-            <Mandala className="pointer-events-none absolute left-1/2 top-[-120px] -z-10 h-[560px] w-[560px] -translate-x-1/2 animate-spin-slow text-gold/[0.08]" />
-            <p className="eyebrow animate-fade-up">A rentable closet</p>
-            <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-gold-shimmer animate-fade-up sm:text-7xl">
-              {siteConfig.tagline}
-            </h1>
-            <p className="mx-auto mt-5 max-w-xl text-cream/75 animate-fade-up">
-              {siteConfig.description}
-            </p>
-            <PaisleyDivider className="mx-auto mt-8 h-7 w-44 text-gold animate-fade-up" />
-            <FestivalCountdown className="mx-auto mt-5 block w-fit rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-sm text-gold animate-fade-up" />
-          </section>
-
-          {/* occasion ribbon — understated */}
-          <div className="relative my-8 overflow-hidden border-y border-gold/12 py-2.5">
-            <div className="flex w-max animate-marquee gap-0 whitespace-nowrap">
-              {[0, 1].map((dup) => (
-                <div key={dup} className="flex items-center" aria-hidden={dup === 1}>
-                  {occasions.map((w) => (
-                    <span key={w} className="flex items-center">
-                      <span className="text-xs font-medium uppercase tracking-[0.28em] text-cream/55">
-                        {w}
-                      </span>
-                      <span className="mx-7 text-gold/30">·</span>
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
+    <div className="relative z-10">
+      <Navbar />
+      <main>
+        {/* Hero */}
+        <section className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-10 pt-24 text-center sm:pt-32">
+          {siteConfig.heroVideo && <HeroVideo src={siteConfig.heroVideo} />}
+          <p className="eyebrow animate-fade-up">A rentable closet</p>
+          <h1 className="mx-auto mt-6 max-w-3xl font-display text-5xl font-light leading-[1.04] tracking-tight text-zari animate-fade-up sm:text-7xl">
+            {siteConfig.tagline}
+          </h1>
+          <p className="mx-auto mt-6 max-w-lg text-cream/60 animate-fade-up">
+            {siteConfig.description}
+          </p>
+          <div className="mt-9 flex items-center justify-center gap-3 animate-fade-up">
+            <Link href="/browse" className="btn-primary">
+              Browse the closet
+            </Link>
+            <Link href="/#rail" className="btn-ghost">
+              The rail
+            </Link>
           </div>
+        </section>
 
-          <div className="text-center">
-            <p className="eyebrow">Newest additions</p>
-          </div>
-          <ScallopValance className="mt-3 h-6 w-full text-gold/40" />
+        {/* The rail */}
+        <section className="pt-14">
+          <p className="eyebrow text-center">Newest additions</p>
           <Showcase items={items} />
-
           <div className="mt-10 text-center">
             <Link href="/browse" className="btn-ghost">
               Browse all pieces →
             </Link>
           </div>
+        </section>
 
-          <Lookbook entries={looks} />
+        <Lookbook entries={looks} />
 
-          <section id="how" className="mx-auto max-w-6xl px-5 pt-20">
-            <p className="eyebrow text-center">How it works</p>
-            <h2 className="mt-2 text-center font-display text-4xl text-cream sm:text-5xl">
-              Three easy steps
-            </h2>
-            <PaisleyDivider className="mx-auto mt-4 h-7 w-40 text-gold" />
-            <div className="mt-12 grid gap-6 sm:grid-cols-3">
-              {steps.map((s, i) => (
-                <Reveal
-                  key={s.n}
-                  delay={i * 0.12}
-                  className="panel relative overflow-hidden p-7 transition duration-300 hover:-translate-y-1.5 hover:border-gold/50 hover:shadow-glow"
-                >
-                  <AlpanaCorner className="absolute right-2 top-2 h-10 w-10 text-gold/30" />
-                  <span
-                    className={`grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br ${s.grad} font-display text-2xl font-bold text-white shadow-glow`}
-                  >
-                    {s.n}
-                  </span>
-                  <h3 className="mt-5 font-display text-2xl text-gold">{s.title}</h3>
-                  <p className="mt-2 text-sm text-cream/70">{s.body}</p>
-                </Reveal>
-              ))}
-            </div>
-          </section>
-        </main>
-        <Footer />
-      </div>
-    </>
+        {/* How it works */}
+        <section id="how" className="mx-auto max-w-5xl px-5 pt-28">
+          <p className="eyebrow text-center">How it works</p>
+          <h2 className="mt-3 text-center font-display text-4xl font-light text-cream sm:text-5xl">
+            Three easy steps
+          </h2>
+          <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-cream/10 bg-cream/10 sm:grid-cols-3">
+            {steps.map((s, i) => (
+              <Reveal key={s.n} delay={i * 0.1} className="bg-night p-8">
+                <span className="font-display text-3xl font-light text-cream/40">{s.n}</span>
+                <h3 className="mt-5 font-display text-xl text-cream">{s.title}</h3>
+                <p className="mt-2 text-sm text-cream/55">{s.body}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

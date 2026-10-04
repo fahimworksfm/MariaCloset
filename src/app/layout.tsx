@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Rozha_One, Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import { siteConfig } from "@/data/config";
 import "./globals.css";
 
-const display = Rozha_One({
+const display = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["300", "400", "500", "600"],
   variable: "--font-display",
   display: "swap",
 });
@@ -28,9 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
-      <body className="bg-festive min-h-screen antialiased">
-        <div className="bg-jali min-h-screen">{children}</div>
-      </body>
+      <body className="bg-festive min-h-screen antialiased">{children}</body>
     </html>
   );
 }

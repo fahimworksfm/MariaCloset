@@ -5,7 +5,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import {
   RoundedBox,
   useTexture,
-  Sparkles,
   ContactShadows,
   Environment,
   Lightformer,
@@ -146,7 +145,7 @@ function Ring({
                   glowRefs.current[i] = el;
                 }}
                 map={glow}
-                color={item.accent}
+                color="#ECE7DD"
                 transparent
                 opacity={0}
                 blending={THREE.AdditiveBlending}
@@ -156,11 +155,11 @@ function Ring({
 
             <RoundedBox args={[CARD_W, CARD_H, 0.16]} radius={0.1} smoothness={4}>
               <meshStandardMaterial
-                color="#7a5c16"
-                emissive="#FFC83D"
-                emissiveIntensity={0.22}
+                color="#2A2824"
+                emissive="#CFC8BA"
+                emissiveIntensity={0.12}
                 metalness={1}
-                roughness={0.22}
+                roughness={0.34}
               />
             </RoundedBox>
 
@@ -252,21 +251,20 @@ export default function CarouselCanvas({ items, index, onIndexChange }: Props) {
       onPointerLeave={onUp}
     >
       <Canvas camera={{ position: [0, 0.25, CAM_Z], fov: 40 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
-        <fog attach="fog" args={["#1A0826", 9.5, 16]} />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[3, 5, 6]} intensity={1.0} color="#F2DDB0" />
-        <directionalLight position={[-5, 2, 3]} intensity={0.5} color="#9A5468" />
-        <pointLight position={[0, -1, 4]} intensity={0.4} color="#3E8C82" />
+        <fog attach="fog" args={["#100F0D", 9.5, 16]} />
+        <ambientLight intensity={0.55} />
+        <directionalLight position={[3, 5, 6]} intensity={1.05} color="#F2EEE4" />
+        <directionalLight position={[-5, 2, 3]} intensity={0.5} color="#8C867A" />
+        <pointLight position={[0, -1, 4]} intensity={0.35} color="#CFC8BA" />
 
         <Suspense fallback={null}>
           <Ring items={items} anglePer={anglePer} groupRef={refs.groupRef} />
           <Environment resolution={256} frames={1}>
-            <Lightformer intensity={1.8} color="#F2DDB0" position={[0, 2, 5]} scale={[8, 8, 1]} />
-            <Lightformer intensity={1.1} color="#9A5468" position={[-5, 1, 2]} scale={[5, 5, 1]} />
-            <Lightformer intensity={1.0} color="#3E8C82" position={[5, -1, 2]} scale={[5, 5, 1]} />
-            <Lightformer intensity={1.0} color="#C9A24B" position={[0, -3, 3]} scale={[6, 3, 1]} />
+            <Lightformer intensity={1.8} color="#F3EFE7" position={[0, 2, 5]} scale={[8, 8, 1]} />
+            <Lightformer intensity={1.1} color="#D8D2C6" position={[-5, 1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.0} color="#D8D2C6" position={[5, -1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={0.9} color="#B8B1A3" position={[0, -3, 3]} scale={[6, 3, 1]} />
           </Environment>
-          <Sparkles count={22} scale={[13, 7, 5]} size={3} speed={0.25} color="#D9C28A" opacity={0.4} />
           <ContactShadows position={[0, -2.0, 0]} opacity={0.5} scale={14} blur={2.8} far={4} color="#000000" />
         </Suspense>
 

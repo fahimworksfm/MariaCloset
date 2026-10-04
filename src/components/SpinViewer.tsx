@@ -6,7 +6,6 @@ import {
   RoundedBox,
   useTexture,
   ContactShadows,
-  Sparkles,
   Environment,
   Lightformer,
 } from "@react-three/drei";
@@ -42,14 +41,12 @@ function clamp(v: number, lo: number, hi: number) {
 
 function Card({
   images,
-  accent,
   rotX,
   rotY,
   frame,
   hasFrames,
 }: {
   images: string[];
-  accent: string;
   rotX: React.MutableRefObject<number>;
   rotY: React.MutableRefObject<number>;
   frame: React.MutableRefObject<number>;
@@ -89,9 +86,9 @@ function Card({
         <meshBasicMaterial
           ref={glowMat}
           map={glow}
-          color={accent}
+          color="#ECE7DD"
           transparent
-          opacity={0.4}
+          opacity={0.32}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -99,11 +96,11 @@ function Card({
       <group ref={group}>
         <RoundedBox args={[CARD_W, CARD_H, 0.18]} radius={0.12} smoothness={5}>
           <meshStandardMaterial
-            color="#7a5c16"
-            emissive="#FFC83D"
-            emissiveIntensity={0.25}
+            color="#2A2824"
+            emissive="#CFC8BA"
+            emissiveIntensity={0.14}
             metalness={1}
-            roughness={0.22}
+            roughness={0.34}
           />
         </RoundedBox>
         <mesh position={[0, 0, 0.1]}>
@@ -115,7 +112,7 @@ function Card({
   );
 }
 
-export default function SpinViewer({ images, accent = "#FF9A1F" }: Props) {
+export default function SpinViewer({ images }: Props) {
   const hasFrames = images.length > 1;
   const rotX = useRef(0);
   const rotY = useRef(0);
@@ -167,17 +164,16 @@ export default function SpinViewer({ images, accent = "#FF9A1F" }: Props) {
     >
       <Canvas camera={{ position: [0, 0, 5.4], fov: 42 }} gl={{ alpha: true, antialias: true }} dpr={[1, 2]}>
         <ambientLight intensity={0.5} />
-        <directionalLight position={[3, 5, 5]} intensity={1.0} color="#F2DDB0" />
-        <directionalLight position={[-4, 1, 2]} intensity={0.45} color="#9A5468" />
-        <pointLight position={[0, -1, 3]} intensity={0.35} color="#3E8C82" />
+        <directionalLight position={[3, 5, 5]} intensity={1.05} color="#F2EEE4" />
+        <directionalLight position={[-4, 1, 2]} intensity={0.45} color="#8C867A" />
+        <pointLight position={[0, -1, 3]} intensity={0.3} color="#CFC8BA" />
         <Suspense fallback={null}>
-          <Card images={images} accent={accent} rotX={rotX} rotY={rotY} frame={frame} hasFrames={hasFrames} />
+          <Card images={images} rotX={rotX} rotY={rotY} frame={frame} hasFrames={hasFrames} />
           <Environment resolution={256} frames={1}>
-            <Lightformer intensity={1.8} color="#F2DDB0" position={[0, 2, 5]} scale={[8, 8, 1]} />
-            <Lightformer intensity={1.1} color="#9A5468" position={[-5, 1, 2]} scale={[5, 5, 1]} />
-            <Lightformer intensity={1.0} color="#3E8C82" position={[5, -1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.8} color="#F3EFE7" position={[0, 2, 5]} scale={[8, 8, 1]} />
+            <Lightformer intensity={1.1} color="#D8D2C6" position={[-5, 1, 2]} scale={[5, 5, 1]} />
+            <Lightformer intensity={1.0} color="#D8D2C6" position={[5, -1, 2]} scale={[5, 5, 1]} />
           </Environment>
-          <Sparkles count={18} scale={[6, 7, 4]} size={3} speed={0.25} color="#D9C28A" opacity={0.4} />
           <ContactShadows position={[0, -1.9, 0]} opacity={0.45} scale={9} blur={2.8} far={4} color="#000000" />
         </Suspense>
         <EffectComposer>

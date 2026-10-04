@@ -8,10 +8,7 @@ import { type LookEntry } from "@/data/lookbook";
 /** Elegant fallback shown until a real photo exists for this entry. */
 function Plate({ entry }: { entry: LookEntry }) {
   return (
-    <div
-      className="absolute inset-0 grid place-items-center"
-      style={{ background: `radial-gradient(90% 80% at 50% 30%, ${entry.accent}44, #160a12 78%)` }}
-    >
+    <div className="absolute inset-0 grid place-items-center bg-white/[0.03]">
       <span className="px-6 text-center font-display text-3xl tracking-wide text-cream/25 sm:text-4xl">
         {entry.title}
       </span>
@@ -145,7 +142,7 @@ export default function Lookbook({
         <p className="eyebrow">{eyebrow}</p>
         <h2 className="mt-2 font-display text-4xl text-gold-shimmer sm:text-5xl">{title}</h2>
         <p className="mx-auto mt-3 max-w-xl text-cream/70">{subtitle}</p>
-        <div className="mx-auto mt-6 h-px w-24 bg-gold/40" />
+        <div className="mx-auto mt-6 h-px w-24 bg-cream/20" />
       </div>
 
       <div className="mt-10 grid gap-4 md:auto-rows-[15rem] md:grid-cols-4">
