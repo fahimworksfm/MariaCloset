@@ -42,7 +42,13 @@ export default async function ClosetPage({ params }: { params: { name: string } 
             ))}
           </div>
 
-          {looks.length > 0 && <Lookbook entries={looks} />}
+          {looks.length > 0 && (
+            <Lookbook
+              entries={looks}
+              title={`Styled by ${name}`}
+              subtitle={`A closer look at how ${name}'s pieces wear.`}
+            />
+          )}
         </main>
         <Footer />
       </div>

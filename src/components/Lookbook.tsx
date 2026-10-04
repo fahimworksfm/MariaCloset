@@ -126,19 +126,25 @@ function Tile({
 /** Editorial "The Edit" lookbook — magazine-spread layout with scroll reveals.
  *  The first tile is the large feature; the rest flow beside and below it, so
  *  any number of tiles (managed in the admin Lookbook editor) composes cleanly. */
-export default function Lookbook({ entries }: { entries: LookEntry[] }) {
+export default function Lookbook({
+  entries,
+  eyebrow = "The Edit",
+  title = "Styled for the season",
+  subtitle = "A closer look at how each piece wears — from grand entrances to quiet evenings.",
+}: {
+  entries: LookEntry[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+}) {
   if (!entries || entries.length === 0) return null;
 
   return (
     <section id="lookbook" className="mx-auto max-w-6xl px-5 pt-24">
       <div className="text-center">
-        <p className="eyebrow">The Edit</p>
-        <h2 className="mt-2 font-display text-4xl text-gold-shimmer sm:text-5xl">
-          Styled for the season
-        </h2>
-        <p className="mx-auto mt-3 max-w-xl text-cream/70">
-          A closer look at how each piece wears — from grand entrances to quiet evenings.
-        </p>
+        <p className="eyebrow">{eyebrow}</p>
+        <h2 className="mt-2 font-display text-4xl text-gold-shimmer sm:text-5xl">{title}</h2>
+        <p className="mx-auto mt-3 max-w-xl text-cream/70">{subtitle}</p>
         <div className="mx-auto mt-6 h-px w-24 bg-gold/40" />
       </div>
 
