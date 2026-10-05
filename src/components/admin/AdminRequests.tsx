@@ -128,6 +128,7 @@ export default function AdminRequests({
                 </p>
                 <p className="text-sm text-cream/60">
                   {r.renterName} · {r.contact}
+                  {r.method ? ` · ${r.method}` : ""}
                 </p>
                 {r.message && <p className="mt-1 text-sm text-cream/50">“{r.message}”</p>}
               </div>

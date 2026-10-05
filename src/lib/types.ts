@@ -79,6 +79,8 @@ export type RentRequest = {
   days: number;
   total: number;
   message?: string;
+  /** How the renter wants to receive the piece (pickup / delivery / shipping). */
+  method?: string;
   status: "pending" | "approved" | "declined";
   createdAt: string;
 };

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { itemId, renterName, contact, from, to, message } = body as Record<
+  const { itemId, renterName, contact, from, to, method, message } = body as Record<
     string,
     string | undefined
   >;
@@ -61,6 +61,7 @@ export async function POST(request: Request) {
     to,
     days,
     total: days * item.pricePerDay,
+    method: method ? String(method).slice(0, 60) : undefined,
     message: message ? String(message).slice(0, 1000) : undefined,
     status: "pending",
     createdAt: new Date().toISOString(),
@@ -78,6 +79,7 @@ export async function POST(request: Request) {
           record.to,
         )} (${record.days} day${record.days > 1 ? "s" : ""}, ${money(record.total)})</p>
         <p>From: ${record.renterName} (${record.contact})</p>
+        ${record.method ? `<p>Receive by: ${record.method}</p>` : ""}
         ${record.message ? `<p>Note: ${record.message}</p>` : ""}
         <p>Review and approve it in your admin dashboard.</p>`,
     });

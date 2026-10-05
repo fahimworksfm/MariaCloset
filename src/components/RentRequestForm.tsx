@@ -22,6 +22,7 @@ export default function RentRequestForm({ item }: { item: Item }) {
   const [range, setRange] = useState<Selection>(null);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [method, setMethod] = useState("Pickup in person");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
@@ -50,6 +51,7 @@ export default function RentRequestForm({ item }: { item: Item }) {
           contact,
           from: range!.from,
           to: range!.to,
+          method,
           message,
         }),
       });
@@ -172,6 +174,15 @@ export default function RentRequestForm({ item }: { item: Item }) {
             required
           />
         </div>
+      </div>
+
+      <div>
+        <label className="eyebrow mb-1.5 block">How would you like to receive it?</label>
+        <select className="field" value={method} onChange={(e) => setMethod(e.target.value)}>
+          <option>Pickup in person</option>
+          <option>Local delivery</option>
+          <option>Shipping</option>
+        </select>
       </div>
 
       <div>
