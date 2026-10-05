@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Petals from "@/components/Petals";
+import ImageBand from "@/components/ImageBand";
 import GiftForm from "@/components/GiftForm";
-import { PaisleyDivider } from "@/components/Ornament";
 
 export const metadata: Metadata = { title: "Membership & Gifts — Maria's Closet" };
 
@@ -31,17 +30,18 @@ const tiers = [
 export default function MembershipPage() {
   return (
     <>
-      <Petals />
       <div className="relative z-10">
         <Navbar />
-        <main className="mx-auto max-w-5xl px-5 py-12">
-          <p className="eyebrow text-center">For the regulars</p>
-          <h1 className="mt-2 text-center font-display text-5xl text-gold-shimmer">
-            Membership &amp; gifts
-          </h1>
-          <PaisleyDivider className="mx-auto my-6 h-7 w-40 text-gold/70" />
-
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <ImageBand
+          src="/brand/gold-sweep.jpg"
+          eyebrow="For the regulars"
+          title="Membership & gifts"
+          as="h1"
+          heightClass="h-[42vh] min-h-[300px]"
+          priority
+        />
+        <main className="mx-auto max-w-5xl px-5 py-14">
+          <div className="grid gap-5 sm:grid-cols-2">
             {tiers.map((t) => (
               <div
                 key={t.name}

@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Showcase from "@/components/Showcase";
 import Lookbook from "@/components/Lookbook";
 import HeroVideo from "@/components/HeroVideo";
+import ImageBand from "@/components/ImageBand";
 import Reveal from "@/components/Reveal";
 import { siteConfig } from "@/data/config";
 import { getItems } from "@/lib/store";
@@ -62,6 +63,15 @@ export default async function Home() {
         </section>
 
         <Lookbook entries={looks} />
+
+        {/* Editorial break */}
+        <ImageBand
+          src="/brand/silk-light.jpg"
+          eyebrow="The closet"
+          title="Borrowed beauty, returned with stories."
+          heightClass="h-[60vh] min-h-[380px]"
+          className="mt-28"
+        />
 
         {/* How it works */}
         <section id="how" className="mx-auto max-w-5xl px-5 pt-32">
