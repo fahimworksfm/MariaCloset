@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 /** A tiny reactive localStorage-backed string list (wishlist, recently-viewed). */
-function makeStore(key: string, cap = 100) {
+function makeStore(key: string, cap = 100, onToggle?: (id: string, added: boolean) => void) {
   const listeners = new Set<() => void>();
   let cache: string[] | null = null;
 
@@ -33,7 +33,9 @@ function makeStore(key: string, cap = 100) {
     },
     toggle(id: string) {
       const cur = read();
-      write(cur.includes(id) ? cur.filter((x) => x !== id) : [id, ...cur]);
+      const added = !cur.includes(id);
+      write(added ? [id, ...cur] : cur.filter((x) => x !== id));
+      onToggle?.(id, added);
     },
     /** Add to front, de-duped (used for recently-viewed). */
     push(id: string) {
@@ -42,7 +44,16 @@ function makeStore(key: string, cap = 100) {
   };
 }
 
-export const wishlist = makeStore("mc_wishlist");
+// Report hearts anonymously so the insights dashboard can rank most-saved
+// pieces. Fire-and-forget: the local wishlist never waits on the network.
+export const wishlist = makeStore("mc_wishlist", 100, (itemId, saved) => {
+  fetch("/api/saves", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ itemId, saved }),
+    keepalive: true,
+  }).catch(() => {});
+});
 export const recent = makeStore("mc_recent", 12);
 
 const EMPTY: string[] = [];
