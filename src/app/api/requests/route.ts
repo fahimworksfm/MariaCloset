@@ -5,6 +5,8 @@ import { saveRequest } from "@/lib/requests";
 import { inclusiveDays, parseISO, rangeOverlapsUnavailable, formatPretty } from "@/lib/dates";
 import { sendEmail, ownerEmail } from "@/lib/email";
 import { money } from "@/data/config";
+import { getReferralByCode, rewardsApplyTo } from "@/lib/rewards";
+import { normContact } from "@/lib/requestMath";
 import type { RentRequest } from "@/lib/types";
 
 export async function POST(request: Request) {
@@ -15,7 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { itemId, renterName, contact, from, to, method, message } = body as Record<
+  const { itemId, renterName, contact, from, to, method, message, ref } = body as Record<
     string,
     string | undefined
   >;
@@ -51,6 +53,17 @@ export async function POST(request: Request) {
   }
 
   const days = inclusiveDays(fromDate, toDate);
+
+  // Keep an invite code only if it's real, not your own, and this piece takes
+  // part in rewards. Whether it's a first rental is checked at approval.
+  let referral: { referralCode: string; referredBy: string } | undefined;
+  if (ref && rewardsApplyTo(item)) {
+    const r = await getReferralByCode(String(ref));
+    if (r && r.contact !== normContact(String(contact))) {
+      referral = { referralCode: r.code, referredBy: r.name };
+    }
+  }
+
   const record: RentRequest = {
     id: randomUUID(),
     itemId: item.id,
@@ -63,6 +76,7 @@ export async function POST(request: Request) {
     total: days * item.pricePerDay,
     method: method ? String(method).slice(0, 60) : undefined,
     message: message ? String(message).slice(0, 1000) : undefined,
+    ...referral,
     status: "pending",
     createdAt: new Date().toISOString(),
   };

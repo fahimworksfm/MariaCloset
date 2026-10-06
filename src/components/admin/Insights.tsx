@@ -107,7 +107,7 @@ export default function Insights({
 
 /* ----------------------------------------------------------------------- */
 
-type Delta = { dir: "up" | "down" | "flat"; text: string } | undefined;
+export type Delta = { dir: "up" | "down" | "flat"; text: string } | undefined;
 
 function delta(cur: number, prev: number | null, label: string | null): Delta {
   if (prev === null || label === null || (cur === 0 && prev === 0)) return undefined;
@@ -117,7 +117,7 @@ function delta(cur: number, prev: number | null, label: string | null): Delta {
   return { dir: pct > 0 ? "up" : "down", text: `${Math.abs(pct)}% ${label}` };
 }
 
-function StatTile({ label, value, delta, sub }: { label: string; value: string; delta?: Delta; sub?: string }) {
+export function StatTile({ label, value, delta, sub }: { label: string; value: string; delta?: Delta; sub?: string }) {
   return (
     <div className="panel p-5">
       <p className="text-xs text-cream/50">{label}</p>

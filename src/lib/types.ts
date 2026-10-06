@@ -81,6 +81,27 @@ export type RentRequest = {
   message?: string;
   /** How the renter wants to receive the piece (pickup / delivery / shipping). */
   method?: string;
+  /** Invite code the renter arrived with, and the inviter's first name. */
+  referralCode?: string;
+  referredBy?: string;
+  /**
+   * Reward discounts applied when the request was approved. Present (even if
+   * empty) once rewards have been settled — that's what keeps them one-shot.
+   */
+  adjustments?: { label: string; amount: number }[];
   status: "pending" | "approved" | "declined";
+  createdAt: string;
+};
+
+/** An invite code. `contact` is normalised (see normContact). */
+export type Referral = { code: string; name: string; contact: string; createdAt: string };
+
+/** One movement of reward credit (+ earned, − spent). Balance = sum per contact. */
+export type CreditEntry = {
+  id: string;
+  contact: string;
+  amount: number;
+  reason: string;
+  requestId?: string;
   createdAt: string;
 };

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import { siteConfig } from "@/data/config";
+import InviteCapture from "@/components/InviteCapture";
 import "./globals.css";
 
 const display = Cormorant_Garamond({
@@ -31,7 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
-      <body className="bg-festive min-h-screen antialiased">{children}</body>
+      <body className="bg-festive min-h-screen antialiased">
+        <InviteCapture />
+        {children}
+      </body>
     </html>
   );
 }

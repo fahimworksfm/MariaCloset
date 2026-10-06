@@ -39,6 +39,19 @@ export async function saveRequest(req: RentRequest): Promise<{ stored: boolean }
   return { stored: await writeAll(all) };
 }
 
+/** Merge fields into a stored request. */
+export async function patchRequest(
+  id: string,
+  patch: Partial<RentRequest>,
+): Promise<RentRequest | null> {
+  const all = await readAll();
+  const idx = all.findIndex((r) => r.id === id);
+  if (idx < 0) return null;
+  all[idx] = { ...all[idx], ...patch };
+  await writeAll(all);
+  return all[idx];
+}
+
 export async function updateRequestStatus(
   id: string,
   status: RentRequest["status"],

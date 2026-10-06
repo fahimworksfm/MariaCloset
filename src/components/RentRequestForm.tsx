@@ -1,10 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Item } from "@/lib/types";
-import { money, siteConfig } from "@/data/config";
+import { money, rewardsConfig, siteConfig } from "@/data/config";
 import { formatPretty, inclusiveDays, parseISO } from "@/lib/dates";
+import { rewardsApplyTo } from "@/lib/requestMath";
+import { readInvite } from "@/lib/invite";
 import AvailabilityCalendar from "./AvailabilityCalendar";
+import { InviteButton } from "./InviteShare";
 
 type Selection = { from: string; to: string } | null;
 type Status = "idle" | "submitting" | "success" | "error";
@@ -27,6 +30,19 @@ export default function RentRequestForm({ item }: { item: Item }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
+  const inRewards = rewardsApplyTo(item);
+  const [invite, setInvite] = useState<{ code: string; name: string } | null>(null);
+
+  // Arrived via a friend's link? Show who invited them (first name only).
+  useEffect(() => {
+    if (!inRewards) return;
+    const code = readInvite();
+    if (!code) return;
+    fetch(`/api/referrals?code=${encodeURIComponent(code)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.name && setInvite({ code, name: d.name }))
+      .catch(() => {});
+  }, [inRewards]);
 
   const complete = !!(range?.from && range?.to);
   const days = useMemo(
@@ -53,6 +69,7 @@ export default function RentRequestForm({ item }: { item: Item }) {
           to: range!.to,
           method,
           message,
+          ref: invite?.code,
         }),
       });
       const data = await res.json();
@@ -114,7 +131,17 @@ export default function RentRequestForm({ item }: { item: Item }) {
             {siteConfig.ownerName} directly.
           </p>
         )}
-        <div className="mt-4 flex flex-wrap gap-3">
+        {inRewards && (
+          <div className="mt-5 border-t border-cream/10 pt-5">
+            <p className="text-sm text-cream">Invite a friend</p>
+            <p className="mt-1 text-xs text-cream/55">
+              They get {money(rewardsConfig.welcomeOffer)} off their first rental; you get{" "}
+              {money(rewardsConfig.referralReward)} credit once it&apos;s confirmed.
+            </p>
+            <InviteButton name={name} contact={contact} />
+          </div>
+        )}
+        <div className="mt-5 flex flex-wrap gap-3">
           {mailto && (
             <a href={mailto} className="btn-primary">
               Also send by email
@@ -194,6 +221,14 @@ export default function RentRequestForm({ item }: { item: Item }) {
           placeholder="What's the occasion? Any questions?"
         />
       </div>
+
+      {invite && (
+        <p className="rounded-lg border border-cream/15 px-4 py-3 text-sm text-cream/75">
+          <span className="text-cream">{invite.name} invited you.</span> If this is your first rental,
+          you&apos;ll get {money(rewardsConfig.welcomeOffer)} off — applied when {siteConfig.ownerName}{" "}
+          confirms.
+        </p>
+      )}
 
       <div className="panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="text-sm text-cream/70">

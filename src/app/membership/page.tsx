@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ImageBand from "@/components/ImageBand";
 import GiftForm from "@/components/GiftForm";
+import { money, rewardsConfig } from "@/data/config";
 
 export const metadata: Metadata = { title: "Membership & Gifts — Maria's Closet" };
 
@@ -64,6 +65,24 @@ export default function MembershipPage() {
               </div>
             ))}
           </div>
+
+          <section className="mt-16 text-center">
+            <p className="eyebrow">Rewards</p>
+            <h2 className="mt-3 font-display text-3xl text-cream">
+              Give {money(rewardsConfig.welcomeOffer)}, get {money(rewardsConfig.referralReward)}
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-cream/60">
+              Invite friends for credit, and save more with every rental —{" "}
+              {rewardsConfig.tiers
+                .filter((t) => t.discountPct)
+                .map((t) => `${t.name}s get ${t.discountPct}% off`)
+                .join(", ")}
+              .
+            </p>
+            <Link href="/refer" className="btn-ghost mt-6">
+              Get your invite link
+            </Link>
+          </section>
 
           <section className="mt-16">
             <h2 className="text-center font-display text-3xl text-gold">Gift a rental</h2>

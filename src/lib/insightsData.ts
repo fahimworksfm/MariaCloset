@@ -3,6 +3,7 @@ import { getItems } from "@/lib/store";
 import { getRequests } from "@/lib/requests";
 import { getWaitlist } from "@/lib/waitlist";
 import { getSaves } from "@/lib/saves";
+import { netTotal } from "@/lib/requestMath";
 import type { Item } from "@/lib/types";
 
 /**
@@ -29,7 +30,8 @@ export async function loadInsights(scope?: (item: Item) => boolean) {
         id: r.id,
         itemId: r.itemId,
         status: r.status,
-        total: r.total,
+        // What was actually charged, after any reward discounts.
+        total: netTotal(r),
         createdAt: r.createdAt,
         to: r.to,
       })),

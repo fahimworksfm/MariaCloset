@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { RentRequest } from "@/lib/types";
-import { money } from "@/data/config";
+import type { RewardPreview } from "@/lib/rewards";
+import { money, rewardsConfig } from "@/data/config";
 import { formatPretty } from "@/lib/dates";
+import { netTotal } from "@/lib/requestMath";
 import AdminNav from "./AdminNav";
 
 type Filter = "all" | "pending" | "approved" | "declined";
@@ -18,10 +20,13 @@ export default function AdminRequests({
   initial,
   endpoint = "/api/admin/requests",
   nav,
+  previews = {},
 }: {
   initial: RentRequest[];
   endpoint?: string;
   nav?: ReactNode;
+  /** Reward preview per pending request (what approving would apply). */
+  previews?: Record<string, RewardPreview>;
 }) {
   const [requests, setRequests] = useState(initial);
   const [busy, setBusy] = useState("");
@@ -40,7 +45,7 @@ export default function AdminRequests({
       total: requests.length,
       pending: requests.filter((r) => r.status === "pending").length,
       approved: approved.length,
-      revenue: approved.reduce((s, r) => s + r.total, 0),
+      revenue: approved.reduce((s, r) => s + netTotal(r), 0),
     };
   }, [requests]);
 
@@ -54,11 +59,12 @@ export default function AdminRequests({
       body: JSON.stringify({ id, status }),
     });
     setBusy("");
+    const d = await r.json().catch(() => ({}));
     if (r.ok) {
-      setRequests((prev) => prev.map((x) => (x.id === id ? { ...x, status } : x)));
+      // Take the server's copy: on approve it carries the rewards just applied.
+      setRequests((prev) => prev.map((x) => (x.id === id ? { ...x, ...(d.request ?? {}), status } : x)));
       setMsg(status === "approved" ? "Approved ✓ those dates are now blocked" : "Declined");
     } else {
-      const d = await r.json().catch(() => ({}));
       setMsg(d.error || "Couldn't update");
     }
   }
@@ -124,13 +130,22 @@ export default function AdminRequests({
                 </div>
                 <p className="text-sm text-cream/70">
                   {formatPretty(r.from)} → {formatPretty(r.to)} · {r.days} day
-                  {r.days > 1 ? "s" : ""} · <span className="text-gold">{money(r.total)}</span>
+                  {r.days > 1 ? "s" : ""} ·{" "}
+                  {r.adjustments?.length ? (
+                    <>
+                      <span className="text-cream">{money(netTotal(r))}</span>{" "}
+                      <s className="text-cream/35">{money(r.total)}</s>
+                    </>
+                  ) : (
+                    <span className="text-gold">{money(r.total)}</span>
+                  )}
                 </p>
                 <p className="text-sm text-cream/60">
                   {r.renterName} · {r.contact}
                   {r.method ? ` · ${r.method}` : ""}
                 </p>
                 {r.message && <p className="mt-1 text-sm text-cream/50">“{r.message}”</p>}
+                <RewardsLine r={r} preview={previews[r.id]} />
               </div>
               {r.status === "pending" ? (
                 <div className="flex gap-2">
@@ -159,5 +174,35 @@ export default function AdminRequests({
         </div>
       )}
     </main>
+  );
+}
+
+const offList = (adj: { label: string; amount: number }[]) =>
+  adj.map((a) => `${a.label} −${money(a.amount)}`).join(" · ");
+
+/** Pending: who this renter is in the programme + what approving applies.
+ *  Approved: what was applied. */
+function RewardsLine({ r, preview }: { r: RentRequest; preview?: RewardPreview }) {
+  if (r.status === "approved" && r.adjustments?.length) {
+    return <p className="mt-1.5 text-xs text-cream/55">Rewards applied: {offList(r.adjustments)}</p>;
+  }
+  if (r.status !== "pending" || !preview?.applies) {
+    return r.referredBy ? <p className="mt-1.5 text-xs text-cream/45">Invited by {r.referredBy}</p> : null;
+  }
+  const facts = [
+    preview.tier !== rewardsConfig.tiers[0].name ? preview.tier : null,
+    preview.credit > 0 ? `${money(preview.credit)} credit` : null,
+    r.referredBy ? `invited by ${r.referredBy}` : null,
+  ].filter(Boolean);
+  if (!facts.length && !preview.adjustments.length) return null;
+  return (
+    <div className="mt-1.5 space-y-0.5 text-xs">
+      {facts.length > 0 && <p className="text-cream/55">{facts.join(" · ")}</p>}
+      {preview.adjustments.length > 0 && (
+        <p className="text-cream/70">
+          On approval: {offList(preview.adjustments)} → <span className="text-cream">{money(preview.net)}</span>
+        </p>
+      )}
+    </div>
   );
 }

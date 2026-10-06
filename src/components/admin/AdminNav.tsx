@@ -9,6 +9,7 @@ export default function AdminNav({
   active:
     | "pieces"
     | "insights"
+    | "rewards"
     | "lookbook"
     | "requests"
     | "schedule"
@@ -40,6 +41,7 @@ export default function AdminNav({
       <span className="mx-1 hidden h-5 w-px bg-gold/20 sm:block" />
       {tab("/admin", "Pieces", "pieces")}
       {tab("/admin/insights", "Insights", "insights")}
+      {tab("/admin/rewards", "Rewards", "rewards")}
       {tab("/admin/lookbook", "Lookbook", "lookbook")}
       {tab("/admin/requests", "Requests", "requests")}
       {tab("/admin/schedule", "Schedule", "schedule")}
