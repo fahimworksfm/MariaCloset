@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { isOwnerOrAdmin } from "@/lib/ownerAuth";
 import { visionModel } from "@/lib/ai";
+import { parseModelJson } from "@/lib/aiJson";
 
 const MIME: Record<string, string> = {
   png: "image/png",
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
   const key = process.env.GROQ_API_KEY;
   if (!key) {
     return NextResponse.json(
-      { error: "Add GROQ_API_KEY to .env.local to enable AI auto-fill." },
+      { error: "AI auto-fill is off — add GROQ_API_KEY (in Vercel for the live site)." },
       { status: 501 },
     );
   }
@@ -69,15 +70,19 @@ export async function POST(req: Request) {
     });
     if (!r.ok) {
       const detail = (await r.text()).slice(0, 400);
-      return NextResponse.json({ error: `Groq returned ${r.status}.`, detail }, { status: 502 });
+      return NextResponse.json(
+        { error: `Groq returned ${r.status} for model "${model}".`, detail },
+        { status: 502 },
+      );
     }
     const data = await r.json();
-    const content = data?.choices?.[0]?.message?.content ?? "{}";
-    let suggestion: unknown;
-    try {
-      suggestion = JSON.parse(content);
-    } catch {
-      suggestion = { raw: content };
+    // Never report success with nothing filled in: if the answer can't be read, say so.
+    const suggestion = parseModelJson(data?.choices?.[0]?.message?.content);
+    if (!suggestion) {
+      return NextResponse.json(
+        { error: "The AI's answer couldn't be read — try again or use a clearer photo." },
+        { status: 502 },
+      );
     }
     return NextResponse.json({ ok: true, suggestion });
   } catch (err) {

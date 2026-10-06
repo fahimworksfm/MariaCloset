@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { textModel } from "@/lib/ai";
+import { parseModelJson } from "@/lib/aiJson";
 
 export async function POST(req: Request) {
   const { query, categories, occasions } = (await req.json().catch(() => ({}))) as {
@@ -34,13 +35,8 @@ Request: "${query}"`;
     });
     if (!r.ok) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
     const data = await r.json();
-    const content = data?.choices?.[0]?.message?.content ?? "{}";
-    let filters: unknown;
-    try {
-      filters = JSON.parse(content);
-    } catch {
-      filters = { q: query };
-    }
+    const filters = parseModelJson(data?.choices?.[0]?.message?.content);
+    if (!filters) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
     return NextResponse.json({ ok: true, filters, ai: true });
   } catch {
     return NextResponse.json({ ok: true, filters: { q: query }, ai: false });

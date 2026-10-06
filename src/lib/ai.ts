@@ -1,11 +1,16 @@
 // Server-only: the Groq models every AI feature uses, and a health check for
 // the admin. One place for the defaults, so the check and the features agree.
 
+// Defaults track Groq's current line-up. Llama 4 Scout (the old vision model)
+// was shut down on 17 Jul 2026; Qwen3.8 27B is Groq's multimodal replacement
+// (a preview model — if Groq retires it, the admin status line will say so).
+const TEXT_DEFAULT = "llama-3.3-70b-versatile";
+const VISION_DEFAULT = "qwen/qwen3.8-27b";
+
 /** Text model — AI search and the stylist. */
-export const textModel = () => process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
-/** Vision model — photo auto-fill in the piece editor. */
-export const visionModel = () =>
-  process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+export const textModel = () => process.env.GROQ_MODEL || TEXT_DEFAULT;
+/** Vision model — photo auto-fill in the piece editor (needs image input). */
+export const visionModel = () => process.env.GROQ_VISION_MODEL || VISION_DEFAULT;
 
 export type AiStatus = {
   state: "ok" | "warn" | "error" | "off";
@@ -51,21 +56,26 @@ async function check(): Promise<AiStatus> {
     if (!r.ok) return { state: "error", text: `Groq returned an error (${r.status}).`, detail: fallbacks };
 
     const ids = new Set<string>(((await r.json())?.data ?? []).map((m: { id?: string }) => m.id));
+    // A model set by env var overrides the default, so name both the culprit and the fix.
+    const fix = (envVar: string, fallback: string) =>
+      process.env[envVar]
+        ? `Delete ${envVar} in Vercel (to use ${fallback}) or set it to a current model, then redeploy.`
+        : `Groq may have retired ${fallback} — tell your developer the default needs updating.`;
     if (!ids.has(text)) {
       return {
         state: "error",
         text: `Groq doesn't offer the model "${text}".`,
-        detail: `Set GROQ_MODEL to a current Groq model (or remove it to use the default), then redeploy. ${fallbacks}`,
+        detail: `${fix("GROQ_MODEL", TEXT_DEFAULT)} ${fallbacks}`,
       };
     }
     if (!ids.has(vision)) {
       return {
         state: "warn",
         text: `AI connected · ${text}`,
-        detail: `Photo auto-fill's model "${vision}" isn't available — set GROQ_VISION_MODEL to a current vision model.`,
+        detail: `Photo auto-fill's model "${vision}" isn't available. ${fix("GROQ_VISION_MODEL", VISION_DEFAULT)}`,
       };
     }
-    return { state: "ok", text: `AI connected · ${text}` };
+    return { state: "ok", text: `AI connected · ${text} · photos: ${vision}` };
   } catch {
     return { state: "error", text: "Couldn't reach Groq.", detail: fallbacks };
   }

@@ -4,6 +4,7 @@
 import type { Item } from "@/lib/types";
 import { siteConfig } from "@/data/config";
 import { textModel } from "@/lib/ai";
+import { parseModelJson } from "@/lib/aiJson";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 export type StylistPick = { id: string; why: string };
@@ -92,9 +93,10 @@ export async function askGroq(
       return null;
     }
     const data = await r.json();
-    const parsed = JSON.parse(data?.choices?.[0]?.message?.content ?? "{}");
-    const reply = String(parsed?.reply ?? "").trim().slice(0, 900);
-    const picks = validatePicks(parsed?.picks, items);
+    const parsed = parseModelJson(data?.choices?.[0]?.message?.content);
+    if (!parsed) return null; // unreadable answer → keyword fallback
+    const reply = String(parsed.reply ?? "").trim().slice(0, 900);
+    const picks = validatePicks(parsed.picks, items);
     if (!reply && !picks.length) return null;
     return { reply: reply || "Here are a few pieces I'd suggest.", picks, ai: true };
   } catch (err) {
