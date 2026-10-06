@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Item } from "@/lib/types";
+import type { AiStatus } from "@/lib/ai";
 import { money } from "@/data/config";
 import AdminNav from "./AdminNav";
 
@@ -30,7 +31,15 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "piece";
 }
 
-export default function AdminDashboard({ initialItems }: { initialItems: Item[] }) {
+const AI_GLYPH: Record<AiStatus["state"], string> = { ok: "✓", warn: "!", error: "!", off: "○" };
+
+export default function AdminDashboard({
+  initialItems,
+  aiStatus,
+}: {
+  initialItems: Item[];
+  aiStatus?: AiStatus;
+}) {
   const router = useRouter();
   const [items, setItems] = useState<Item[]>(initialItems);
   const [editing, setEditing] = useState<Item | null>(null);
@@ -182,6 +191,22 @@ export default function AdminDashboard({ initialItems }: { initialItems: Item[] 
           <p className="text-sm text-cream/60">
             Upload pieces and drag the order — top to bottom = the order on the rail &amp; stage.
           </p>
+          {aiStatus && (
+            <p
+              role="status"
+              className={`mt-2 flex max-w-xl items-start gap-2 text-xs ${
+                aiStatus.state === "error" ? "text-vermilion" : aiStatus.state === "ok" ? "text-cream/50" : "text-cream/75"
+              }`}
+            >
+              <span aria-hidden className="mt-px w-3 shrink-0 text-center">
+                {AI_GLYPH[aiStatus.state]}
+              </span>
+              <span>
+                {aiStatus.text}
+                {aiStatus.detail && <span className="text-cream/45"> {aiStatus.detail}</span>}
+              </span>
+            </p>
+          )}
         </div>
         <AdminNav active="pieces" />
       </header>

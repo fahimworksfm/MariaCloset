@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { textModel } from "@/lib/ai";
 
 export async function POST(req: Request) {
   const { query, categories, occasions } = (await req.json().catch(() => ({}))) as {
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   // Graceful fallback: treat the text as a plain keyword search.
   if (!key) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
 
-  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+  const model = textModel();
   const prompt = `Convert a shopper's request into filters for a South Asian clothing rental catalogue.
 Available categories: ${(categories ?? []).join(", ") || "any"}.
 Available occasions: ${(occasions ?? []).join(", ") || "any"}.

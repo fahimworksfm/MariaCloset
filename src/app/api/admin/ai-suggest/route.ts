@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { isOwnerOrAdmin } from "@/lib/ownerAuth";
+import { visionModel } from "@/lib/ai";
 
 const MIME: Record<string, string> = {
   png: "image/png",
@@ -46,7 +47,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Could not read the image." }, { status: 400 });
   }
 
-  const model = process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+  const model = visionModel();
   try {
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",

@@ -3,6 +3,7 @@
 // real pieces — model output is validated against the catalogue.
 import type { Item } from "@/lib/types";
 import { siteConfig } from "@/data/config";
+import { textModel } from "@/lib/ai";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 export type StylistPick = { id: string; why: string };
@@ -72,7 +73,7 @@ export async function askGroq(
 ): Promise<StylistResult | null> {
   const key = process.env.GROQ_API_KEY;
   if (!key) return null;
-  const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+  const model = textModel();
   try {
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
