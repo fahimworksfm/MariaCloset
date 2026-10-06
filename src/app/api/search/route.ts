@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { textModel } from "@/lib/ai";
+import { GROQ_CHAT_URL, groqKey, textModel } from "@/lib/ai";
 import { parseModelJson } from "@/lib/aiJson";
 
 export async function POST(req: Request) {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   };
   if (!query?.trim()) return NextResponse.json({ error: "Empty query." }, { status: 400 });
 
-  const key = process.env.GROQ_API_KEY;
+  const key = groqKey();
   // Graceful fallback: treat the text as a plain keyword search.
   if (!key) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
 
@@ -23,7 +23,7 @@ Respond ONLY with JSON of this shape:
 Request: "${query}"`;
 
   try {
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const r = await fetch(GROQ_CHAT_URL, {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -33,7 +33,10 @@ Request: "${query}"`;
         messages: [{ role: "user", content: prompt }],
       }),
     });
-    if (!r.ok) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
+    if (!r.ok) {
+      console.error("[search] groq", r.status, (await r.text()).slice(0, 300));
+      return NextResponse.json({ ok: true, filters: { q: query }, ai: false });
+    }
     const data = await r.json();
     const filters = parseModelJson(data?.choices?.[0]?.message?.content);
     if (!filters) return NextResponse.json({ ok: true, filters: { q: query }, ai: false });

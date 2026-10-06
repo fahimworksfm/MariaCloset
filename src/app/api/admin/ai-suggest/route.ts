@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { isOwnerOrAdmin } from "@/lib/ownerAuth";
-import { visionModel } from "@/lib/ai";
+import { GROQ_CHAT_URL, groqKey, visionModel } from "@/lib/ai";
 import { parseModelJson } from "@/lib/aiJson";
 
 const MIME: Record<string, string> = {
@@ -30,7 +30,7 @@ If unsure about anything, make a sensible, confident guess.`;
 export async function POST(req: Request) {
   if (!isOwnerOrAdmin()) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const key = process.env.GROQ_API_KEY;
+  const key = groqKey();
   if (!key) {
     return NextResponse.json(
       { error: "AI auto-fill is off — add GROQ_API_KEY (in Vercel for the live site)." },
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
 
   const model = visionModel();
   try {
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const r = await fetch(GROQ_CHAT_URL, {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({

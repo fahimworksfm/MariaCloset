@@ -3,7 +3,7 @@
 // real pieces — model output is validated against the catalogue.
 import type { Item } from "@/lib/types";
 import { siteConfig } from "@/data/config";
-import { textModel } from "@/lib/ai";
+import { GROQ_CHAT_URL, groqKey, textModel } from "@/lib/ai";
 import { parseModelJson } from "@/lib/aiJson";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
@@ -72,11 +72,11 @@ export async function askGroq(
   items: Item[],
   viewing?: Item,
 ): Promise<StylistResult | null> {
-  const key = process.env.GROQ_API_KEY;
+  const key = groqKey();
   if (!key) return null;
   const model = textModel();
   try {
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const r = await fetch(GROQ_CHAT_URL, {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
