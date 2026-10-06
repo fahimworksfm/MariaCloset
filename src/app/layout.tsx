@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import { siteConfig } from "@/data/config";
 import "./globals.css";
@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.tagline}`,
   description: siteConfig.description,
 };
+
+// Tints the mobile browser chrome to match the near-black canvas.
+export const viewport: Viewport = { themeColor: "#100F0D" };
 
 export default function RootLayout({
   children,
