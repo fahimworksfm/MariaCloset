@@ -3,23 +3,27 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ImageBand from "@/components/ImageBand";
 import ReferForm from "@/components/ReferForm";
-import { money, rewardsConfig, siteConfig } from "@/data/config";
+import { money, siteConfig } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 
-const welcome = money(rewardsConfig.welcomeOffer);
-const reward = money(rewardsConfig.referralReward);
+export async function generateMetadata(): Promise<Metadata> {
+  const { rewards } = await getSettings();
+  return {
+    title: "Invite a friend — Maria's Closet",
+    description: `Give ${money(rewards.welcomeOffer)}, get ${money(rewards.referralReward)}. Plus rewards that grow with every rental.`,
+  };
+}
 
-export const metadata: Metadata = {
-  title: "Invite a friend — Maria's Closet",
-  description: `Give ${welcome}, get ${reward}. Plus rewards that grow with every rental.`,
-};
-
-export default function ReferPage() {
+export default async function ReferPage() {
+  const { rewards } = await getSettings();
+  const welcome = money(rewards.welcomeOffer);
+  const reward = money(rewards.referralReward);
   const steps = [
     { n: "01", title: "Share your link", body: "Send it to a friend who'd love something beautiful to wear." },
     { n: "02", title: `They get ${welcome} off`, body: "Taken off their first rental, when it's confirmed." },
     { n: "03", title: `You get ${reward} credit`, body: "Added once their rental is confirmed, and applied to your next one." },
   ];
-  const tiers = rewardsConfig.tiers;
+  const tiers = rewards.tiers;
 
   return (
     <div className="relative z-10">
@@ -48,7 +52,7 @@ export default function ReferPage() {
         <section className="panel mx-auto mt-10 max-w-2xl p-6 sm:p-8">
           <h2 className="font-display text-2xl text-cream">Get your invite link</h2>
           <p className="mb-6 mt-1 text-sm text-cream/55">It only takes a moment, and your link never changes.</p>
-          <ReferForm />
+          <ReferForm welcomeOffer={rewards.welcomeOffer} />
         </section>
 
         <section className="mt-20">
@@ -75,7 +79,7 @@ export default function ReferPage() {
           <p className="mx-auto mt-6 max-w-xl text-center text-xs leading-relaxed text-cream/45">
             Rewards are matched to the email or phone you rent with and applied automatically when{" "}
             {siteConfig.ownerName} confirms a rental.
-            {rewardsConfig.scope === "maria" ? ` They apply to pieces from ${siteConfig.ownerName}'s closet.` : ""}
+            {rewards.scope === "maria" ? ` They apply to pieces from ${siteConfig.ownerName}'s closet.` : ""}
           </p>
         </section>
       </main>

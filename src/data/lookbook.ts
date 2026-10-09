@@ -3,7 +3,7 @@
  *
  * Each tile shows a refined accent-gradient plate until a real photo exists at
  * `image`. Drop a file at that path under `public/lookbook/` (or point `image`
- * at a Vercel Blob URL) and the tile upgrades to the photo automatically —
+ * at an uploaded file) and the tile upgrades to the photo automatically —
  * no code change needed. Recommended: clean editorial / lifestyle shots,
  * roughly portrait 4:5 for features and landscape 16:10 for the rest.
  */
@@ -13,7 +13,7 @@ export type LookEntry = {
   title: string;
   caption: string;
   accent: string;
-  /** Path under /public (e.g. "/lookbook/wedding.jpg") or a full Blob URL. */
+  /** Path under /public (e.g. "/lookbook/wedding.jpg") or a full uploaded-file URL. */
   image?: string;
   /** Optional short muted clip that plays on hover over this tile. */
   video?: string;

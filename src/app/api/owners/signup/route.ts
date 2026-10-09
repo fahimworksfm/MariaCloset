@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   };
   const { stored } = await addOwner(owner);
 
-  const admin = ownerEmail();
+  const admin = await ownerEmail();
   if (admin) {
     await sendEmail({
       to: admin,

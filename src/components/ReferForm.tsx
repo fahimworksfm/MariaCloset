@@ -4,7 +4,7 @@ import { useState } from "react";
 import { InviteShare } from "./InviteShare";
 
 /** Name + email/phone → your personal invite link. */
-export default function ReferForm() {
+export default function ReferForm({ welcomeOffer }: { welcomeOffer: number }) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [code, setCode] = useState<string | null>(null);
@@ -33,7 +33,7 @@ export default function ReferForm() {
         <p className="mt-1 text-xs text-cream/55">
           Use the same email or phone when you rent, so your credit finds you.
         </p>
-        <InviteShare code={code} />
+        <InviteShare code={code} welcomeOffer={welcomeOffer} />
       </div>
     );
   }

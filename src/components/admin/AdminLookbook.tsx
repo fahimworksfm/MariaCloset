@@ -1,5 +1,6 @@
 "use client";
 
+import { uploadMedia } from "@/lib/uploadMedia";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import type { LookEntry } from "@/data/lookbook";
@@ -47,7 +48,7 @@ export default function AdminLookbook({
       body: JSON.stringify({ entries: next }),
     });
     const d = await r.json().catch(() => ({}));
-    setMsg(r.ok ? (d.stored ? "Saved ✓" : "Saved (not persisted — connect Blob)") : "Save failed");
+    setMsg(r.ok ? (d.stored ? "Saved ✓" : "Not saved — the database didn't accept it") : "Save failed");
     router.refresh();
   }
 
@@ -83,13 +84,10 @@ export default function AdminLookbook({
 
   async function upload(file: File, field: "image" | "video") {
     setBusy(field);
-    const form = new FormData();
-    form.append("file", file);
-    const r = await fetch("/api/admin/upload", { method: "POST", body: form });
-    const d = await r.json().catch(() => ({}));
+    const d = await uploadMedia(file, "lookbook");
     setBusy("");
-    if (r.ok) setEditing((c) => (c ? { ...c, [field]: d.url } : c));
-    else setMsg(d.error || "Upload failed");
+    if ("url" in d) setEditing((c) => (c ? { ...c, [field]: d.url } : c));
+    else setMsg(d.error);
   }
 
   const d = editing;
@@ -184,7 +182,7 @@ export default function AdminLookbook({
                 </button>
               )}
               <p className="mt-1 text-[11px] leading-snug text-cream/40">
-                Photo fills the tile; the optional clip plays on hover. MP4/WebM, up to 4.5MB.
+                Photo fills the tile; the optional clip plays on hover. MP4/WebM, up to 50MB.
               </p>
             </div>
 

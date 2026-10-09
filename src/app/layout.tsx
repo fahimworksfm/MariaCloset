@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import { siteConfig } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 import InviteCapture from "@/components/InviteCapture";
 import Stylist from "@/components/Stylist";
 import "./globals.css";
@@ -18,10 +19,10 @@ const sans = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: `${siteConfig.name} — ${siteConfig.tagline}`,
-  description: siteConfig.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { site } = await getSettings();
+  return { title: `${siteConfig.name} — ${site.tagline}`, description: site.description };
+}
 
 // Tints the mobile browser chrome to match the near-black canvas.
 export const viewport: Viewport = { themeColor: "#100F0D" };

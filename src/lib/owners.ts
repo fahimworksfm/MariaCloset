@@ -1,62 +1,62 @@
-import { promises as fs } from "fs";
-import path from "path";
-import { blobEnabled, getJson, putJson } from "@/lib/blob";
+// Server-only. Closet owners — emails and password hashes never leave the server.
+import { sql, iso, opt } from "@/lib/db";
 import type { Owner } from "@/lib/types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const FILE = path.join(DATA_DIR, "owners.json");
-const BLOB_KEY = "data/owners.json";
+type Row = {
+  id: string;
+  closet: string;
+  name: string;
+  email: string;
+  password_hash: string;
+  bio: string | null;
+  status: Owner["status"];
+  created_at: Date;
+};
 
-async function readAll(): Promise<Owner[]> {
-  if (blobEnabled()) return getJson<Owner[]>(BLOB_KEY, []);
-  try {
-    return JSON.parse(await fs.readFile(FILE, "utf8")) as Owner[];
-  } catch {
-    return [];
-  }
-}
-
-async function writeAll(all: Owner[]): Promise<boolean> {
-  if (blobEnabled()) return putJson(BLOB_KEY, all);
-  try {
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.writeFile(FILE, JSON.stringify(all, null, 2), "utf8");
-    return true;
-  } catch (err) {
-    console.error("[owners] could not persist:", err);
-    return false;
-  }
-}
+const fromRow = (r: Row): Owner => ({
+  id: r.id,
+  closet: r.closet,
+  name: r.name,
+  email: r.email,
+  passwordHash: r.password_hash,
+  bio: opt(r.bio),
+  status: r.status,
+  createdAt: iso(r.created_at),
+});
 
 export async function getOwners(): Promise<Owner[]> {
-  return (await readAll()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  return (await sql<Row[]>`select * from owners order by created_at desc`).map(fromRow);
 }
 
 export async function getOwnerById(id: string): Promise<Owner | undefined> {
-  return (await readAll()).find((o) => o.id === id);
+  const [row] = await sql<Row[]>`select * from owners where id = ${id}`;
+  return row ? fromRow(row) : undefined;
 }
 
 export async function getOwnerByEmail(email: string): Promise<Owner | undefined> {
-  const e = email.trim().toLowerCase();
-  return (await readAll()).find((o) => o.email.toLowerCase() === e);
+  const [row] = await sql<Row[]>`select * from owners where lower(email) = ${email.trim().toLowerCase()}`;
+  return row ? fromRow(row) : undefined;
 }
 
 export async function closetTaken(closet: string): Promise<boolean> {
-  const c = closet.trim().toLowerCase();
-  return (await readAll()).some((o) => o.closet.toLowerCase() === c);
+  const [row] = await sql`select 1 from owners where lower(closet) = ${closet.trim().toLowerCase()}`;
+  return !!row;
 }
 
 export async function addOwner(owner: Owner): Promise<{ stored: boolean }> {
-  const all = await readAll();
-  all.push(owner);
-  return { stored: await writeAll(all) };
+  try {
+    await sql`
+      insert into owners (id, closet, name, email, password_hash, bio, status, created_at)
+      values (${owner.id}, ${owner.closet}, ${owner.name}, ${owner.email}, ${owner.passwordHash},
+              ${owner.bio ?? null}, ${owner.status}, ${owner.createdAt})`;
+    return { stored: true };
+  } catch (err) {
+    console.error("[owners] could not persist:", err);
+    return { stored: false };
+  }
 }
 
 export async function setOwnerStatus(id: string, status: Owner["status"]): Promise<Owner | null> {
-  const all = await readAll();
-  const idx = all.findIndex((o) => o.id === id);
-  if (idx < 0) return null;
-  all[idx] = { ...all[idx], status };
-  await writeAll(all);
-  return all[idx];
+  const [row] = await sql<Row[]>`update owners set status = ${status} where id = ${id} returning *`;
+  return row ? fromRow(row) : null;
 }

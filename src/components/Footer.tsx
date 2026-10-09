@@ -1,7 +1,9 @@
 import { siteConfig } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 import { PaisleyDivider } from "./Ornament";
 
-export default function Footer() {
+export default async function Footer() {
+  const { site } = await getSettings();
   return (
     <footer className="relative mt-24 border-t border-gold/15">
       <div className="mx-auto max-w-6xl px-5 pb-12 pt-10">
@@ -15,7 +17,7 @@ export default function Footer() {
         </div>
         <div className="flex flex-col items-center justify-between gap-3 text-sm text-cream/70 sm:flex-row">
           <p className="font-display text-lg text-gold">{siteConfig.name}</p>
-          <p className="text-base text-rani">{siteConfig.tagline}</p>
+          <p className="text-base text-rani">{site.tagline}</p>
           <p className="text-cream/50">
             Rent responsibly · Handle with love ·{" "}
             <a href="/admin" className="transition hover:text-gold">

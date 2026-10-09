@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { getItemById } from "@/lib/store";
 import { saveRequest } from "@/lib/requests";
+import { getSettings } from "@/lib/settings";
 import { inclusiveDays, parseISO, rangeOverlapsUnavailable, formatPretty } from "@/lib/dates";
 import { sendEmail, ownerEmail } from "@/lib/email";
 import { money } from "@/data/config";
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
   // Keep an invite code only if it's real, not your own, and this piece takes
   // part in rewards. Whether it's a first rental is checked at approval.
   let referral: { referralCode: string; referredBy: string } | undefined;
-  if (ref && rewardsApplyTo(item)) {
+  if (ref && rewardsApplyTo(item, (await getSettings()).rewards)) {
     const r = await getReferralByCode(String(ref));
     if (r && r.contact !== normContact(String(contact))) {
       referral = { referralCode: r.code, referredBy: r.name };
@@ -83,7 +84,7 @@ export async function POST(request: Request) {
 
   const { stored } = await saveRequest(record);
 
-  const owner = ownerEmail();
+  const owner = await ownerEmail();
   if (owner) {
     await sendEmail({
       to: owner,

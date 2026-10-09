@@ -1,8 +1,10 @@
 import { getRequests, patchRequest, updateRequestStatus } from "@/lib/requests";
-import { getItems, saveItems } from "@/lib/store";
+import { addUnavailable, getItemById } from "@/lib/store";
+import { sql } from "@/lib/db";
+import { getSettings } from "@/lib/settings";
 import { sendEmail, looksLikeEmail } from "@/lib/email";
 import { formatPretty } from "@/lib/dates";
-import { money, rewardsConfig, siteConfig } from "@/data/config";
+import { money, siteConfig, type RewardsSettings } from "@/data/config";
 import { netTotal } from "@/lib/requestMath";
 import {
   ensureReferralCode,
@@ -26,24 +28,19 @@ export async function decideRequest(
   let updated = await updateRequestStatus(id, status);
   if (!updated) return null;
 
+  const { rewards } = await getSettings();
   if (status === "approved") {
-    const items = await getItems();
-    const item = items.find((i) => i.id === updated!.itemId);
-    if (item) {
-      const exists = (item.unavailable ?? []).some(
-        (r) => r.from === updated!.from && r.to === updated!.to,
-      );
-      if (!exists) {
-        item.unavailable = [...(item.unavailable ?? []), { from: updated.from, to: updated.to }];
-        await saveItems(items);
-      }
-    }
+    const item = updated.itemId ? await getItemById(updated.itemId) : undefined;
+    if (item) await addUnavailable(item.id, { from: updated.from, to: updated.to });
 
-    // Rewards settle exactly once: `adjustments` is written (even if empty) the
-    // first time a request is approved, so re-approving can't double-credit.
-    if (updated.adjustments === undefined) {
+    // Rewards settle exactly once: claim the request by setting `adjustments`
+    // from null to [] in one statement, so a double-click or re-approval can't
+    // double-credit. Only the caller that wins the claim records the ledger.
+    const claimed = await sql`
+      update requests set adjustments = '[]'::jsonb where id = ${id} and adjustments is null returning id`;
+    if (claimed.length) {
       const [all, referrals, credits] = await Promise.all([getRequests(), getReferrals(), getCredits()]);
-      const plan = planRewards(updated, item, all, referrals, credits);
+      const plan = planRewards(updated, item, all, referrals, credits, rewards);
       await recordLedger(plan.ledger);
       updated = (await patchRequest(id, { adjustments: plan.adjustments })) ?? updated;
     }
@@ -56,14 +53,13 @@ export async function decideRequest(
         status === "approved"
           ? `Your rental is confirmed — ${updated.itemName}`
           : `Update on your rental request — ${updated.itemName}`,
-      html: status === "approved" ? await approvedEmail(updated) : declinedEmail(updated),
+      html: status === "approved" ? await approvedEmail(updated, rewards) : declinedEmail(updated),
     });
   }
   return updated;
 }
 
-async function approvedEmail(r: RentRequest): Promise<string> {
-  const items = await getItems();
+async function approvedEmail(r: RentRequest, rewards: RewardsSettings): Promise<string> {
   const adj = r.adjustments ?? [];
   const priceLines = adj.length
     ? `<ul>${adj.map((a) => `<li>${esc(a.label)}: −${money(a.amount)}</li>`).join("")}</ul>
@@ -72,12 +68,12 @@ async function approvedEmail(r: RentRequest): Promise<string> {
 
   // Every confirmed renter gets their own invite link.
   let invite = "";
-  if (rewardsConfig.enabled && rewardsApplyTo(items.find((i) => i.id === r.itemId))) {
+  if (rewardsApplyTo(r.itemId ? await getItemById(r.itemId) : undefined, rewards)) {
     const ref = await ensureReferralCode(r.renterName, r.contact);
     const link = `${siteConfig.url}/?ref=${ref.code}`;
     invite = `<p>Know someone who'd love this? Share your link — they get ${money(
-      rewardsConfig.welcomeOffer,
-    )} off their first rental and you get ${money(rewardsConfig.referralReward)} credit:<br>
+      rewards.welcomeOffer,
+    )} off their first rental and you get ${money(rewards.referralReward)} credit:<br>
       <a href="${link}">${link}</a></p>`;
   }
 
