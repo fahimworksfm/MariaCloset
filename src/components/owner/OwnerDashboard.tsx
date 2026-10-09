@@ -1,5 +1,6 @@
 "use client";
 
+import { uploadMedia } from "@/lib/uploadMedia";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Item } from "@/lib/types";
@@ -56,7 +57,7 @@ export default function OwnerDashboard({
       body: JSON.stringify({ items: next }),
     });
     const d = await r.json().catch(() => ({}));
-    setMsg(r.ok ? (d.stored ? "Saved ✓" : "Saved (not persisted — connect Blob)") : "Save failed");
+    setMsg(r.ok ? (d.stored ? "Saved ✓" : "Not saved — the database didn't accept it") : "Save failed");
     router.refresh();
   }
 
@@ -89,24 +90,18 @@ export default function OwnerDashboard({
   async function onUpload(file: File) {
     if (!editing) return;
     setBusy("upload");
-    const form = new FormData();
-    form.append("file", file);
-    const r = await fetch("/api/admin/upload", { method: "POST", body: form });
-    const d = await r.json().catch(() => ({}));
+    const d = await uploadMedia(file);
     setBusy("");
-    if (r.ok) setEditing((c) => (c ? { ...c, image: d.url } : c));
-    else setMsg(d.error || "Upload failed");
+    if ("url" in d) setEditing((c) => (c ? { ...c, image: d.url } : c));
+    else setMsg(d.error);
   }
 
   async function onUploadVideo(file: File) {
     setBusy("video");
-    const form = new FormData();
-    form.append("file", file);
-    const r = await fetch("/api/admin/upload", { method: "POST", body: form });
-    const d = await r.json().catch(() => ({}));
+    const d = await uploadMedia(file);
     setBusy("");
-    if (r.ok) setEditing((c) => (c ? { ...c, video: d.url } : c));
-    else setMsg(d.error || "Upload failed");
+    if ("url" in d) setEditing((c) => (c ? { ...c, video: d.url } : c));
+    else setMsg(d.error);
   }
 
   async function aiSuggest() {
@@ -147,14 +142,11 @@ export default function OwnerDashboard({
       ) => Promise<{ removeBackground: (src: string) => Promise<Blob> }>;
       const mod = await cdnImport("https://esm.sh/@imgly/background-removal@1.7.0");
       const blob = await mod.removeBackground(editing.image);
-      const form = new FormData();
-      form.append("file", new File([blob], "cutout.png", { type: "image/png" }));
-      const r = await fetch("/api/admin/upload", { method: "POST", body: form });
-      const d = await r.json().catch(() => ({}));
-      if (r.ok) {
+      const d = await uploadMedia(new File([blob], "cutout.png", { type: "image/png" }));
+      if ("url" in d) {
         setEditing((c) => (c ? { ...c, image: d.url } : c));
         setMsg("Background removed ✓");
-      } else setMsg(d.error || "Upload failed");
+      } else setMsg(d.error);
     } catch {
       setMsg("Background removal failed.");
     } finally {
@@ -248,7 +240,7 @@ export default function OwnerDashboard({
                 </button>
               )}
               <p className="mt-1 text-[11px] leading-snug text-cream/40">
-                Plays when someone hovers this piece&apos;s card. MP4/WebM, up to 4.5MB.
+                Plays when someone hovers this piece&apos;s card. MP4/WebM, up to 50MB.
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">

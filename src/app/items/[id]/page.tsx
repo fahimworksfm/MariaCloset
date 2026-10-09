@@ -14,6 +14,7 @@ import CompleteTheLook from "@/components/CompleteTheLook";
 import ReviewsSection from "@/components/ReviewsSection";
 import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
 import { getItemById, getItems } from "@/lib/store";
+import { getSettings } from "@/lib/settings";
 import { approvedForItem } from "@/lib/reviews";
 import { money } from "@/data/config";
 
@@ -34,7 +35,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
   if (!item) notFound();
 
   const images = item.frames?.length ? item.frames : [item.image];
-  const [allItems, reviews] = await Promise.all([getItems(), approvedForItem(item.id)]);
+  const [allItems, reviews, settings] = await Promise.all([getItems(), approvedForItem(item.id), getSettings()]);
 
   return (
     <>
@@ -115,7 +116,7 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
 
               <div className="my-7 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
-              <RentRequestForm item={item} />
+              <RentRequestForm item={item} rewards={settings.rewards} ownerEmail={settings.site.ownerEmail} />
             </div>
           </div>
 

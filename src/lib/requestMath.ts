@@ -1,10 +1,13 @@
 // Pure helpers shared by server and client code.
-import { rewardsConfig, siteConfig } from "@/data/config";
+import { siteConfig, type RewardsSettings } from "@/data/config";
 
-/** Whether this piece takes part in the rewards programme (see rewardsConfig.scope). */
-export function rewardsApplyTo(item: { closet?: string } | undefined): boolean {
-  if (!rewardsConfig.enabled || !item) return false;
-  return rewardsConfig.scope === "all" || (item.closet || siteConfig.ownerName) === siteConfig.ownerName;
+/** Whether this piece takes part in the rewards programme (see the rewards scope setting). */
+export function rewardsApplyTo(
+  item: { closet?: string } | undefined,
+  rewards: Pick<RewardsSettings, "enabled" | "scope">,
+): boolean {
+  if (!rewards.enabled || !item) return false;
+  return rewards.scope === "all" || (item.closet || siteConfig.ownerName) === siteConfig.ownerName;
 }
 
 /**

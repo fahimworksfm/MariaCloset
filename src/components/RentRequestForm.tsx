@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Item } from "@/lib/types";
-import { money, rewardsConfig, siteConfig } from "@/data/config";
+import { money, siteConfig, type RewardsSettings } from "@/data/config";
 import { formatPretty, inclusiveDays, parseISO } from "@/lib/dates";
 import { rewardsApplyTo } from "@/lib/requestMath";
 import { readInvite } from "@/lib/invite";
@@ -21,7 +21,15 @@ type Confirmed = {
   stored: boolean;
 };
 
-export default function RentRequestForm({ item }: { item: Item }) {
+export default function RentRequestForm({
+  item,
+  rewards,
+  ownerEmail,
+}: {
+  item: Item;
+  rewards: RewardsSettings;
+  ownerEmail: string;
+}) {
   const [range, setRange] = useState<Selection>(null);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -30,7 +38,7 @@ export default function RentRequestForm({ item }: { item: Item }) {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [confirmed, setConfirmed] = useState<Confirmed | null>(null);
-  const inRewards = rewardsApplyTo(item);
+  const inRewards = rewardsApplyTo(item, rewards);
   const [invite, setInvite] = useState<{ code: string; name: string } | null>(null);
 
   // Arrived via a friend's link? Show who invited them (first name only).
@@ -95,8 +103,8 @@ export default function RentRequestForm({ item }: { item: Item }) {
 
   if (status === "success" && confirmed) {
     const mailto =
-      siteConfig.ownerEmail &&
-      `mailto:${siteConfig.ownerEmail}?subject=${encodeURIComponent(
+      ownerEmail &&
+      `mailto:${ownerEmail}?subject=${encodeURIComponent(
         `Rental request — ${item.name}`,
       )}&body=${encodeURIComponent(
         `Hi ${siteConfig.ownerName},\n\nI'd love to rent the ${item.name} from ${formatPretty(
@@ -135,10 +143,10 @@ export default function RentRequestForm({ item }: { item: Item }) {
           <div className="mt-5 border-t border-cream/10 pt-5">
             <p className="text-sm text-cream">Invite a friend</p>
             <p className="mt-1 text-xs text-cream/55">
-              They get {money(rewardsConfig.welcomeOffer)} off their first rental; you get{" "}
-              {money(rewardsConfig.referralReward)} credit once it&apos;s confirmed.
+              They get {money(rewards.welcomeOffer)} off their first rental; you get{" "}
+              {money(rewards.referralReward)} credit once it&apos;s confirmed.
             </p>
-            <InviteButton name={name} contact={contact} />
+            <InviteButton name={name} contact={contact} welcomeOffer={rewards.welcomeOffer} />
           </div>
         )}
         <div className="mt-5 flex flex-wrap gap-3">
@@ -225,7 +233,7 @@ export default function RentRequestForm({ item }: { item: Item }) {
       {invite && (
         <p className="rounded-lg border border-cream/15 px-4 py-3 text-sm text-cream/75">
           <span className="text-cream">{invite.name} invited you.</span> If this is your first rental,
-          you&apos;ll get {money(rewardsConfig.welcomeOffer)} off — applied when {siteConfig.ownerName}{" "}
+          you&apos;ll get {money(rewards.welcomeOffer)} off — applied when {siteConfig.ownerName}{" "}
           confirms.
         </p>
       )}

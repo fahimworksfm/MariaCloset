@@ -9,6 +9,7 @@ import Reveal from "@/components/Reveal";
 import { siteConfig } from "@/data/config";
 import { getItems } from "@/lib/store";
 import { getLookbookFor } from "@/lib/lookbookStore";
+import { getSettings } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -23,9 +24,10 @@ const steps = [
 ];
 
 export default async function Home() {
-  const [items, looks] = await Promise.all([
+  const [items, looks, { site }] = await Promise.all([
     getItems(),
     getLookbookFor(siteConfig.ownerName),
+    getSettings(),
   ]);
   return (
     <div className="relative z-10">
@@ -33,13 +35,13 @@ export default async function Home() {
       <main>
         {/* Hero */}
         <section className="relative mx-auto max-w-5xl overflow-hidden px-5 pb-16 pt-28 text-center sm:pt-40">
-          {siteConfig.heroVideo && <HeroVideo src={siteConfig.heroVideo} />}
+          {site.heroVideo && <HeroVideo src={site.heroVideo} />}
           <p className="eyebrow animate-fade-up">A rentable closet</p>
           <h1 className="mx-auto mt-7 max-w-3xl font-display text-6xl font-light leading-[1.02] tracking-tight text-zari animate-fade-up sm:text-7xl lg:text-[5.75rem]">
-            {siteConfig.tagline}
+            {site.tagline}
           </h1>
           <p className="mx-auto mt-7 max-w-md text-[15px] leading-relaxed text-cream/55 animate-fade-up">
-            {siteConfig.description}
+            {site.description}
           </p>
           <div className="mt-11 flex items-center justify-center gap-3 animate-fade-up">
             <Link href="/browse" className="btn-primary">

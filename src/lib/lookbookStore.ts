@@ -1,67 +1,98 @@
 // Server-only module: reads/writes the homepage lookbook. Never import from a client component.
-import { promises as fs } from "fs";
-import path from "path";
-import { lookbook as seedLookbook, type LookEntry } from "@/data/lookbook";
-import { blobEnabled, getJson, putJson } from "@/lib/blob";
+import { sql, opt, sameKey } from "@/lib/db";
+import type { LookEntry } from "@/data/lookbook";
 import { siteConfig } from "@/data/config";
 
 /** A tile's effective owner — empty closet means Maria's (the homepage edit). */
 export const closetOf = (e: LookEntry) => e.closet || siteConfig.ownerName;
 
-const FILE = path.join(process.cwd(), "data", "lookbook.json");
-const BLOB_KEY = "data/lookbook.json";
+type Row = {
+  id: string;
+  kicker: string;
+  title: string;
+  caption: string;
+  accent: string;
+  image: string | null;
+  video: string | null;
+  item_id: string | null;
+  closet: string | null;
+  sort_order: number;
+};
 
-/**
- * The "The Edit" lookbook entries. Reads admin-edited storage (Vercel Blob when
- * connected, else data/lookbook.json) and falls back to the seed list in
- * src/data/lookbook.ts until the first admin save persists the full list.
- */
+const fromRow = (r: Row): LookEntry => ({
+  id: r.id,
+  kicker: r.kicker,
+  title: r.title,
+  caption: r.caption,
+  accent: r.accent,
+  image: opt(r.image),
+  video: opt(r.video),
+  itemId: opt(r.item_id),
+  closet: opt(r.closet),
+});
+
+/** Every closet's "The Edit" tiles, in display order. */
 export async function getLookbook(): Promise<LookEntry[]> {
-  if (blobEnabled()) {
-    return getJson<LookEntry[]>(BLOB_KEY, seedLookbook);
-  }
-  try {
-    const raw = await fs.readFile(FILE, "utf8");
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed as LookEntry[];
-  } catch {
-    /* not persisted yet */
-  }
-  return seedLookbook;
+  return (await sql<Row[]>`select * from lookbook order by sort_order, created_at`).map(fromRow);
 }
 
 /** Tiles belonging to one closet (Maria's name for the homepage edit). */
 export async function getLookbookFor(closet: string): Promise<LookEntry[]> {
-  return (await getLookbook()).filter((e) => closetOf(e) === closet);
+  const rows =
+    closet === siteConfig.ownerName
+      ? await sql<Row[]>`select * from lookbook where closet is null order by sort_order, created_at`
+      : await sql<Row[]>`select * from lookbook where closet = ${closet} order by sort_order, created_at`;
+  return rows.map(fromRow);
 }
 
 /**
  * Replace one closet's tiles while preserving everyone else's. Maria's tiles
  * are stored with no `closet` (the canonical homepage edit); owners' tiles
- * carry their closet name.
+ * carry their closet name. Only changed tiles are written.
  */
-export async function saveLookbookFor(
-  closet: string,
-  mine: LookEntry[],
-): Promise<{ stored: boolean }> {
-  const others = (await getLookbook()).filter((e) => closetOf(e) !== closet);
-  const scoped = mine.map((e) => ({
-    ...e,
-    closet: closet === siteConfig.ownerName ? undefined : closet,
-  }));
-  return saveLookbook([...others, ...scoped]);
-}
-
-export async function saveLookbook(entries: LookEntry[]): Promise<{ stored: boolean }> {
-  if (blobEnabled()) {
-    return { stored: await putJson(BLOB_KEY, entries) };
-  }
+export async function saveLookbookFor(closet: string, mine: LookEntry[]): Promise<{ stored: boolean }> {
+  const scope = closet === siteConfig.ownerName ? null : closet;
   try {
-    await fs.mkdir(path.dirname(FILE), { recursive: true });
-    await fs.writeFile(FILE, JSON.stringify(entries, null, 2), "utf8");
+    await sql.begin(async (tx) => {
+      const existing = await (scope === null
+        ? tx<Row[]>`select * from lookbook where closet is null`
+        : tx<Row[]>`select * from lookbook where closet = ${scope}`);
+      const before = new Map(existing.map((r) => [r.id, sameKey(rowOf(fromRow(r), scope, r.sort_order))]));
+      const keep = mine.map((e) => e.id);
+      if (scope === null) await tx`delete from lookbook where closet is null and id <> all(${keep})`;
+      else await tx`delete from lookbook where closet = ${scope} and id <> all(${keep})`;
+
+      // A tile may still point at a piece that has since been deleted — drop the link.
+      const pieces = new Set((await tx<{ id: string }[]>`select id from items`).map((r) => r.id));
+      for (let i = 0; i < mine.length; i++) {
+        const e = mine[i];
+        const row = rowOf({ ...e, itemId: e.itemId && pieces.has(e.itemId) ? e.itemId : undefined }, scope, i);
+        if (before.get(row.id) === sameKey(row)) continue;
+        await tx`
+          insert into lookbook ${tx(row as never)}
+          on conflict (id) do update set
+            kicker = excluded.kicker, title = excluded.title, caption = excluded.caption,
+            accent = excluded.accent, image = excluded.image, video = excluded.video,
+            item_id = excluded.item_id, sort_order = excluded.sort_order
+          where lookbook.closet is not distinct from excluded.closet`;
+      }
+    });
     return { stored: true };
   } catch (err) {
     console.error("[lookbookStore] could not persist:", err);
     return { stored: false };
   }
 }
+
+const rowOf = (e: LookEntry, closet: string | null, sortOrder: number) => ({
+  id: e.id,
+  kicker: e.kicker ?? "",
+  title: e.title ?? "",
+  caption: e.caption ?? "",
+  accent: e.accent,
+  image: e.image || null,
+  video: e.video || null,
+  item_id: e.itemId || null,
+  closet,
+  sort_order: sortOrder,
+});

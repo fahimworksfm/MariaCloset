@@ -15,7 +15,8 @@ export default function AdminNav({
     | "schedule"
     | "waitlist"
     | "reviews"
-    | "owners";
+    | "owners"
+    | "settings";
 }) {
   const router = useRouter();
   async function logout() {
@@ -48,6 +49,7 @@ export default function AdminNav({
       {tab("/admin/waitlist", "Waitlist", "waitlist")}
       {tab("/admin/reviews", "Reviews", "reviews")}
       {tab("/admin/owners", "Owners", "owners")}
+      {tab("/admin/settings", "Settings", "settings")}
       <button onClick={logout} className="btn-ghost">
         Log out
       </button>

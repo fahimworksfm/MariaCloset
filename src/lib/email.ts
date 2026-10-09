@@ -1,12 +1,13 @@
-import { siteConfig } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 
 /** Sends mail via Resend when RESEND_API_KEY is set; otherwise a no-op. */
 export function emailEnabled(): boolean {
   return !!process.env.RESEND_API_KEY;
 }
 
-export function ownerEmail(): string {
-  return process.env.OWNER_EMAIL || siteConfig.ownerEmail || "";
+/** Where new-request emails go: the Settings owner email, else OWNER_EMAIL. */
+export async function ownerEmail(): Promise<string> {
+  return (await getSettings()).site.ownerEmail || process.env.OWNER_EMAIL || "";
 }
 
 export function looksLikeEmail(s: string): boolean {

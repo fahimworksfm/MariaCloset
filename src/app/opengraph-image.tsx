@@ -2,15 +2,17 @@ import { ImageResponse } from "next/og";
 import { promises as fs } from "fs";
 import path from "path";
 import { siteConfig } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 
 // Site-wide default share card. No params → prerendered at build time, so the
 // photo is read straight from /public. Item pages override with their own.
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${siteConfig.name} — ${siteConfig.tagline}`;
+export const alt = siteConfig.name;
 
 export default async function Image() {
+  const { site } = await getSettings();
   const photo = await fs.readFile(path.join(process.cwd(), "public", "brand", "og-silk.jpg"));
   const src = `data:image/jpeg;base64,${photo.toString("base64")}`;
 
@@ -52,7 +54,7 @@ export default async function Image() {
             MARIA’S CLOSET
           </div>
           <div style={{ fontSize: 74, marginTop: 18, lineHeight: 1.05, display: "flex" }}>
-            {siteConfig.tagline}
+            {site.tagline}
           </div>
         </div>
       </div>

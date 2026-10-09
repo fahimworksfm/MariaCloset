@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { money, rewardsConfig } from "@/data/config";
+import { money } from "@/data/config";
 
 /** Shows someone's invite link with copy + (where supported) native share. */
-export function InviteShare({ code }: { code: string }) {
+export function InviteShare({ code, welcomeOffer }: { code: string; welcomeOffer: number }) {
   const [copied, setCopied] = useState(false);
   const link = typeof window === "undefined" ? `/?ref=${code}` : `${window.location.origin}/?ref=${code}`;
   const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
@@ -39,7 +39,7 @@ export function InviteShare({ code }: { code: string }) {
               navigator
                 .share({
                   title: "Maria's Closet",
-                  text: `Borrow something beautiful — ${money(rewardsConfig.welcomeOffer)} off your first rental.`,
+                  text: `Borrow something beautiful — ${money(welcomeOffer)} off your first rental.`,
                   url: link,
                 })
                 .catch(() => {})
@@ -54,7 +54,15 @@ export function InviteShare({ code }: { code: string }) {
 }
 
 /** Fetches the invite link for someone we already know (e.g. right after a request). */
-export function InviteButton({ name, contact }: { name: string; contact: string }) {
+export function InviteButton({
+  name,
+  contact,
+  welcomeOffer,
+}: {
+  name: string;
+  contact: string;
+  welcomeOffer: number;
+}) {
   const [code, setCode] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -73,7 +81,7 @@ export function InviteButton({ name, contact }: { name: string; contact: string 
     else setError(d?.error || "Couldn't create your link. Try again.");
   }
 
-  if (code) return <InviteShare code={code} />;
+  if (code) return <InviteShare code={code} welcomeOffer={welcomeOffer} />;
   return (
     <div className="mt-3">
       <button type="button" onClick={get} disabled={busy} className="btn-ghost">

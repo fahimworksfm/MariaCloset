@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { RentRequest } from "@/lib/types";
 import type { RewardPreview } from "@/lib/rewards";
-import { money, rewardsConfig } from "@/data/config";
+import { money } from "@/data/config";
 import { formatPretty } from "@/lib/dates";
 import { netTotal } from "@/lib/requestMath";
 import AdminNav from "./AdminNav";
@@ -190,7 +190,7 @@ function RewardsLine({ r, preview }: { r: RentRequest; preview?: RewardPreview }
     return r.referredBy ? <p className="mt-1.5 text-xs text-cream/45">Invited by {r.referredBy}</p> : null;
   }
   const facts = [
-    preview.tier !== rewardsConfig.tiers[0].name ? preview.tier : null,
+    !preview.baseTier ? preview.tier : null,
     preview.credit > 0 ? `${money(preview.credit)} credit` : null,
     r.referredBy ? `invited by ${r.referredBy}` : null,
   ].filter(Boolean);

@@ -4,7 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ImageBand from "@/components/ImageBand";
 import GiftForm from "@/components/GiftForm";
-import { money, rewardsConfig } from "@/data/config";
+import { money } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 
 export const metadata: Metadata = { title: "Membership & Gifts — Maria's Closet" };
 
@@ -28,7 +29,8 @@ const tiers = [
   },
 ];
 
-export default function MembershipPage() {
+export default async function MembershipPage() {
+  const { rewards } = await getSettings();
   return (
     <>
       <div className="relative z-10">
@@ -69,11 +71,11 @@ export default function MembershipPage() {
           <section className="mt-16 text-center">
             <p className="eyebrow">Rewards</p>
             <h2 className="mt-3 font-display text-3xl text-cream">
-              Give {money(rewardsConfig.welcomeOffer)}, get {money(rewardsConfig.referralReward)}
+              Give {money(rewards.welcomeOffer)}, get {money(rewards.referralReward)}
             </h2>
             <p className="mx-auto mt-2 max-w-md text-cream/60">
               Invite friends for credit, and save more with every rental —{" "}
-              {rewardsConfig.tiers
+              {rewards.tiers
                 .filter((t) => t.discountPct)
                 .map((t) => `${t.name}s get ${t.discountPct}% off`)
                 .join(", ")}

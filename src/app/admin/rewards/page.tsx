@@ -3,7 +3,8 @@ import { isAdmin } from "@/lib/auth";
 import { getRequests } from "@/lib/requests";
 import { getCredits, getReferrals, tierFor } from "@/lib/rewards";
 import { normContact } from "@/lib/requestMath";
-import { money, rewardsConfig } from "@/data/config";
+import { money } from "@/data/config";
+import { getSettings } from "@/lib/settings";
 import AdminLogin from "@/components/admin/AdminLogin";
 import AdminNav from "@/components/admin/AdminNav";
 import { StatTile } from "@/components/admin/Insights";
@@ -23,7 +24,12 @@ type Member = {
 
 export default async function AdminRewardsPage() {
   if (!isAdmin()) return <AdminLogin />;
-  const [referrals, credits, requests] = await Promise.all([getReferrals(), getCredits(), getRequests()]);
+  const [referrals, credits, requests, { rewards }] = await Promise.all([
+    getReferrals(),
+    getCredits(),
+    getRequests(),
+    getSettings(),
+  ]);
 
   // Everyone in the programme: invite-code holders, renters with confirmed
   // rentals, and anyone with credit movements — keyed by normalised contact.
@@ -44,7 +50,7 @@ export default async function AdminRewardsPage() {
     if (c.amount > 0) m.converted++;
   }
   const list = Array.from(members.values())
-    .map((m) => ({ ...m, tier: tierFor(m.rentals).name }))
+    .map((m) => ({ ...m, tier: tierFor(m.rentals, rewards.tiers).name }))
     .sort((a, b) => b.credit - a.credit || b.rentals - a.rentals || a.name.localeCompare(b.name));
 
   const converted = list.reduce((s, m) => s + m.converted, 0);
@@ -61,9 +67,9 @@ export default async function AdminRewardsPage() {
             <h1 className="font-display text-4xl text-gold-shimmer">Rewards</h1>
             <p className="text-sm text-cream/60">
               Invites, credit and loyalty tiers.{" "}
-              {rewardsConfig.enabled
+              {rewards.enabled
                 ? `Applied automatically when you approve a request${
-                    rewardsConfig.scope === "maria" ? " for one of your pieces" : ""
+                    rewards.scope === "maria" ? " for one of your pieces" : ""
                   }.`
                 : "The programme is switched off."}
             </p>
@@ -82,7 +88,7 @@ export default async function AdminRewardsPage() {
           <h2 className="text-sm font-medium text-cream">Members</h2>
           <p className="text-xs text-cream/50">
             Matched by the email or phone they rent with. Tiers:{" "}
-            {rewardsConfig.tiers
+            {rewards.tiers
               .map((t) => `${t.name} ${t.minRentals}+${t.discountPct ? ` (${t.discountPct}% off)` : ""}`)
               .join(" · ")}
             .
