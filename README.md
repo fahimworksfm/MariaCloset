@@ -70,14 +70,13 @@ owners add and edit everything from the site.
 - **Media** — a public `media` bucket. The browser asks `/api/admin/upload` for
   a signed URL (admins/owners only) and uploads straight to Supabase, so videos
   up to 50MB work.
-- **Seed / import** — `npm run db:seed` seeds from `src/data/items.ts` and
-  `src/data/lookbook.ts`. If `BLOB_READ_WRITE_TOKEN` is present it imports the
-  old Vercel Blob data and copies its media instead. It runs once (a marker row
-  records it), so pieces deleted later never come back.
+- **Seed** — `npm run db:seed` fills a fresh database from `src/data/items.ts`
+  and `src/data/lookbook.ts`. It runs once (a marker row records it), so pieces
+  deleted later never come back.
 
 ## Deployment
 
 Push to `main` and Vercel deploys. Every Vercel build runs `vercel-build`:
-new migrations are applied, the one-time seed/import runs on the first deploy
+new migrations are applied, the one-time seed runs on the first deploy
 only, and then `next build` runs. If a migration fails, the build fails and the
 previous deployment stays live.
