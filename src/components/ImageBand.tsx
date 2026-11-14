@@ -1,6 +1,7 @@
 /**
- * A full-width editorial image band: one photograph, a soft near-black scrim,
- * and centred type over it. Used for page headers and the homepage break.
+ * A full-width editorial image band: one photograph, a near-black scrim that
+ * deepens toward the foot, and type set bottom-left over it. Used as the page
+ * header on membership and join.
  */
 export default function ImageBand({
   src,
@@ -32,15 +33,11 @@ export default function ImageBand({
         loading={priority ? "eager" : "lazy"}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-night/40 via-night/45 to-night" />
-      <div className="relative z-10 flex h-full flex-col items-center justify-center px-5 text-center">
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <Heading className="mt-4 max-w-3xl font-display text-4xl font-light leading-tight text-zari sm:text-6xl">
-          {title}
-        </Heading>
-        {subtitle && (
-          <p className="mx-auto mt-5 max-w-md text-[15px] leading-relaxed text-cream/65">{subtitle}</p>
-        )}
+      <div className="absolute inset-0 bg-gradient-to-b from-night/35 via-night/45 to-night" />
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-10 sm:px-8">
+        {eyebrow && <p className="kicker">{eyebrow}</p>}
+        <Heading className="headline mt-5 max-w-4xl text-[clamp(3rem,8vw,7rem)]">{title}</Heading>
+        {subtitle && <p className="mt-6 max-w-lg leading-relaxed text-cream/85">{subtitle}</p>}
       </div>
     </section>
   );

@@ -95,48 +95,57 @@ export default function BrowseGrid({
     setQuery(f.q ? String(f.q) : "");
   }
 
+  const tab = (active: boolean) =>
+    `min-h-[44px] border-b text-[15px] transition ${
+      active ? "border-brass font-medium text-brass" : "border-transparent text-cream hover:text-brass"
+    }`;
+  const label = "mb-1.5 block text-xs text-mute";
+
   return (
     <div>
-      {/* AI search */}
-      <form onSubmit={aiSearch} className="mx-auto mb-7 flex max-w-2xl gap-2">
-        <input
-          className="field"
-          value={ask}
-          onChange={(e) => setAsk(e.target.value)}
-          placeholder="Describe it — e.g. “something red for a wedding under $50”"
-        />
-        <button type="submit" className="btn-primary whitespace-nowrap" disabled={aiBusy}>
-          {aiBusy ? "…" : "✦ Ask"}
+      {/* Ask the stylist (AI search) */}
+      <form onSubmit={aiSearch} className="mb-10 flex max-w-xl items-end gap-4">
+        <label className="min-w-0 flex-1">
+          <span className="block text-xs font-medium uppercase tracking-[0.2em] text-mute">Ask the stylist</span>
+          <input
+            className="mt-1 min-h-[48px] w-full border-b border-cream bg-transparent text-base text-zari outline-none placeholder:text-mute/70 focus:border-brass"
+            value={ask}
+            onChange={(e) => setAsk(e.target.value)}
+            placeholder="Something red for a wedding under $50"
+          />
+        </label>
+        <button type="submit" className="btn-ghost" disabled={aiBusy}>
+          {aiBusy ? "…" : "Ask"}
         </button>
       </form>
 
-      {/* occasion chips */}
-      <div className="mb-5 flex flex-wrap justify-center gap-2">
-        <button
-          onClick={() => setOccasion(null)}
-          className={`rounded-full px-4 py-1.5 text-sm transition ${
-            !occasion ? "bg-gradient-to-r from-rani to-marigold text-white" : "chip hover:bg-gold/15"
-          }`}
-        >
-          All occasions
-        </button>
-        {occasions.map((o) => (
-          <button
-            key={o}
-            onClick={() => setOccasion(occasion === o ? null : o)}
-            className={`rounded-full px-4 py-1.5 text-sm transition ${
-              occasion === o ? "bg-gradient-to-r from-rani to-marigold text-white" : "chip hover:bg-gold/15"
-            }`}
-          >
-            {o}
+      {/* category + occasion tabs */}
+      <div className="flex flex-wrap gap-x-7 gap-y-1">
+        {categories.map((c) => (
+          <button key={c} onClick={() => setCategory(c)} aria-pressed={category === c} className={tab(category === c)}>
+            {c === "All" ? "All pieces" : c}
           </button>
         ))}
       </div>
+      {occasions.length > 0 && (
+        <div className="mt-1 flex flex-wrap gap-x-7 gap-y-1">
+          {occasions.map((o) => (
+            <button
+              key={o}
+              onClick={() => setOccasion(occasion === o ? null : o)}
+              aria-pressed={occasion === o}
+              className={tab(occasion === o)}
+            >
+              {o}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* filter bar */}
-      <div className="panel mb-8 grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid gap-5 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-4">
         <label className="block">
-          <span className="eyebrow mb-1 block">Search</span>
+          <span className={label}>Search</span>
           <input
             className="field"
             value={query}
@@ -145,54 +154,37 @@ export default function BrowseGrid({
           />
         </label>
         <label className="block">
-          <span className="eyebrow mb-1 block">Category</span>
-          <select className="field" value={category} onChange={(e) => setCategory(e.target.value)}>
-            {categories.map((c) => (
-              <option key={c} value={c} className="bg-night">
-                {c}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="eyebrow mb-1 block">Up to {`$${price}`}/day</span>
+          <span className={label}>Up to {`$${price}`} a day</span>
           <input
             type="range"
             min={10}
             max={maxPrice}
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
-            className="mt-3 w-full accent-rani"
+            className="mt-3 w-full accent-brass"
           />
         </label>
-        <div className="grid grid-cols-2 gap-2">
-          <label className="block">
-            <span className="eyebrow mb-1 block">From</span>
-            <input type="date" min={minDate} className="field" value={from} onChange={(e) => setFrom(e.target.value)} />
-          </label>
-          <label className="block">
-            <span className="eyebrow mb-1 block">To</span>
-            <input type="date" min={from || minDate} className="field" value={to} onChange={(e) => setTo(e.target.value)} />
-          </label>
-        </div>
+        <label className="block">
+          <span className={label}>Free from</span>
+          <input type="date" min={minDate} className="field" value={from} onChange={(e) => setFrom(e.target.value)} />
+        </label>
+        <label className="block">
+          <span className={label}>To</span>
+          <input type="date" min={from || minDate} className="field" value={to} onChange={(e) => setTo(e.target.value)} />
+        </label>
       </div>
 
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-sm text-cream/70">
+      <div className="mb-8 mt-5 flex items-center justify-between gap-3">
+        <p className="text-sm text-mute">
           {results.length} {results.length === 1 ? "piece" : "pieces"}
           {from && " available"}
         </p>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setSavedOnly((s) => !s)}
-            className={`rounded-full px-4 py-1.5 text-sm transition ${
-              savedOnly ? "bg-rani text-white" : "chip hover:bg-gold/15"
-            }`}
-          >
+        <div className="flex items-center gap-6">
+          <button onClick={() => setSavedOnly((s) => !s)} aria-pressed={savedOnly} className={tab(savedOnly)}>
             ♥ Saved
           </button>
           {activeFilters && (
-            <button onClick={clearAll} className="text-sm text-gold/70 underline hover:text-gold">
+            <button onClick={clearAll} className="min-h-[44px] text-sm text-mute underline hover:text-cream">
               Clear
             </button>
           )}
@@ -200,12 +192,12 @@ export default function BrowseGrid({
       </div>
 
       {results.length === 0 ? (
-        <p className="py-16 text-center text-cream/60">
+        <p className="py-16 text-center text-mute">
           Nothing matches those filters
-          {savedOnly && " — heart a few pieces to save them"}.
+          {savedOnly && ". Heart a few pieces to save them"}.
         </p>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((item) => (
             <ItemCard key={item.id} item={item} />
           ))}

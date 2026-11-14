@@ -34,11 +34,11 @@ export default function GiftForm() {
     return (
       <div className="panel p-6 text-center">
         <p className="eyebrow">A gift for {card.to}</p>
-        <p className="mt-2 font-display text-5xl text-gold-shimmer">{money(card.amount)}</p>
+        <p className="mt-2 font-display text-6xl font-light text-zari">{money(card.amount)}</p>
         {card.message && <p className="mt-2 text-cream/70">“{card.message}”</p>}
         <p className="mt-5 text-sm text-cream/55">Gift code</p>
         <div className="mt-1 flex items-center justify-center gap-2">
-          <code className="rounded-lg border border-gold/30 bg-night/50 px-4 py-2 font-mono text-lg text-gold">
+          <code className="border border-line bg-night px-4 py-2 font-mono text-lg text-brass">
             {card.code}
           </code>
           <button
@@ -64,7 +64,7 @@ export default function GiftForm() {
   }
 
   return (
-    <form onSubmit={submit} className="panel space-y-3 p-6">
+    <form onSubmit={submit} className="space-y-4 border border-line p-6 sm:p-8">
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="block">
           <span className="eyebrow mb-1 block">From</span>

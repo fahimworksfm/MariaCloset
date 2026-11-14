@@ -22,7 +22,10 @@ export default function HeroVideo({ src }: { src: string }) {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      {/* still shown instead of the clip under prefers-reduced-motion */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/silk-light.jpg" alt="" className="hidden h-full w-full object-cover motion-reduce:block" />
       <video
         ref={ref}
         src={src}
@@ -33,9 +36,8 @@ export default function HeroVideo({ src }: { src: string }) {
         preload="auto"
         className="h-full w-full object-cover opacity-75 motion-reduce:hidden"
       />
-      {/* keep the headline legible + feather the clip into the near-black canvas */}
-      <div className="absolute inset-0 bg-gradient-to-b from-night/55 via-night/20 to-night" />
-      <div className="absolute inset-0 bg-[radial-gradient(80%_70%_at_50%_42%,transparent,rgba(16,15,13,0.68))]" />
+      {/* the headline sits bottom-left: darken the foot and feather into the canvas */}
+      <div className="absolute inset-0 bg-gradient-to-b from-night/45 via-night/25 to-night" />
     </div>
   );
 }

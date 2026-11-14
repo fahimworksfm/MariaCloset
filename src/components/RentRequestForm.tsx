@@ -238,21 +238,21 @@ export default function RentRequestForm({
         </p>
       )}
 
-      <div className="panel flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-sm text-cream/70">
+      <div className="flex flex-col gap-4 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="text-sm text-mute">
           {complete ? (
             <>
-              <span className="text-gold">{money(item.pricePerDay)}</span> × {days} day
+              <span className="text-cream">{money(item.pricePerDay)}</span> × {days} day
               {days > 1 ? "s" : ""}
             </>
           ) : (
             <>Pick dates to see your total</>
           )}
-          <div className="font-display text-3xl text-gold-shimmer">
+          <div className="font-display text-4xl font-light text-zari">
             {complete ? money(total) : "—"}
           </div>
         </div>
-        <button type="submit" className="btn-primary" disabled={!canSubmit}>
+        <button type="submit" className="btn-accent" disabled={!canSubmit}>
           {status === "submitting" ? "Sending…" : "Request to rent"}
         </button>
       </div>

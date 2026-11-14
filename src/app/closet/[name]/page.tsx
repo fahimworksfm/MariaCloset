@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import Petals from "@/components/Petals";
 import ItemCard from "@/components/ItemCard";
 import Lookbook from "@/components/Lookbook";
-import { PaisleyDivider } from "@/components/Ornament";
 import { getItems } from "@/lib/store";
 import { getLookbookFor } from "@/lib/lookbookStore";
 import { siteConfig } from "@/data/config";
@@ -28,15 +27,19 @@ export default async function ClosetPage({ params }: { params: { name: string } 
       <Petals />
       <div className="relative z-10">
         <Navbar />
-        <main className="mx-auto max-w-6xl px-5 py-10">
-          <Link href="/closets" className="text-sm font-medium text-gold/80 transition hover:text-marigold">
-            ‹ All closets
+        <main className="mx-auto max-w-7xl px-5 pt-6 sm:px-8">
+          <Link href="/closets" className="inline-block py-3 text-sm text-mute transition hover:text-cream">
+            ← All closets
           </Link>
-          <h1 className="mt-4 text-center font-display text-5xl text-gold-shimmer">
-            {name}&apos;s closet
-          </h1>
-          <PaisleyDivider className="mx-auto my-6 h-7 w-40 text-gold/70" />
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mb-12 mt-6 flex flex-wrap items-end justify-between gap-4">
+            <h1 className="headline text-[clamp(3rem,8vw,7rem)]">
+              {name}&apos;s <em className="italic">closet</em>
+            </h1>
+            <p className="text-sm text-mute">
+              {items.length} piece{items.length > 1 ? "s" : ""}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}

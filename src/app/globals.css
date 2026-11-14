@@ -50,32 +50,51 @@ body {
     color: theme(colors.zari);
   }
 
-  /* Primary: a solid bone pill with near-black text. High-contrast, flat. */
+  /* Primary: a solid bone block with near-black text. High-contrast, flat. */
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3
-      text-xs font-medium uppercase tracking-[0.22em] transition
+    @apply relative inline-flex min-h-[46px] items-center justify-center gap-2 px-7 py-3
+      text-sm font-medium transition
       hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50;
-    background: theme(colors.cream);
+    background: theme(colors.zari);
     color: theme(colors.night);
   }
 
   /* Ghost: a single bone hairline, transparent fill. */
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border px-7 py-3
-      text-xs font-medium uppercase tracking-[0.22em] text-cream transition
+    @apply inline-flex min-h-[46px] items-center justify-center gap-2 border px-7 py-3
+      text-sm font-medium text-cream transition
       hover:bg-cream/5 active:scale-[0.99];
-    border-color: rgba(236, 231, 221, 0.22);
+    border-color: rgba(236, 231, 221, 0.45);
     background: transparent;
   }
 
+  /* Public-site accent CTA (the one place brass fills a button). */
+  .btn-accent {
+    @apply inline-flex min-h-[46px] items-center justify-center gap-2 px-7 py-3
+      text-sm font-semibold transition
+      hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50;
+    background: theme(colors.brass);
+    color: theme(colors.night);
+  }
+
+  /* Public-site section label. `.eyebrow` stays grey for forms and the admin. */
+  .kicker {
+    @apply text-xs font-medium uppercase tracking-[0.28em] text-brass;
+  }
+
+  /* Oversized light serif headline. */
+  .headline {
+    @apply font-display font-light leading-[0.92] tracking-[-0.03em] text-zari;
+  }
+
   .panel {
-    @apply rounded-2xl border;
+    @apply border;
     border-color: rgba(236, 231, 221, 0.1);
     background: rgba(255, 255, 255, 0.02);
   }
 
   .field {
-    @apply w-full rounded-lg border px-4 py-3 text-sm text-cream outline-none transition
+    @apply w-full border px-4 py-3 text-sm text-cream outline-none transition
       placeholder:text-cream/30;
     border-color: rgba(236, 231, 221, 0.16);
     background: rgba(255, 255, 255, 0.02);

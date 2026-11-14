@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import { siteConfig } from "@/data/config";
 import { getSettings } from "@/lib/settings";
 import InviteCapture from "@/components/InviteCapture";
 import Stylist from "@/components/Stylist";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-display",
   display: "swap",
 });

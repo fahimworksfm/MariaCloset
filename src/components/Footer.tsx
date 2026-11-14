@@ -1,29 +1,22 @@
 import { siteConfig } from "@/data/config";
 import { getSettings } from "@/lib/settings";
-import { PaisleyDivider } from "./Ornament";
 
 export default async function Footer() {
   const { site } = await getSettings();
   return (
-    <footer className="relative mt-24 border-t border-gold/15">
-      <div className="mx-auto max-w-6xl px-5 pb-12 pt-10">
-        <PaisleyDivider className="mx-auto mb-7 h-7 w-40 text-gold/70" />
-        <div className="mb-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-cream/70">
-          <a href="/browse" className="transition hover:text-gold">Browse</a>
-          <a href="/closets" className="transition hover:text-gold">Closets</a>
-          <a href="/membership" className="transition hover:text-gold">Membership &amp; gifts</a>
-          <a href="/refer" className="transition hover:text-gold">Invite a friend</a>
-          <a href="/join" className="transition hover:text-gold">Open a closet</a>
+    <footer className="mt-24 border-t border-line">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 py-10 sm:px-8 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="font-display text-2xl text-zari">{siteConfig.name}</p>
+          <p className="mt-2 text-sm text-mute">{site.tagline}</p>
         </div>
-        <div className="flex flex-col items-center justify-between gap-3 text-sm text-cream/70 sm:flex-row">
-          <p className="font-display text-lg text-gold">{siteConfig.name}</p>
-          <p className="text-base text-rani">{site.tagline}</p>
-          <p className="text-cream/50">
-            Rent responsibly · Handle with love ·{" "}
-            <a href="/admin" className="transition hover:text-gold">
-              Manage
-            </a>
-          </p>
+        <div className="flex flex-wrap gap-x-7 gap-y-1 text-sm text-cream">
+          <a href="/browse" className="py-2 transition hover:text-brass">Browse</a>
+          <a href="/closets" className="py-2 transition hover:text-brass">Closets</a>
+          <a href="/membership" className="py-2 transition hover:text-brass">Membership &amp; gifts</a>
+          <a href="/refer" className="py-2 transition hover:text-brass">Invite a friend</a>
+          <a href="/join" className="py-2 transition hover:text-brass">Open a closet</a>
+          <a href="/admin" className="py-2 text-mute transition hover:text-cream">Manage</a>
         </div>
       </div>
     </footer>

@@ -23,6 +23,10 @@ const config: Config = {
         royal: "#8C8579",
         emerald: "#8E978A", // faint neutral for back-office "approved"
         vermilion: "#BE6A5E", // muted terracotta — errors only
+        // Public-site additions. The admin stays monochrome and never uses brass.
+        brass: "#C9A45C", // the one accent — eyebrows, links, the primary CTA on a piece
+        mute: "#A8A193", // secondary text (passes 4.5:1 on night)
+        line: "#2E2A24", // hairlines
       },
       fontFamily: {
         display: ["var(--font-display)", "Georgia", "serif"],

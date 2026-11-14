@@ -12,7 +12,6 @@ import ShareButton from "@/components/ShareButton";
 import SizeFit from "@/components/SizeFit";
 import CompleteTheLook from "@/components/CompleteTheLook";
 import ReviewsSection from "@/components/ReviewsSection";
-import { AlpanaCorner, ScallopValance } from "@/components/Ornament";
 import { getItemById, getItems } from "@/lib/store";
 import { getSettings } from "@/lib/settings";
 import { approvedForItem } from "@/lib/reviews";
@@ -37,91 +36,80 @@ export default async function ItemPage({ params }: { params: { id: string } }) {
   const images = item.frames?.length ? item.frames : [item.image];
   const [allItems, reviews, settings] = await Promise.all([getItems(), approvedForItem(item.id), getSettings()]);
 
+  const facts: [string, string][] = [
+    ["Size", item.size],
+    ["Colour", item.color],
+  ];
+  if (item.occasions?.length) facts.push(["Occasions", item.occasions.join(", ")]);
+  if (item.details?.length) facts.push(["Details", item.details.join(" · ")]);
+
   return (
     <>
       <RecordView itemId={item.id} />
       <Petals />
       <div className="relative z-10">
         <Navbar />
-        <main className="mx-auto max-w-6xl px-5 py-8">
-          <div className="flex items-center justify-between gap-3">
-            <Link
-              href="/"
-              className="text-sm font-medium text-gold/80 transition hover:text-marigold"
-            >
-              ‹ Back to the closet
-            </Link>
-            <ShareButton title={item.name} />
-          </div>
-
-          <div className="mt-6 grid gap-10 lg:grid-cols-2">
-            {/* 3D inspect viewer */}
-            <div>
-              <div className="panel relative overflow-hidden">
-                <ScallopValance className="h-5 w-full text-gold/70" />
-                <AlpanaCorner className="absolute left-3 top-8 h-12 w-12 text-gold/30" />
-                <AlpanaCorner className="absolute right-3 top-8 h-12 w-12 -scale-x-100 text-gold/30" />
-                <div
-                  className="relative aspect-[4/5] w-full"
-                  style={{
-                    background: `radial-gradient(70% 60% at 50% 38%, ${item.accent}33, transparent 70%)`,
-                  }}
-                >
-                  <SpinViewerClient images={images} accent={item.accent} />
-                  <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.2em] text-gold/70">
-                    {images.length > 1 ? "drag to spin 360°" : "drag to take a closer look"}
-                  </p>
-                </div>
+        <main>
+          <div className="grid lg:grid-cols-2">
+            {/* 3D inspect viewer — full-bleed on the left, pinned while the details scroll */}
+            <div className="relative bg-aubergine lg:sticky lg:top-[61px] lg:h-[calc(100vh-61px)]">
+              <div className="relative aspect-[4/5] w-full lg:aspect-auto lg:h-full">
+                <SpinViewerClient images={images} accent={item.accent} />
+                <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-night/60 px-3 py-1.5 text-xs text-cream backdrop-blur">
+                  {images.length > 1 ? "Drag to spin 360°" : "Drag to take a closer look"}
+                </p>
               </div>
             </div>
 
             {/* details + request */}
-            <div>
-              <p className="eyebrow">
+            <div className="px-5 pb-16 pt-6 sm:px-10 lg:px-14 lg:pt-10">
+              <div className="flex items-center justify-between gap-3">
+                <Link href="/browse" className="py-3 text-sm text-mute transition hover:text-cream">
+                  ← The closet
+                </Link>
+                <ShareButton title={item.name} />
+              </div>
+
+              <p className="kicker mt-8">
                 {item.category}
                 {item.brand ? ` · ${item.brand}` : ""}
               </p>
-              <h1 className="mt-2 font-display text-5xl leading-tight text-gold-shimmer">
-                {item.name}
-              </h1>
-              <p className="mt-3 text-3xl font-semibold text-gold">
-                {money(item.pricePerDay)}{" "}
-                <span className="text-base font-normal text-cream/60">/ day</span>
+              <h1 className="headline mt-4 text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[0.95]">{item.name}</h1>
+              <p className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-display text-4xl font-light text-zari">{money(item.pricePerDay)}</span>
+                <span className="text-sm text-mute">
+                  per day{item.retailValue ? ` · retail value ${money(item.retailValue)}` : ""}
+                </span>
               </p>
 
-              <div className="mt-4 flex flex-wrap gap-2 text-sm">
-                <span className="chip">Size {item.size}</span>
-                <span className="chip">{item.color}</span>
-                {item.retailValue && <span className="chip">Retail {money(item.retailValue)}</span>}
-              </div>
+              <p className="mt-6 max-w-xl leading-relaxed text-cream/85">{item.description}</p>
 
-              <p className="mt-5 text-cream/80">{item.description}</p>
-
-              {item.details && (
-                <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm text-cream/75">
-                  {item.details.map((d) => (
-                    <li key={d} className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-marigold" />
-                      {d}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <dl className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-2">
+                {facts.map(([k, v]) => (
+                  <div key={k} className="bg-night px-4 py-4">
+                    <dt className="text-xs text-mute">{k}</dt>
+                    <dd className="mt-1 text-[15px] text-cream">{v}</dd>
+                  </div>
+                ))}
+              </dl>
 
               <SizeFit item={item} />
 
-              <div className="mt-4">
+              <div className="mt-5">
                 <WaitlistButton itemId={item.id} />
               </div>
 
-              <div className="my-7 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-
-              <RentRequestForm item={item} rewards={settings.rewards} ownerEmail={settings.site.ownerEmail} />
+              <div className="mt-10 bg-aubergine p-5 sm:p-7">
+                <h2 className="mb-5 font-display text-3xl font-light text-zari">Request to rent</h2>
+                <RentRequestForm item={item} rewards={settings.rewards} ownerEmail={settings.site.ownerEmail} />
+              </div>
             </div>
           </div>
 
-          <CompleteTheLook item={item} all={allItems} />
-          <ReviewsSection itemId={item.id} reviews={reviews} />
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <CompleteTheLook item={item} all={allItems} />
+            <ReviewsSection itemId={item.id} reviews={reviews} />
+          </div>
         </main>
         <Footer />
       </div>
