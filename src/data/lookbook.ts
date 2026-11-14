@@ -41,7 +41,7 @@ export const lookbook: LookEntry[] = [
     caption: "Deep jewel tones that catch the light.",
     accent: "#5A4A86",
     image: "/lookbook/reception.jpg",
-    video: "/videos/saree-drift.mp4",
+    video: "/videos/lehenga-turn.mp4",
     itemId: "royal-anarkali-suit",
   },
   {
