@@ -21,7 +21,7 @@ export function InviteShare({ code, welcomeOffer }: { code: string; welcomeOffer
 
   return (
     <div className="mt-3">
-      <div className="flex items-center gap-2 rounded-lg border border-cream/15 bg-white/[0.02] px-3 py-2.5">
+      <div className="flex items-center gap-2 border border-line bg-night px-3 py-2.5">
         <span className="min-w-0 flex-1 truncate text-sm text-cream" title={link}>
           {link}
         </span>

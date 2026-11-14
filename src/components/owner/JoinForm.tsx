@@ -29,7 +29,7 @@ export default function JoinForm() {
   if (status === "done") {
     return (
       <div className="panel p-6 text-center">
-        <p className="font-display text-2xl text-gold">Application sent ✓</p>
+        <p className="font-display text-3xl font-light text-zari">Application sent ✓</p>
         <p className="mt-2 text-cream/70">
           We&apos;ll review {f.closet}&apos;s closet and email you when it&apos;s approved — then log
           in to add your pieces.
@@ -71,7 +71,7 @@ export default function JoinForm() {
       {status === "error" && <p className="text-sm text-vermilion">{err}</p>}
       <p className="text-center text-sm text-cream/60">
         Already approved?{" "}
-        <Link href="/owner/login" className="text-gold underline">
+        <Link href="/owner/login" className="text-brass underline">
           Log in
         </Link>
       </p>

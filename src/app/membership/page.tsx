@@ -31,73 +31,78 @@ const tiers = [
 
 export default async function MembershipPage() {
   const { rewards } = await getSettings();
+  const discounts = rewards.tiers
+    .filter((t) => t.discountPct)
+    .map((t) => `${t.name}s get ${t.discountPct}% off`)
+    .join(", ");
   return (
-    <>
-      <div className="relative z-10">
-        <Navbar />
-        <ImageBand
-          src="/brand/gold-sweep.jpg"
-          eyebrow="For the regulars"
-          title="Membership & gifts"
-          as="h1"
-          heightClass="h-[42vh] min-h-[300px]"
-          priority
-        />
-        <main className="mx-auto max-w-5xl px-5 py-14">
-          <div className="grid gap-5 sm:grid-cols-2">
-            {tiers.map((t) => (
-              <div
-                key={t.name}
-                className={`panel p-7 ${t.highlight ? "border-gold/50 shadow-glow" : ""}`}
-              >
-                {t.highlight && <p className="eyebrow mb-1">Most loved</p>}
-                <h2 className="font-display text-3xl text-gold">{t.name}</h2>
-                <p className="mt-1 text-sm text-cream/60">{t.price}</p>
-                <ul className="mt-4 space-y-2 text-sm text-cream/75">
-                  {t.perks.map((p) => (
-                    <li key={p} className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-marigold" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/browse" className={`${t.highlight ? "btn-primary" : "btn-ghost"} mt-6`}>
+    <div className="relative z-10">
+      <Navbar />
+      <ImageBand
+        src="/brand/gold-sweep.jpg"
+        eyebrow="For the regulars"
+        title="Membership & gifts"
+        as="h1"
+        heightClass="h-[48vh] min-h-[340px]"
+        priority
+      />
+      <main>
+        <div className="mx-auto grid max-w-7xl gap-5 px-5 pt-14 sm:px-8 md:grid-cols-2">
+          {tiers.map((t) => (
+            <div
+              key={t.name}
+              className={`flex flex-col border p-8 sm:p-10 ${t.highlight ? "border-brass bg-aubergine" : "border-line"}`}
+            >
+              {t.highlight && <p className="kicker mb-3">Most loved</p>}
+              <h2 className="font-display text-4xl font-light text-zari">{t.name}</h2>
+              <p className="mt-2 text-sm text-mute">{t.price}</p>
+              <ul className="mt-6 border-b border-line text-[15px] text-cream">
+                {t.perks.map((p) => (
+                  <li key={p} className="border-t border-line py-3.5">
+                    {p}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-auto pt-8">
+                <Link href="/browse" className={t.highlight ? "btn-accent" : "btn-ghost"}>
                   {t.highlight ? "Enquire to join" : "Browse pieces"}
                 </Link>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
 
-          <section className="mt-16 text-center">
-            <p className="eyebrow">Rewards</p>
-            <h2 className="mt-3 font-display text-3xl text-cream">
-              Give {money(rewards.welcomeOffer)}, get {money(rewards.referralReward)}
-            </h2>
-            <p className="mx-auto mt-2 max-w-md text-cream/60">
-              Invite friends for credit, and save more with every rental —{" "}
-              {rewards.tiers
-                .filter((t) => t.discountPct)
-                .map((t) => `${t.name}s get ${t.discountPct}% off`)
-                .join(", ")}
-              .
-            </p>
-            <Link href="/refer" className="btn-ghost mt-6">
-              Get your invite link
-            </Link>
-          </section>
-
-          <section className="mt-16">
-            <h2 className="text-center font-display text-3xl text-gold">Gift a rental</h2>
-            <p className="mx-auto mt-2 max-w-md text-center text-cream/65">
-              The perfect present — a credit toward something gorgeous. Create a code to share.
-            </p>
-            <div className="mx-auto mt-6 max-w-lg">
-              <GiftForm />
+          <section className="mt-24 bg-aubergine">
+            <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-8 px-5 py-20 sm:px-8">
+              <div>
+                <p className="kicker">Rewards</p>
+                <h2 className="headline mt-4 text-[clamp(2.5rem,6vw,5rem)] leading-[0.95]">
+                  Give {money(rewards.welcomeOffer)},{" "}
+                  <em className="italic">get {money(rewards.referralReward)}</em>
+                </h2>
+                <p className="mt-5 max-w-md leading-relaxed text-mute">
+                  Invite friends for credit, and save more with every rental{discounts ? `. ${discounts}.` : "."}
+                </p>
+              </div>
+              <Link href="/refer" className="btn-ghost">
+                Get your invite link
+              </Link>
             </div>
           </section>
-        </main>
-        <Footer />
-      </div>
-    </>
+
+        <section className="mx-auto grid max-w-7xl gap-12 px-5 pt-24 sm:px-8 lg:grid-cols-2">
+          <div>
+            <h2 className="headline text-[clamp(2.5rem,5vw,4rem)] leading-[0.98]">
+              Gift a <em className="italic">rental</em>
+            </h2>
+            <p className="mt-5 max-w-sm leading-relaxed text-mute">
+              The perfect present: a credit toward something gorgeous. Create a code to share.
+            </p>
+          </div>
+          <GiftForm />
+        </section>
+      </main>
+      <Footer />
+    </div>
   );
 }

@@ -17,7 +17,7 @@ export default function JoinPage() {
         title="Open your closet"
         subtitle="Apply to list your own pieces alongside Maria's. Once approved, you'll manage your closet from your own dashboard."
         as="h1"
-        heightClass="h-[46vh] min-h-[320px]"
+        heightClass="h-[56vh] min-h-[420px]"
         priority
       />
       <main className="mx-auto max-w-lg px-5 py-14">
