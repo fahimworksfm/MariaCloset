@@ -33,6 +33,8 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
     }
   }
 
+  const meta = [item.color, (item.occasions ?? []).join(", ")].filter(Boolean).join(" · ");
+
   return (
     <Link
       href={`/items/${item.id}`}
@@ -47,13 +49,13 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
           e.stopPropagation();
           wishlist.toggle(item.id);
         }}
-        className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border border-cream/20 bg-night/50 text-lg backdrop-blur transition hover:border-cream/40"
+        className="absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center rounded-full bg-night/55 text-lg backdrop-blur transition hover:bg-night/80"
       >
-        <span className={isSaved ? "text-cream" : "text-cream/60"}>{isSaved ? "♥" : "♡"}</span>
+        <span className={isSaved ? "text-brass" : "text-cream"}>{isSaved ? "♥" : "♡"}</span>
       </button>
 
       <div
-        className="relative grid w-full place-items-center overflow-hidden bg-white/[0.02]"
+        className="relative grid w-full place-items-center overflow-hidden bg-aubergine"
         style={{ aspectRatio: compact ? "1 / 1" : "4 / 5" }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -63,7 +65,7 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
           loading="lazy"
           className={`h-full w-full ${
             isRaster(item.image) ? "object-cover" : "object-contain"
-          } transition duration-500 group-hover:scale-105`}
+          } transition duration-500 group-hover:scale-[1.03]`}
         />
 
         {item.video && (
@@ -79,7 +81,7 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
               className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             />
             {/* subtle "has motion" cue, fades out once the clip plays */}
-            <span className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1 rounded-full border border-gold/30 bg-night/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-gold/90 backdrop-blur transition-opacity duration-300 group-hover:opacity-0">
+            <span className="pointer-events-none absolute bottom-3 left-3 z-10 flex items-center gap-1 bg-night/60 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-cream backdrop-blur transition-opacity duration-300 group-hover:opacity-0">
               <span className="text-[8px]">▶</span> Motion
             </span>
           </>
@@ -87,14 +89,19 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
       </div>
 
       <div className="pt-4">
-        <p className="eyebrow truncate">
-          {item.category}
-          {item.brand ? ` · ${item.brand}` : ""}
-        </p>
-        <h3 className="mt-2 truncate font-display text-lg leading-tight text-cream">{item.name}</h3>
-        <p className="mt-1.5 text-[13px] tracking-wide text-cream/50">
-          {money(item.pricePerDay)} <span className="text-cream/30">/ day</span>
-        </p>
+        <div className={compact ? "" : "flex items-baseline justify-between gap-3"}>
+          <h3
+            className={`truncate font-display leading-tight text-zari transition group-hover:text-brass ${
+              compact ? "text-lg" : "text-xl sm:text-2xl"
+            }`}
+          >
+            {item.name}
+          </h3>
+          <p className={`flex-none text-cream ${compact ? "mt-1 text-sm" : "text-[15px]"}`}>
+            {money(item.pricePerDay)} <span className="text-mute">/ day</span>
+          </p>
+        </div>
+        {!compact && meta && <p className="mt-1.5 truncate text-[13px] text-mute">{meta}</p>}
       </div>
     </Link>
   );

@@ -23,7 +23,7 @@ export default function CategoryMenu() {
       key={c}
       href={`/browse?category=${encodeURIComponent(c)}`}
       onClick={() => setOpen(false)}
-      className="block rounded-lg px-3 py-1.5 text-sm text-cream/80 transition hover:bg-gold/10 hover:text-gold"
+      className="block px-3 py-2 text-sm text-cream transition hover:bg-cream/5 hover:text-brass"
     >
       {c}
     </Link>
@@ -33,19 +33,19 @@ export default function CategoryMenu() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-sm font-medium text-cream/80 transition hover:text-gold"
+        className="flex items-center gap-1.5 py-3 text-sm text-cream transition hover:text-brass"
         aria-expanded={open}
       >
         Shop
         <span className={`text-[10px] transition-transform ${open ? "rotate-180" : ""}`}>▼</span>
       </button>
       {open && (
-        <div className="panel absolute left-0 top-full z-50 mt-3 w-56 p-3">
-          <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold/60">
+        <div className="absolute left-0 top-full z-50 mt-1 w-56 border border-line bg-aubergine p-3">
+          <p className="px-3 pb-1 text-[11px] font-medium uppercase tracking-[0.2em] text-mute">
             Clothes
           </p>
           {CLOTHES.map(link)}
-          <div className="my-2 h-px bg-gold/15" />
+          <div className="my-2 h-px bg-line" />
           {OTHER.map(link)}
         </div>
       )}

@@ -25,11 +25,11 @@ export default function CompleteTheLook({ item, all }: { item: Item; all: Item[]
   return (
     <section className="mt-16">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-display text-3xl text-gold">Complete the look</h2>
+        <h2 className="font-display text-4xl font-light text-zari">Complete the look</h2>
         <p className="text-sm text-cream/70">
           Rent the look:{" "}
           <span className="text-cream/50 line-through">{money(full)}</span>{" "}
-          <span className="font-semibold text-gold">{money(bundle)}</span>/day
+          <span className="font-semibold text-brass">{money(bundle)}</span>/day
           <span className="ml-1 rounded-full bg-emerald/20 px-2 py-0.5 text-xs text-emerald">
             save 10%
           </span>

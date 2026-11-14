@@ -73,21 +73,21 @@ export default function AvailabilityCalendar({
   }
 
   return (
-    <div className="panel p-4">
+    <div className="border border-line p-4">
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
           onClick={() => shiftMonth(-1)}
-          className="grid h-8 w-8 place-items-center rounded-full text-gold transition hover:bg-gold/10"
+          className="grid h-11 w-11 place-items-center text-cream transition hover:bg-cream/10"
           aria-label="Previous month"
         >
           ‹
         </button>
-        <p className="font-display text-xl text-gold">{monthLabel(view.year, view.month)}</p>
+        <p className="font-display text-xl text-zari">{monthLabel(view.year, view.month)}</p>
         <button
           type="button"
           onClick={() => shiftMonth(1)}
-          className="grid h-8 w-8 place-items-center rounded-full text-gold transition hover:bg-gold/10"
+          className="grid h-11 w-11 place-items-center text-cream transition hover:bg-cream/10"
           aria-label="Next month"
         >
           ›
@@ -105,16 +105,16 @@ export default function AvailabilityCalendar({
       <div className="grid grid-cols-7 gap-1">
         {weeks.flat().map((date) => {
           const s = cellState(date);
-          const base = "h-9 rounded-lg text-sm transition flex items-center justify-center";
-          let cls = "text-cream/85 hover:bg-gold/10";
+          const base = "h-10 text-sm transition flex items-center justify-center";
+          let cls = "text-cream hover:bg-cream/10";
           if (!s.inMonth) cls = "text-cream/20";
           if (s.disabled && s.inMonth)
             cls = s.booked
-              ? "text-vermilion/60 line-through cursor-not-allowed"
+              ? "text-mute line-through cursor-not-allowed"
               : "text-cream/25 cursor-not-allowed";
-          if (s.inRange) cls = "bg-rani/20 text-cream";
+          if (s.inRange) cls = "bg-brass/25 text-zari";
           if (s.isFrom || s.isTo)
-            cls = "bg-gradient-to-br from-rani to-marigold text-white font-semibold shadow-glow-pink";
+            cls = "bg-brass text-night font-semibold";
           return (
             <button
               key={s.iso}
@@ -129,12 +129,12 @@ export default function AvailabilityCalendar({
         })}
       </div>
 
-      <div className="mt-3 flex items-center gap-4 text-[11px] text-cream/60">
+      <div className="mt-3 flex items-center gap-4 text-[12px] text-mute">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-rani to-marigold" /> selected
+          <span className="h-2.5 w-2.5 bg-brass" /> selected
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-vermilion/50" /> booked
+          <span className="line-through">12</span> booked
         </span>
       </div>
     </div>

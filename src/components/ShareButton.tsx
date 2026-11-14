@@ -25,7 +25,7 @@ export default function ShareButton({ title }: { title: string }) {
   }
 
   return (
-    <button onClick={share} className="btn-ghost px-5 py-2 text-sm">
+    <button onClick={share} className="btn-ghost px-5">
       {copied ? "Link copied ✓" : "Share ↗"}
     </button>
   );

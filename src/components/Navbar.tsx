@@ -1,36 +1,39 @@
 import Link from "next/link";
 import { siteConfig } from "@/data/config";
-import { LotusMark } from "./Ornament";
 import CategoryMenu from "./CategoryMenu";
 
-export default function Navbar() {
+/**
+ * `overlay` lays the bar transparently over a full-bleed hero (the homepage);
+ * everywhere else it is sticky with a blurred near-black ground.
+ */
+export default function Navbar({ overlay = false }: { overlay?: boolean }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-cream/10 bg-night/80 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5">
-        <div className="flex items-center gap-4 sm:gap-5">
-          <Link href="/" className="group flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-items-center rounded-full border border-cream/25">
-              <LotusMark className="h-4 w-4 text-cream" />
-            </span>
-            <span className="font-display text-2xl tracking-tight text-zari sm:text-[1.7rem]">
-              {siteConfig.name}
-            </span>
+    <header
+      className={
+        overlay
+          ? "absolute inset-x-0 top-0 z-40"
+          : "sticky top-0 z-40 border-b border-line bg-night/85 backdrop-blur-md"
+      }
+    >
+      <nav className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-1 px-5 py-3 sm:px-8">
+        <div className="flex items-center gap-5">
+          <Link href="/" className="font-display text-[1.4rem] text-zari">
+            {siteConfig.name}
           </Link>
-          <span className="hidden h-5 w-px bg-gold/20 sm:block" />
           <CategoryMenu />
         </div>
-        <div className="flex items-center gap-6 text-[11px] font-medium uppercase tracking-[0.18em] text-cream/55 sm:gap-8">
-          <Link href="/browse" className="transition hover:text-cream">
+        <div className="flex items-center gap-6 text-sm text-cream sm:gap-7">
+          <Link href="/browse" className="py-3 transition hover:text-brass">
             Browse
           </Link>
-          <Link href="/closets" className="hidden transition hover:text-cream sm:inline">
+          <Link href="/closets" className="py-3 transition hover:text-brass">
             Closets
           </Link>
-          <Link href="/#rail" className="hidden transition hover:text-cream sm:inline">
-            The rail
+          <Link href="/membership" className="hidden py-3 transition hover:text-brass sm:inline">
+            Membership
           </Link>
-          <Link href="/#how" className="hidden transition hover:text-cream sm:inline">
-            How it works
+          <Link href="/refer" className="hidden py-3 transition hover:text-brass sm:inline">
+            Refer
           </Link>
         </div>
       </nav>

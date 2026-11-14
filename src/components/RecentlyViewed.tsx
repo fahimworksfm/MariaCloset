@@ -12,7 +12,7 @@ export default function RecentlyViewed({ items }: { items: Item[] }) {
 
   return (
     <section className="mt-16">
-      <h2 className="font-display text-2xl text-gold">Recently viewed</h2>
+      <h2 className="font-display text-3xl font-light text-zari">Recently viewed</h2>
       <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
         {list.slice(0, 6).map((i) => (
           <ItemCard key={i.id} item={i} compact />

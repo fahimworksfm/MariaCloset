@@ -64,7 +64,7 @@ function Tile({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-70px" }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className={`group relative overflow-hidden rounded-2xl border border-gold/20 ${aspect} md:aspect-auto md:h-full ${className}`}
+      className={`group relative overflow-hidden ${aspect} md:aspect-auto md:h-full ${className}`}
     >
       {showImg ? (
         <motion.div style={{ y }} className="absolute inset-x-0 -top-[10%] h-[120%]">
@@ -110,7 +110,7 @@ function Tile({
         {entry.itemId && (
           <Link
             href={`/items/${entry.itemId}`}
-            className="mt-3 inline-block text-sm font-medium text-gold transition hover:text-zari"
+            className="mt-3 inline-block py-2 text-sm text-brass transition hover:text-zari"
           >
             View the piece →
           </Link>
@@ -137,12 +137,13 @@ export default function Lookbook({
   if (!entries || entries.length === 0) return null;
 
   return (
-    <section id="lookbook" className="mx-auto max-w-6xl px-5 pt-24">
-      <div className="text-center">
-        <p className="eyebrow">{eyebrow}</p>
-        <h2 className="mt-2 font-display text-4xl text-gold-shimmer sm:text-5xl">{title}</h2>
-        <p className="mx-auto mt-3 max-w-xl text-cream/70">{subtitle}</p>
-        <div className="mx-auto mt-6 h-px w-24 bg-cream/20" />
+    <section id="lookbook" className="mx-auto max-w-7xl scroll-mt-20 px-5 pt-28 sm:px-8">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="kicker">{eyebrow}</p>
+          <h2 className="headline mt-4 text-[clamp(2.25rem,5vw,3.75rem)]">{title}</h2>
+        </div>
+        <p className="max-w-sm text-mute">{subtitle}</p>
       </div>
 
       <div className="mt-10 grid gap-4 md:auto-rows-[15rem] md:grid-cols-4">

@@ -5,7 +5,7 @@ import type { Review } from "@/lib/types";
 
 function Stars({ n, className = "" }: { n: number; className?: string }) {
   return (
-    <span className={`text-gold ${className}`}>
+    <span className={`text-brass ${className}`}>
       {"★".repeat(Math.round(n))}
       <span className="text-gold/25">{"★".repeat(5 - Math.round(n))}</span>
     </span>
@@ -41,7 +41,7 @@ export default function ReviewsSection({
   return (
     <section className="mt-16">
       <div className="flex flex-wrap items-baseline gap-3">
-        <h2 className="font-display text-3xl text-gold">Reviews</h2>
+        <h2 className="font-display text-4xl font-light text-zari">Reviews</h2>
         {reviews.length > 0 && (
           <span className="text-sm text-cream/70">
             <Stars n={avg} /> {avg.toFixed(1)} · {reviews.length} review
@@ -83,7 +83,7 @@ export default function ReviewsSection({
                     key={n}
                     type="button"
                     onClick={() => setRating(n)}
-                    className={n <= rating ? "text-gold" : "text-gold/25"}
+                    className={n <= rating ? "text-brass" : "text-cream/25"}
                     aria-label={`${n} stars`}
                   >
                     ★
