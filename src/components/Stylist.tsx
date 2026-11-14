@@ -104,7 +104,7 @@ export default function Stylist() {
         ref={launcher}
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className="fixed bottom-5 right-5 z-50 rounded-full bg-cream px-5 py-3 text-xs font-medium uppercase tracking-[0.2em] text-night shadow-panel transition hover:opacity-90"
+        className="fixed bottom-5 right-5 z-50 inline-flex min-h-[46px] items-center bg-zari px-6 text-sm font-medium text-night shadow-panel transition hover:opacity-90"
       >
         Ask the stylist
       </button>
@@ -117,20 +117,20 @@ export default function Stylist() {
     <div
       role="dialog"
       aria-label="Stylist chat"
-      className="fixed inset-x-3 bottom-3 z-50 flex h-[min(620px,calc(100dvh_-_5rem))] flex-col rounded-2xl border border-cream/15 bg-night shadow-panel sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[400px]"
+      className="fixed inset-x-3 bottom-3 z-50 flex h-[min(620px,calc(100dvh_-_5rem))] flex-col border border-line bg-night shadow-panel sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[400px]"
     >
-      <div className="flex items-start justify-between gap-3 border-b border-cream/10 px-5 py-4">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
         <div>
-          <p className="font-display text-xl text-cream">Stylist</p>
-          <p className="text-xs text-cream/50">Tell me the occasion, budget and vibe.</p>
+          <p className="font-display text-2xl font-light text-zari">Stylist</p>
+          <p className="text-xs text-mute">Tell me the occasion, budget and vibe.</p>
         </div>
         <div className="flex items-center gap-3">
           {msgs.length > 0 && (
-            <button onClick={() => setMsgs([])} className="text-xs text-cream/45 transition hover:text-cream">
+            <button onClick={() => setMsgs([])} className="py-2 text-xs text-mute transition hover:text-cream">
               New chat
             </button>
           )}
-          <button onClick={close} aria-label="Close stylist" className="text-lg leading-none text-cream/60 transition hover:text-cream">
+          <button onClick={close} aria-label="Close stylist" className="grid h-11 w-11 place-items-center text-lg leading-none text-cream transition hover:text-brass">
             ×
           </button>
         </div>
@@ -145,7 +145,7 @@ export default function Stylist() {
             </p>
             <div className="mt-4 flex flex-col items-start gap-2">
               {starters.map((s) => (
-                <button key={s} onClick={() => send(s)} className="chip text-left text-xs hover:bg-cream/5">
+                <button key={s} onClick={() => send(s)} className="border border-line px-3 py-2 text-left text-xs text-cream transition hover:border-brass hover:text-brass">
                   {s}
                 </button>
               ))}
@@ -155,7 +155,7 @@ export default function Stylist() {
 
         {msgs.map((m, i) =>
           m.role === "user" ? (
-            <p key={i} className="ml-auto w-fit max-w-[85%] rounded-2xl bg-cream/10 px-4 py-2 text-sm text-cream">
+            <p key={i} className="ml-auto w-fit max-w-[85%] bg-aubergine px-4 py-2 text-sm text-cream">
               {m.content}
             </p>
           ) : (
@@ -167,7 +167,7 @@ export default function Stylist() {
                     <Link
                       key={p.id}
                       href={`/items/${p.id}`}
-                      className="flex gap-3 rounded-xl border border-cream/10 p-2 transition hover:border-cream/30"
+                      className="flex gap-3 border border-line p-2 transition hover:border-brass"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={p.image} alt="" className="h-[72px] w-14 shrink-0 bg-white/[0.03] object-cover" />
@@ -193,7 +193,7 @@ export default function Stylist() {
           e.preventDefault();
           send(input);
         }}
-        className="flex items-center gap-2 border-t border-cream/10 p-3"
+        className="flex items-center gap-2 border-t border-line p-3"
       >
         <input
           ref={field}
