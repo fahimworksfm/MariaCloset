@@ -64,6 +64,13 @@ export default function Stylist() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // The nav's "Stylist" link opens the chat (the floating button is hidden on phones).
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener("open-stylist", onOpen);
+    return () => window.removeEventListener("open-stylist", onOpen);
+  }, []);
+
   const close = () => setOpen(false);
 
   async function send(text: string) {
@@ -104,7 +111,7 @@ export default function Stylist() {
         ref={launcher}
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
-        className="fixed bottom-5 right-5 z-50 inline-flex min-h-[46px] items-center bg-zari px-6 text-sm font-medium text-night shadow-panel transition hover:opacity-90"
+        className="fixed bottom-5 right-5 z-50 hidden min-h-[46px] sm:inline-flex items-center bg-zari px-6 text-sm font-medium text-night shadow-panel transition hover:opacity-90"
       >
         Ask the stylist
       </button>

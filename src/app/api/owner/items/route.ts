@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentOwner } from "@/lib/ownerAuth";
 import { getItems, saveClosetItems } from "@/lib/store";
 import { sanitizeItem } from "@/lib/sanitizeItem";
@@ -21,5 +22,7 @@ export async function PUT(req: Request) {
   // The owner can only touch their own closet — force it on every piece.
   const mine = body.items.map(sanitizeItem).filter(Boolean) as Item[];
   const { stored } = await saveClosetItems(owner.closet, mine);
+  // Prerendered pages show the Shop menu, which lists categories that have pieces.
+  if (stored) revalidatePath("/", "layout");
   return NextResponse.json({ ok: true, stored, count: mine.length });
 }

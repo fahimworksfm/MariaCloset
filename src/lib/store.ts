@@ -1,4 +1,5 @@
 // Server-only module: reads/writes the catalog. Never import from a client component.
+import { cache } from "react";
 import { sql, num, opt, sameKey } from "@/lib/db";
 import type { DateRange, Item } from "@/lib/types";
 
@@ -76,6 +77,13 @@ export async function getItems(): Promise<Item[]> {
   const rows = await sql<Row[]>`select * from items order by sort_order, created_at`;
   return rows.map(fromRow);
 }
+
+/** Categories that have at least one piece, for the Shop menu. Cached per request. */
+export const getCategories = cache(async (): Promise<string[]> => {
+  const rows = await sql<{ category: string }[]>`
+    select category from items where category <> '' group by category order by min(sort_order)`;
+  return rows.map((r) => r.category);
+});
 
 export async function getItemById(id: string): Promise<Item | undefined> {
   const [row] = await sql<Row[]>`select * from items where id = ${id}`;
