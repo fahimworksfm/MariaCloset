@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/lib/auth";
 import { getItems, saveItems } from "@/lib/store";
 import { sanitizeItem } from "@/lib/sanitizeItem";
@@ -17,5 +18,7 @@ export async function PUT(req: Request) {
   }
   const items = body.items.map(sanitizeItem).filter(Boolean) as Item[];
   const { stored } = await saveItems(items);
+  // Prerendered pages show the Shop menu, which lists categories that have pieces.
+  if (stored) revalidatePath("/", "layout");
   return NextResponse.json({ ok: true, stored, count: items.length });
 }

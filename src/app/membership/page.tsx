@@ -30,7 +30,13 @@ const tiers = [
 ];
 
 export default async function MembershipPage() {
-  const { rewards } = await getSettings();
+  const { rewards, site } = await getSettings();
+  // The pass is arranged by email. Without an owner email there is nobody to enquire to.
+  const enquire = site.ownerEmail
+    ? `mailto:${site.ownerEmail}?subject=${encodeURIComponent("Closet Pass enquiry")}&body=${encodeURIComponent(
+        "Hi Maria,\n\nI'd like to know more about the Closet Pass.\n\nMy name:\nHow often I'd rent:\n",
+      )}`
+    : "";
   const discounts = rewards.tiers
     .filter((t) => t.discountPct)
     .map((t) => `${t.name}s get ${t.discountPct}% off`)
@@ -64,9 +70,23 @@ export default async function MembershipPage() {
                 ))}
               </ul>
               <div className="mt-auto pt-8">
-                <Link href="/browse" className={t.highlight ? "btn-accent" : "btn-ghost"}>
-                  {t.highlight ? "Enquire to join" : "Browse pieces"}
-                </Link>
+                {!t.highlight ? (
+                  <Link href="/browse" className="btn-ghost">
+                    Browse pieces
+                  </Link>
+                ) : enquire ? (
+                  <a href={enquire} className="btn-accent">
+                    Enquire by email
+                  </a>
+                ) : (
+                  <p className="text-sm leading-relaxed text-mute">
+                    To join, mention the Closet Pass in the note when you{" "}
+                    <Link href="/browse" className="text-brass underline">
+                      request your next rental
+                    </Link>
+                    .
+                  </p>
+                )}
               </div>
             </div>
           ))}

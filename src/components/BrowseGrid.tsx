@@ -36,7 +36,6 @@ export default function BrowseGrid({
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [savedOnly, setSavedOnly] = useState(false);
-  const [ask, setAsk] = useState("");
   const [aiBusy, setAiBusy] = useState(false);
 
   const saved = useStoreList(wishlist);
@@ -74,12 +73,13 @@ export default function BrowseGrid({
 
   async function aiSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (!ask.trim()) return;
+    const asked = query.trim();
+    if (!asked) return;
     setAiBusy(true);
     const r = await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: ask, categories: categories.filter((c) => c !== "All"), occasions }),
+      body: JSON.stringify({ query: asked, categories: categories.filter((c) => c !== "All"), occasions }),
     });
     const d = await r.json().catch(() => ({}));
     setAiBusy(false);
@@ -103,20 +103,29 @@ export default function BrowseGrid({
 
   return (
     <div>
-      {/* Ask the stylist (AI search) */}
-      <form onSubmit={aiSearch} className="mb-10 flex max-w-xl items-end gap-4">
-        <label className="min-w-0 flex-1">
-          <span className="block text-xs font-medium uppercase tracking-[0.2em] text-mute">Ask the stylist</span>
-          <input
-            className="mt-1 min-h-[48px] w-full border-b border-cream bg-transparent text-base text-zari outline-none placeholder:text-mute/70 focus:border-brass"
-            value={ask}
-            onChange={(e) => setAsk(e.target.value)}
-            placeholder="Something red for a wedding under $50"
-          />
-        </label>
-        <button type="submit" className="btn-ghost" disabled={aiBusy}>
-          {aiBusy ? "…" : "Ask"}
-        </button>
+      {/* One box: typing filters by keyword; Enter hands a longer request to the stylist. */}
+      <form onSubmit={aiSearch} className="mb-10 max-w-xl">
+        <div className="flex items-end gap-4">
+          <label className="min-w-0 flex-1">
+            <span className="block text-xs font-medium uppercase tracking-[0.2em] text-mute">
+              Search or ask the stylist
+            </span>
+            <input
+              type="search"
+              className="mt-1 min-h-[48px] w-full border-b border-cream bg-transparent text-base text-zari outline-none placeholder:text-mute/70 focus:border-brass"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="silk, red, or “something for a wedding under $50”"
+              aria-describedby="search-hint"
+            />
+          </label>
+          <button type="submit" className="btn-ghost" disabled={aiBusy || !query.trim()}>
+            {aiBusy ? "…" : "Ask"}
+          </button>
+        </div>
+        <p id="search-hint" className="mt-2 text-[13px] text-mute">
+          Results update as you type. For a longer request, press Enter and the stylist sets the filters.
+        </p>
       </form>
 
       {/* category + occasion tabs */}
@@ -143,16 +152,7 @@ export default function BrowseGrid({
       )}
 
       {/* filter bar */}
-      <div className="mt-6 grid gap-5 border-y border-line py-5 sm:grid-cols-2 lg:grid-cols-4">
-        <label className="block">
-          <span className={label}>Search</span>
-          <input
-            className="field"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="saree, red, silk…"
-          />
-        </label>
+      <div className="mt-6 grid gap-5 border-y border-line py-5 sm:grid-cols-3">
         <label className="block">
           <span className={label}>Up to {`$${price}`} a day</span>
           <input
@@ -195,6 +195,7 @@ export default function BrowseGrid({
         <p className="py-16 text-center text-mute">
           Nothing matches those filters
           {savedOnly && ". Heart a few pieces to save them"}.
+          {query.trim().includes(" ") && " Press Enter to let the stylist read your request."}
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
